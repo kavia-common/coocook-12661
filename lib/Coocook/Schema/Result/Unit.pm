@@ -21,17 +21,27 @@ __PACKAGE__->add_unique_constraints( [ 'project_id', 'long_name' ] );
 
 __PACKAGE__->belongs_to( project => 'Coocook::Schema::Result::Project', 'project_id' );
 
-# returns other convertible units of same quantity but not $self,
 # for doc see https://metacpan.org/pod/DBIx::Class::Relationship::Base#Custom-join-conditions
 __PACKAGE__->has_many(
-    convertible_into => 'Coocook::Schema::Result::Unit',
+    conversions => 'Coocook::Schema::Result::UnitConversion',
+    sub {    # custom relationship constraint required for OR condition
+        my $args = shift;
+
+        return [    # OR
+            "$args->{foreign_alias}.unit1_id" => { -ident => "$args->{self_alias}.id" },
+            "$args->{foreign_alias}.unit2_id" => { -ident => "$args->{self_alias}.id" },
+        ];
+    }
+);
+
+__PACKAGE__->has_many(
+    other_units => 'Coocook::Schema::Result::Unit',
     sub {
         my $args = shift;
 
         return {
-            "$args->{foreign_alias}.id"          => { '!='   => { -ident => "$args->{self_alias}.id" } },
-            "$args->{foreign_alias}.quantity_id" => { -ident => "$args->{self_alias}.quantity_id" },
-            "$args->{foreign_alias}.to_quantity_default" => { '!=' => undef },
+            "$args->{foreign_alias}.id"         => { '!='   => { -ident => "$args->{self_alias}.id" } },
+            "$args->{foreign_alias}.project_id" => { -ident => "$args->{self_alias}.project_id" },
         };
     }
 );
@@ -72,5 +82,21 @@ __PACKAGE__->has_many(
 );
 
 __PACKAGE__->meta->make_immutable;
+
+# looks like a many_to_many() relationship shortcut
+# but needs to be implemented by hand because other unit can be unit1 or unit2
+sub convertible_into {
+    my $self = shift;
+
+    return $self->other_units->search(
+        [    # OR
+            'conversions.unit1_id' => $self->id,
+            'conversions.unit2_id' => $self->id,
+        ],
+        {
+            join => 'conversions',
+        }
+    )->all;
+}
 
 1;

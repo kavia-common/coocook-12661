@@ -117,6 +117,7 @@ schema_diff_like(
               tags
               terms
               units
+              unit_conversions
               users
             >;
 

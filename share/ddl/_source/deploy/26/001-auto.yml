@@ -226,7 +226,7 @@ schema:
           type: NORMAL
       name: articles_tags
       options: []
-      order: 26
+      order: 27
     articles_units:
       constraints:
         - deferrable: 1
@@ -302,7 +302,7 @@ schema:
           type: NORMAL
       name: articles_units
       options: []
-      order: 24
+      order: 25
     blacklist_emails:
       constraints:
         - deferrable: 1
@@ -671,7 +671,7 @@ schema:
           type: NORMAL
       name: dish_ingredients
       options: []
-      order: 30
+      order: 31
     dishes:
       constraints:
         - deferrable: 1
@@ -845,7 +845,7 @@ schema:
           type: NORMAL
       name: dishes
       options: []
-      order: 23
+      order: 24
     dishes_tags:
       constraints:
         - deferrable: 1
@@ -921,7 +921,7 @@ schema:
           type: NORMAL
       name: dishes_tags
       options: []
-      order: 27
+      order: 28
     faqs:
       constraints:
         - deferrable: 1
@@ -1192,7 +1192,7 @@ schema:
           type: NORMAL
       name: items
       options: []
-      order: 28
+      order: 29
     meals:
       constraints:
         - deferrable: 1
@@ -2136,7 +2136,7 @@ schema:
           type: NORMAL
       name: recipe_ingredients
       options: []
-      order: 29
+      order: 30
     recipes:
       constraints:
         - deferrable: 1
@@ -2414,7 +2414,7 @@ schema:
           type: NORMAL
       name: recipes_tags
       options: []
-      order: 25
+      order: 26
     roles_users:
       constraints:
         - deferrable: 1
@@ -2961,6 +2961,122 @@ schema:
       name: terms_users
       options: []
       order: 17
+    unit_conversions:
+      constraints:
+        - deferrable: 1
+          expression: ''
+          fields:
+            - id
+          match_type: ''
+          name: ''
+          on_delete: ''
+          on_update: ''
+          options: []
+          reference_fields: []
+          reference_table: ''
+          type: PRIMARY KEY
+        - deferrable: 1
+          expression: ''
+          fields:
+            - unit1_id
+          match_type: ''
+          name: unit_conversions_fk_unit1_id
+          on_delete: ''
+          on_update: ''
+          options: []
+          reference_fields:
+            - id
+          reference_table: units
+          type: FOREIGN KEY
+        - deferrable: 1
+          expression: ''
+          fields:
+            - unit2_id
+          match_type: ''
+          name: unit_conversions_fk_unit2_id
+          on_delete: ''
+          on_update: ''
+          options: []
+          reference_fields:
+            - id
+          reference_table: units
+          type: FOREIGN KEY
+      fields:
+        comment:
+          data_type: text
+          default_value: ''
+          is_nullable: 0
+          is_primary_key: 0
+          is_unique: 0
+          name: comment
+          order: 6
+          size:
+            - 0
+        factor:
+          data_type: real
+          default_value: ~
+          is_nullable: 0
+          is_primary_key: 0
+          is_unique: 0
+          name: factor
+          order: 3
+          size:
+            - 0
+        id:
+          data_type: integer
+          default_value: ~
+          is_auto_increment: 1
+          is_nullable: 0
+          is_primary_key: 1
+          is_unique: 0
+          name: id
+          order: 1
+          size:
+            - 0
+        transitive:
+          data_type: boolean
+          default_value: 1
+          is_nullable: 0
+          is_primary_key: 0
+          is_unique: 0
+          name: transitive
+          order: 5
+          size:
+            - 0
+        unit1_id:
+          data_type: integer
+          default_value: ~
+          is_nullable: 0
+          is_primary_key: 0
+          is_unique: 0
+          name: unit1_id
+          order: 2
+          size:
+            - 0
+        unit2_id:
+          data_type: integer
+          default_value: ~
+          is_nullable: 0
+          is_primary_key: 0
+          is_unique: 0
+          name: unit2_id
+          order: 4
+          size:
+            - 0
+      indices:
+        - fields:
+            - unit1_id
+          name: unit_conversions_idx_unit1_id
+          options: []
+          type: NORMAL
+        - fields:
+            - unit2_id
+          name: unit_conversions_idx_unit2_id
+          options: []
+          type: NORMAL
+      name: unit_conversions
+      options: []
+      order: 23
     units:
       constraints:
         - deferrable: 1
@@ -3310,6 +3426,7 @@ translator:
       - Terms
       - TermsUser
       - Unit
+      - UnitConversion
       - User
   parser_type: SQL::Translator::Parser::DBIx::Class
   producer_args: {}

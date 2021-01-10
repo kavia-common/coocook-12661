@@ -63,6 +63,11 @@ INSERT INTO "units"
 ( 4,          1, FALSE,          't',       'tons'),
 ( 5,          1, FALSE,          'p',      'pinch'); -- no conversion, (in German: Prise)
 
+INSERT INTO "unit_conversions"
+(unit1_id, factor, unit2_id) VALUES
+(       1,  0.001,        2), --  g to kg
+(       2,  0.001,        4); -- kg to t
+
 INSERT INTO "articles_units"
 (article_id, unit_id) VALUES
 (         1,       1),

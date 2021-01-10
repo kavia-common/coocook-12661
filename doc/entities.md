@@ -72,6 +72,34 @@ Human-readable short variant of the name of the `Unit`. E.g.: `kg` for Kilogram.
 Human-readable long variant of the name of the `Unit`. E.g.: `Kilogram` for Kilogram.
 
 
+## UnitConversions
+**table:** unit\_conversions
+
+### Attributes
+#### id
+**type:** integer
+
+#### unit1\_id
+**type:** integer
+
+#### factor
+**type:** real
+
+#### unit1\_id
+**type:** integer
+
+#### transitive
+**type:** boolean
+
+Defines if this conversion can be extended to convert into other units.
+Some very special conversions might be non-transitive.
+
+#### comment
+**type:** text
+
+User defined comment for conversion.
+Could be an academic resource that specifies the conversion factor.
+
 ## DishIngredient
 **table:** dish\_ingredients
 

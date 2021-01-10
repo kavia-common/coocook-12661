@@ -335,6 +335,22 @@ CREATE INDEX "tags_idx_tag_group_id" on "tags" ("tag_group_id");
 
 ;
 --
+-- Table: unit_conversions
+--
+CREATE TABLE "unit_conversions" (
+  "id" serial NOT NULL,
+  "unit1_id" integer NOT NULL,
+  "factor" real NOT NULL,
+  "unit2_id" integer NOT NULL,
+  "transitive" boolean DEFAULT '1' NOT NULL,
+  "comment" text DEFAULT '' NOT NULL,
+  PRIMARY KEY ("id")
+);
+CREATE INDEX "unit_conversions_idx_unit1_id" on "unit_conversions" ("unit1_id");
+CREATE INDEX "unit_conversions_idx_unit2_id" on "unit_conversions" ("unit2_id");
+
+;
+--
 -- Table: dishes
 --
 CREATE TABLE "dishes" (
@@ -557,6 +573,14 @@ ALTER TABLE "tags" ADD CONSTRAINT "tags_fk_project_id" FOREIGN KEY ("project_id"
 ;
 ALTER TABLE "tags" ADD CONSTRAINT "tags_fk_tag_group_id" FOREIGN KEY ("tag_group_id")
   REFERENCES "tag_groups" ("id") DEFERRABLE;
+
+;
+ALTER TABLE "unit_conversions" ADD CONSTRAINT "unit_conversions_fk_unit1_id" FOREIGN KEY ("unit1_id")
+  REFERENCES "units" ("id") DEFERRABLE;
+
+;
+ALTER TABLE "unit_conversions" ADD CONSTRAINT "unit_conversions_fk_unit2_id" FOREIGN KEY ("unit2_id")
+  REFERENCES "units" ("id") DEFERRABLE;
 
 ;
 ALTER TABLE "dishes" ADD CONSTRAINT "dishes_fk_meal_id" FOREIGN KEY ("meal_id")

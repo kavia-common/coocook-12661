@@ -4,6 +4,24 @@
 BEGIN;
 
 ;
+CREATE TABLE unit_conversions (
+  id INTEGER PRIMARY KEY NOT NULL,
+  unit1_id integer NOT NULL,
+  factor real NOT NULL,
+  unit2_id integer NOT NULL,
+  transitive boolean NOT NULL DEFAULT 1,
+  comment text NOT NULL DEFAULT '',
+  FOREIGN KEY (unit1_id) REFERENCES units(id),
+  FOREIGN KEY (unit2_id) REFERENCES units(id)
+);
+
+;
+CREATE INDEX unit_conversions_idx_unit1_id ON unit_conversions (unit1_id);
+
+;
+CREATE INDEX unit_conversions_idx_unit2_id ON unit_conversions (unit2_id);
+
+;
 CREATE TEMPORARY TABLE units_temp_alter (
   id INTEGER PRIMARY KEY NOT NULL,
   project_id integer NOT NULL,
