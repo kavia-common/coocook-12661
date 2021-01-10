@@ -2,7 +2,6 @@
 
 <table>
 <tr>
-<th>Quantity</th>
 <th>Unit</th>
 <th colspan="2">Conversion</th>
 <th colspan="2">Actions</th>
@@ -11,7 +10,6 @@
     quantity = unit.quantity;
     default_unit = quantity.default_unit %]
 <tr>
-<td>[% quantity.name | html %]</td>
 <td>
     <a href="[% unit.url %]">
     [%~ '<strong>'  IF unit.is_quantity_default ~%]
@@ -40,5 +38,3 @@
 </tr>
 [% END %]
 </table>
-
-<p><strong>strong</strong> = default for quantity</p>

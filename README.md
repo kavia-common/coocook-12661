@@ -112,7 +112,6 @@ Follow the instructions at [hub.docker.com/r/coocook/coocook-dev](https://hub.do
 | Ingredient | an amount of some article for a dish/recipe | 1kg of apples |
 | Article | a single sort of food that can be purchased | apples |
 | Unit | a type of measurement | kilograms
-| Quantity | a collection of physical units that can be converted | masses
 
 ## Author
 

@@ -27,7 +27,6 @@ our $SQLITE_NUMERIC_COLUMNS = {
     DishIngredient   => 'value',
     RecipeIngredient => 'value',
     Item             => [ 'offset', 'value' ],
-    Quantity         => 'to_default_quantity',
 };
 
 sub run {
@@ -106,7 +105,6 @@ sub check_relationships {
         { RecipeIngredient => [qw< recipe article unit >] },
         { RecipeTag        => [qw< recipe tag >] },
         { Tag              => [qw< me tag_group >] },
-        { Unit             => [qw< me quantity >] },
     );
 
     for (@m_n_tables) {

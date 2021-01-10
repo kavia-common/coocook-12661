@@ -14,11 +14,7 @@
 
 <div class="card-body">
     <table>
-[% FOR quantity IN quantities %]
-        <tr>
-            <th>[% quantity.name | html %]</th>
-            <td>
-    [% FOR unit IN quantity.units.all;
+    [% FOR unit IN units;
         id = unit.id;
         IF units_in_use.$id; # pass ID of used unit as hidden field because value of disabled checkbox isn't sent %]
         <input type="hidden" name="units" value="[% id %]">
@@ -27,10 +23,6 @@
         [%~ '&nbsp;' ~%]
         <label for="u[% unit.id %]">[% display_unit(unit, {html => 1}) %]</label>
     [% END %]
-            </td>
-        </tr>
-[% END %]
-    </table>
 </div>
 </div>
 

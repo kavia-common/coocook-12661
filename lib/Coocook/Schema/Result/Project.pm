@@ -45,7 +45,6 @@ __PACKAGE__->many_to_many( users => projects_users => 'user' );
 __PACKAGE__->has_many( articles       => 'Coocook::Schema::Result::Article',      'project_id' );
 __PACKAGE__->has_many( meals          => 'Coocook::Schema::Result::Meal',         'project_id' );
 __PACKAGE__->has_many( purchase_lists => 'Coocook::Schema::Result::PurchaseList', 'project_id' );
-__PACKAGE__->has_many( quantities     => 'Coocook::Schema::Result::Quantity',     'project_id' );
 __PACKAGE__->has_many( recipes        => 'Coocook::Schema::Result::Recipe',       'project_id' );
 __PACKAGE__->has_many( shop_sections  => 'Coocook::Schema::Result::ShopSection',  'project_id' );
 __PACKAGE__->has_many( tags           => 'Coocook::Schema::Result::Tag',          'project_id' );
@@ -165,7 +164,6 @@ sub inventory {
                 dishes           => $self_rs->search_related('meals')->search_related('dishes')->count_rs->as_query,
                 meals            => $self_rs->search_related('meals')->count_rs->as_query,
                 purchase_lists   => $self_rs->search_related('purchase_lists')->count_rs->as_query,
-                quantities       => $self_rs->search_related('quantities')->count_rs->as_query,
                 recipes          => $self_rs->search_related('recipes')->count_rs->as_query,
                 shop_sections    => $self_rs->search_related('shop_sections')->count_rs->as_query,
                 tags             => $self_rs->search_related('tags')->count_rs->as_query,

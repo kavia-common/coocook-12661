@@ -56,15 +56,6 @@ Primary key of `Unit` for database.
 
 Foreign key on `Project`. References the `Project` that this `Unit` was created or imported in.
 
-#### quantity\_id
-**type:** integer
-
-Foreign key on `Quantity`. References the `Quantity` that this `Unit` is for.
-
-#### to\_quantity\_default
-**type:** real
-Factor to multiply by to get to the value in the `Quantity`'s default `Unit`.
-
 #### space'
 **type:** boolean
 

@@ -25,9 +25,8 @@ sub submenu : Chained('/project/base') PathPart('') CaptureArgs(0) {
 
     $c->stash(
         submenu_items => [
-            { text => "All units",  action => 'unit/index' },
-            { text => "Add unit",   action => 'unit/new_unit' },
-            { text => "Quantities", action => 'quantity/index' },
+            { text => "All units", action => 'unit/index' },
+            { text => "Add unit",  action => 'unit/new_unit' },
         ]
     );
 }
@@ -39,10 +38,6 @@ sub submenu : Chained('/project/base') PathPart('') CaptureArgs(0) {
 sub index : GET HEAD Chained('submenu') PathPart('units') Args(0)
   RequiresCapability('view_project') {
     my ( $self, $c ) = @_;
-
-    my @quantities =
-      $c->project->quantities->sorted->search( undef, { prefetch => 'default_unit' } )->all;
-    my %quantities = map { $_->id => $_ } @quantities;
 
     my %units_in_use;
 
@@ -66,8 +61,7 @@ sub index : GET HEAD Chained('submenu') PathPart('units') Args(0)
     {
         my $action = $self->action_for('delete');
 
-        my $units = $c->project->units->search( undef,
-            { join => 'quantity', order_by => [ 'quantity.name', 'to_quantity_default', 'long_name' ] } );
+        my $units = $c->project->units->search( undef, { order_by => 'long_name' } );
 
         while ( my $unit = $units->next ) {
             $unit->quantity( $quantities{ $unit->quantity_id } );
@@ -87,11 +81,6 @@ sub index : GET HEAD Chained('submenu') PathPart('units') Args(0)
                   >
             );
 
-            if ( $unit->quantity and not $unit->is_quantity_default ) {
-                $unit{make_quantity_default_url} =
-                  $c->project_uri( $self->action_for('make_quantity_default'), $unit{id} );
-            }
-
             push @units, \%unit;
 
             # add delete_url to deletable units
@@ -104,7 +93,6 @@ sub index : GET HEAD Chained('submenu') PathPart('units') Args(0)
 
     $c->stash(
         create_url => $c->project_uri( $self->action_for('create') ),
-        quantities => \@quantities,
         units      => \@units,
     );
 }
@@ -116,8 +104,6 @@ sub new_unit : GET HEAD Chained('submenu') PathPart('units/new') RequiresCapabil
     $c->stash(
         template   => 'unit/new.tt',
         create_url => $c->project_uri( $self->action_for('create') ),
-        quantities =>
-          [ $c->project->quantities->sorted->search( undef, { prefetch => 'default_unit' } )->all ],
     );
 }
 
@@ -173,27 +159,6 @@ sub update_or_insert : Private {
 
     my @errors;
 
-    if ( not $unit->in_storage ) {    # about to be created
-        my $quantity = $c->req->params->get('quantity');
-
-        if ( $c->project->quantities->results_exist( { id => $quantity } ) ) {
-            $unit->set_column( quantity_id => $quantity );
-        }
-        else {
-            push @errors, "Invalid quantity selected!";
-        }
-    }
-
-    if ( $unit->in_storage and $unit->is_quantity_default ) {
-        $unit->set_column( to_quantity_default => 1 );
-    }
-    else {
-        $unit->set_column( to_quantity_default => $c->req->params->get('to_quantity_default') );
-
-        ( $unit->to_quantity_default eq '' or looks_like_number( $unit->to_quantity_default ) )
-          or push @errors, "Factor to quantity’s default unit must be empty or a valid number!";
-    }
-
     length $unit->short_name
       or push @errors, "Short name must be set!";
 
@@ -228,13 +193,6 @@ sub delete : POST Chained('base') Args(0) RequiresCapability('edit_project') {
     my ( $self, $c ) = @_;
 
     $c->stash->{unit}->delete();
-    $c->detach('redirect');
-}
-
-sub make_quantity_default : POST Chained('base') Args(0) RequiresCapability('edit_project') {
-    my ( $self, $c ) = @_;
-
-    $c->stash->{unit}->make_quantity_default();
     $c->detach('redirect');
 }
 

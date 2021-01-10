@@ -110,7 +110,6 @@ schema_diff_like(
               organizations
               projects
               purchase_lists
-              quantities
               recipes_of_the_day
               recipes
               shop_sections

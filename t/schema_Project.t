@@ -18,7 +18,6 @@ subtest inventory => sub {
         dishes           => 3,
         meals            => 3,
         purchase_lists   => 1,
-        quantities       => 2,
         recipes          => 1,
         shop_sections    => 2,
         tags             => 3,
@@ -44,7 +43,6 @@ subtest articles_cached_units => sub {
     memory_cycle_ok \@result, "... result is free of memory cycles";
 
     # delete all entries to make sure everything is cached
-    $db->resultset('Quantity')->update( { default_unit_id => undef } );
     for my $rs (qw< DishIngredient Item ArticleTag RecipeIngredient Article Unit >) {
         ok $db->resultset($rs)->delete, "delete all ${rs}s";
         is $db->resultset($rs)->count => 0, "count($rs) == 0";
@@ -52,8 +50,8 @@ subtest articles_cached_units => sub {
 
     # add new unit to new article to make sure that is cached, too
     my $article = $project->create_related( articles => { name => "foo", comment => "" } );
-    my $unit    = $project->create_related(
-        units => { short_name => "b", long_name => "bar", quantity_id => 1, space => 0 } );
+    my $unit =
+      $project->create_related( units => { short_name => "b", long_name => "bar", space => 0 } );
     $article->add_to_units($unit);
 
     my ( $articles => $units ) = @result;

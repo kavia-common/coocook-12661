@@ -14,15 +14,9 @@ __PACKAGE__->meta->make_immutable;
 
 my @internal_properties = (    # array of hashrefs with key 'key' instead of hash to keep order
     {
-        key    => 'quantities',
-        name   => "Quantities",
-        import => sub { shift->quantities },    # quirk: default_unit can't be translated yet
-    },
-    {
-        key        => 'units',
-        name       => "Units",
-        depends_on => ['quantities'],
-        import     => sub { shift->units, { project_id => 'projects', quantity_id => 'quantities' } },
+        key    => 'units',
+        name   => "Units",
+        import => sub { shift->units, { project_id => 'projects' } },
     },
     {
         key    => 'shop_sections',
@@ -341,19 +335,6 @@ sub import_data {    # import() is used by 'use'
                         $rs->populate( \@buffer );    # must be in void context to save time!
                     }
                 }
-            }
-
-            # quirk: now update 'default_unit' of new quantities
-            my $quantities = $target->quantities->search( { default_unit_id => { '!=' => undef } },
-                { columns => [ 'id', 'default_unit_id' ] } );
-
-            if ( $requested_props{units} ) {
-                while ( my $quantity = $quantities->next ) {
-                    $quantity->update( { default_unit_id => $new_id{units}{ $quantity->default_unit_id } || die } );
-                }
-            }
-            else {
-                $quantities->update( { default_unit_id => undef } );
             }
         }
     );
