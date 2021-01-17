@@ -56,7 +56,7 @@ html_title = html_title _ ' for ' _ display_date(list.date, {html=>1});
 							<button class="btn btn-outline-primary ms-1 material-icons" type="submit" title="Update amount">done</button>
 						</form>
 						[% END;
-						IF item.convert_url && item.convertible_into.size %]
+						IF item.convert_url AND item.convertible_into.size %]
 						<form class="d-flex flex-wrap justify-content-end border rounded my-1 w-100 no-print" name="convert" method="post" action="[% item.convert_url %]" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Click on one of the units, to convert the displayed value to this unit">
 							[% FOREACH unit IN item.convertible_into %]
 							<button class="btn btn-outline-secondary btn-sm m-1" type="submit" name="unit" value="[% unit.id %]">[% unit.short_name | html %]</button>

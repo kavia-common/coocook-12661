@@ -51,6 +51,9 @@ __PACKAGE__->has_many( tags           => 'Coocook::Schema::Result::Tag',        
 __PACKAGE__->has_many( tag_groups     => 'Coocook::Schema::Result::TagGroup',     'project_id' );
 __PACKAGE__->has_many( units          => 'Coocook::Schema::Result::Unit',         'project_id' );
 
+# don't need to check conversions_to because all units belong to project anyway
+__PACKAGE__->many_to_many( unit_conversions => units => 'conversions_from' );
+
 # trigger for generating url_name[_fc]
 before store_column => sub {
     my ( $self, $column, $value ) = @_;

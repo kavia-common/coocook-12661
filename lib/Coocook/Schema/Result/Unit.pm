@@ -33,6 +33,9 @@ __PACKAGE__->has_many(
     }
 );
 
+__PACKAGE__->has_many( conversions_from => 'Coocook::Schema::Result::UnitConversion', 'unit1_id' );
+__PACKAGE__->has_many( conversions_to   => 'Coocook::Schema::Result::UnitConversion', 'unit2_id' );
+
 __PACKAGE__->has_many(
     other_units => 'Coocook::Schema::Result::Unit',
     sub {
