@@ -1,5 +1,12 @@
 [% title = "Units" %]
 
+[% new_unit = BLOCK %]
+<p>
+    <a href="[% new_url %]">New unit</a>
+</p>
+[% END;
+new_unit %]
+
 <table>
 <tr>
 <th>Unit</th>
@@ -38,3 +45,5 @@
 </tr>
 [% END %]
 </table>
+
+[% new_unit %]

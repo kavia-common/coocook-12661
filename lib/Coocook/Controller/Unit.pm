@@ -18,24 +18,11 @@ Catalyst Controller.
 
 =head1 METHODS
 
-=cut
-
-sub submenu : Chained('/project/base') PathPart('') CaptureArgs(0) {
-    my ( $self, $c ) = @_;
-
-    $c->stash(
-        submenu_items => [
-            { text => "All units", action => 'unit/index' },
-            { text => "Add unit",  action => 'unit/new_unit' },
-        ]
-    );
-}
-
 =head2 index
 
 =cut
 
-sub index : GET HEAD Chained('submenu') PathPart('units') Args(0)
+sub index : GET HEAD Chained('/project/base') PathPart('units') Args(0)
   RequiresCapability('view_project') {
     my ( $self, $c ) = @_;
 
@@ -64,50 +51,32 @@ sub index : GET HEAD Chained('submenu') PathPart('units') Args(0)
         my $units = $c->project->units->search( undef, { order_by => 'long_name' } );
 
         while ( my $unit = $units->next ) {
-            $unit->quantity( $quantities{ $unit->quantity_id } );
-
-            my %unit = (
-                url                   => $c->project_uri( $self->action_for('edit'), $unit->id ),
-                from_quantity_default => $unit->to_quantity_default ? 1 / $unit->to_quantity_default : undef,
-                map { $_ => scalar $unit->$_() }
-                  qw<
-                  id
-                  is_quantity_default
-                  long_name
-                  quantity
-                  short_name
-                  space
-                  to_quantity_default
-                  >
-            );
-
-            push @units, \%unit;
+            push @units,
+              my $u = $unit->as_hashref( url => $c->project_uri( $self->action_for('edit'), $unit->id ) );
 
             # add delete_url to deletable units
-            exists $units_in_use{ $unit->id }    # in use, for ingredient
-              or (  $unit->is_quantity_default
-                and $unit->convertible_into > 0 )    # need to make other unit quantity default
-              or $unit{delete_url} = $c->project_uri( $action, $unit{id} );    # can be deleted
+            exists $units_in_use{ $unit->id }                                 # in use, for ingredient
+              or $u->{delete_url} = $c->project_uri( $action, $unit->id );    # can be deleted
         }
     }
 
     $c->stash(
-        create_url => $c->project_uri( $self->action_for('create') ),
-        units      => \@units,
+        new_url => $c->project_uri( $self->action_for('new_unit') ),
+        units   => \@units,
     );
 }
 
-sub new_unit : GET HEAD Chained('submenu') PathPart('units/new') RequiresCapability('edit_project')
-{
+sub new_unit : GET HEAD Chained('/project/base') PathPart('units/new')
+  RequiresCapability('edit_project') {
     my ( $self, $c ) = @_;
 
     $c->stash(
-        template   => 'unit/new.tt',
+        template   => 'unit/edit.tt',
         create_url => $c->project_uri( $self->action_for('create') ),
     );
 }
 
-sub base : Chained('submenu') PathPart('unit') CaptureArgs(1) {
+sub base : Chained('/project/base') PathPart('unit') CaptureArgs(1) {
     my ( $self, $c, $id ) = @_;
 
     $c->stash( unit => $c->project->units->find($id) || $c->detach('/error/not_found') );
