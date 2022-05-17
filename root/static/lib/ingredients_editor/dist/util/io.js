@@ -7,17 +7,34 @@ const baseUrl = (project) => {
       return `${backend}/project/${project.id}/${project.name}/recipe/${project.specificId}`;
   }
 };
-const initialIngredientTransformation = (ingredient) => ({
-  ...ingredient,
-  ...{
-    beingDragged: false,
-    units: [ingredient.current_unit, ...ingredient.units]
-  }
+const fromBackendFormat = (ingredient) => ({
+  id: ingredient.id,
+  article: ingredient.article,
+  comment: ingredient.comment,
+  position: ingredient.position,
+  prepare: !!ingredient.prepare,
+  value: ingredient.value,
+  current_unit: ingredient.current_unit,
+  units: ingredient.units,
+  beingDragged: false
 });
-const getAllNormalIngredients = async (project) => {
+const toBackendFormat = (ingredient) => {
+  let result = {
+    id: ingredient.id,
+    article: ingredient.article,
+    comment: ingredient.comment,
+    position: ingredient.position,
+    prepare: ingredient.prepare,
+    value: ingredient.value,
+    current_unit: ingredient.current_unit,
+    units: ingredient.units
+  };
+  return result;
+};
+const getAllIngredients = async (project) => {
   try {
     const response = await (await fetch(`${baseUrl(project)}/ingredients`)).json();
-    const final = response.map(initialIngredientTransformation);
+    const final = response.map(fromBackendFormat);
     console.log("final");
     console.log(final);
     return final;
@@ -26,64 +43,36 @@ const getAllNormalIngredients = async (project) => {
     return null;
   }
 };
-const getAllPreparedIngredients = async (project) => {
+const updateIngredients = async (project, ingredients) => {
   try {
-    const response = await (await fetch(`${baseUrl(project)}/ingredients`)).json();
-    return response.data.map(initialIngredientTransformation);
-  } catch (err) {
-    return null;
-  }
-};
-const createIngredient = async (project, ingredient) => {
-  try {
-    const response = await fetch(`${baseUrl(project)}/ingredients`, {
+    const response = await fetch(`${baseUrl(project)}/ingredients/updateAll`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json"
       },
-      body: JSON.stringify(ingredient)
+      body: JSON.stringify({ingredients: ingredients.map(toBackendFormat)})
     });
-    const id = (await response.json()).data;
-    if (!isNaN(id)) {
-      return id;
-    } else {
-      return null;
-    }
+    return (await response.json()).map(fromBackendFormat);
   } catch (err) {
     return null;
   }
 };
-const putIngredient = async (project, ingredient) => {
+const updateIngredient = async (project, id, changes) => {
   try {
-    const response = await fetch(`${baseUrl(project)}/ingredients/${ingredient.id}`, {
-      method: "PUT",
+    const response = await fetch(`${baseUrl(project)}/ingredients/update`, {
+      method: "POST",
       headers: {
         "Content-Type": "application/json"
       },
-      body: JSON.stringify(ingredient)
+      body: JSON.stringify({id, changes: toBackendFormat(changes)})
     });
-    await response.json();
-    return ingredient.id;
+    return fromBackendFormat(await response.json());
   } catch (err) {
     return null;
   }
 };
-const deleteIngredient = async (project, ingredient) => {
-  try {
-    const response = await fetch(`${baseUrl(project)}/ingredients/${ingredient.id}`, {
-      method: "DELETE"
-    });
-    await response.json();
-    return ingredient.id;
-  } catch (err) {
-    return null;
-  }
+export {
+  getAllIngredients,
+  updateIngredients,
+  updateIngredient
 };
-const IO = {
-  getAllNormalIngredients,
-  getAllPreparedIngredients,
-  createIngredient,
-  putIngredient,
-  deleteIngredient
-};
-export default IO;

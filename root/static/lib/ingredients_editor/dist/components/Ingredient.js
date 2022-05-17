@@ -114,12 +114,35 @@ const Ingredient = ({
   }, unit.short_name, " (", unit.long_name, ")")))), /* @__PURE__ */ React.createElement(Form.Control, {
     as: "input",
     type: "text",
-    defaultValue: data.comment
+    defaultValue: data.comment,
+    onChange: (e) => onChange(data.id, Object.assign(data, {
+      comment: e.target?.value
+    }))
   }), /* @__PURE__ */ React.createElement("div", {
     style: {flex: "none"}
   }, /* @__PURE__ */ React.createElement(Button, {
     variant: "danger",
     onClick: () => onDelete(data.id)
   }, /* @__PURE__ */ React.createElement(DeleteRounded, null))));
+};
+export const significantChanges = (changes) => {
+  const keys = Object.keys(changes);
+  if (keys.includes("comment"))
+    return true;
+  if (keys.includes("article"))
+    return true;
+  if (keys.includes("current_unit"))
+    return true;
+  if (keys.includes("position"))
+    return true;
+  if (keys.includes("prepare"))
+    return true;
+  if (keys.includes("units"))
+    return true;
+  if (keys.includes("value"))
+    return true;
+  if (keys.includes("id"))
+    return true;
+  return false;
 };
 export default Ingredient;
