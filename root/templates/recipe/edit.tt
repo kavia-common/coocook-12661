@@ -37,7 +37,7 @@
 	[% END %]	
 </div>
 
-<form method="post" action="[% update_url %]">
+<form class="confirmIfUnsavedChanges" method="post" action="[% update_url %]">
 
 <div class="card">
     <div class="card-header">
