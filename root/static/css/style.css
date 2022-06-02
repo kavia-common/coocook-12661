@@ -237,4 +237,47 @@ input:focus, textarea:focus {
     box-shadow: none !important;
 }
 
-/******** end content part ********/
+a.dark-link {
+    color: #f5f5ef !important;
+}
+
+a.dark-link:hover {
+    text-decoration: none !important;
+    color: #4CAF50 !important;
+}
+
+/******** footer part ********/
+
+footer {
+    background-color: #333333;
+    color: #f5f5ef;
+    position: absolute; /*necessary to position it at the bottom in all cases*/
+    bottom: 0;
+    width: 100%;
+    padding: 0.5em 1em 0.5em 1em;
+    margin: 0 auto;
+    display: inline-block;
+    line-height: 1.5;
+    height: 12em; /*adjust if there are additional links in the footer*/
+}
+
+footer nav ul {
+    list-style-type: none;
+    float: left;
+}
+
+footer nav ul:first-child {
+    padding-left: 10px;
+}
+
+footer nav h4 {
+    margin: 0;
+}
+
+footer a[href] {
+    color: inherit;
+}
+
+footer a[href]:hover {
+    text-decoration: underline;
+}
