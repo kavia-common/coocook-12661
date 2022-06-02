@@ -99,6 +99,35 @@ footer a:focus {
 
 /******** start header part ********/
 /*** general part ***/
+
+header {
+    margin: 0;
+}
+
+header nav ul {
+    list-style-type: none;
+    padding-left: 0;
+}
+
+header nav li {
+    display: inline;
+}
+
+/* "Logout" must be button for POST request but style like link */
+header nav input[name="logout"]:hover,
+header nav input[name="logout"] {
+    border: 0;
+    font-family: inherit;
+    font-size:   inherit;
+    cursor: pointer;
+}
+
+/*
+ * stop Firefox adding 2px to the submit button's height
+ * see https://stackoverflow.com/questions/12288175/firefox-adds-2px-padding-in-a-submit-button
+ */
+header nav input[name="logout"]::-moz-focus-inner { border:0; padding:0 }
+
 header h1 {
     font-size: 2.5em;
 }
@@ -246,10 +275,16 @@ a.dark-link:hover {
     color: #4CAF50 !important;
 }
 
+.content-box {
+    background-color: var(--bs-light);
+    padding: 1.5rem;
+    border-radius: 1rem;
+    margin-bottom: 1rem;
+}
+
 /******** footer part ********/
 
 footer {
-    background-color: #333333;
     color: #f5f5ef;
     position: absolute; /*necessary to position it at the bottom in all cases*/
     bottom: 0;
