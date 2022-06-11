@@ -306,6 +306,10 @@ a.dark-link:hover, button.dark-link:hover {
    hyphens: auto;
 }
 
+input:focus {
+    box-shadow: none !important;
+}
+
 /******** footer part ********/
 
 footer {
