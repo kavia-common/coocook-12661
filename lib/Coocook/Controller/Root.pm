@@ -92,6 +92,7 @@ sub auto : Private {
         css => [
             '/lib/themed-bootstrap/themed' . ( $c->debug ? '.css' : '.min.css' ),
             '/css/material-design-icons.css',
+            '/lib/ingredients_editor/index.css',
             '/css/style.css',
         ],
         js => [
