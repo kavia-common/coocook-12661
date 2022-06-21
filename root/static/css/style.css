@@ -140,14 +140,13 @@ header h1 {
 
 #project_nav a:hover,
 #project_nav a:focus {
-    background: var(--bs-light);
-    color: var(--bs-dark);
+    color: var(--bs-primary);
 }
 
 /*** submenu nav ***/
-#submenu_nav a:hover,
-#submenu_nav a.active,
-#submenu_nav a:focus {
+#submenu_nav .nav-link:hover,
+#submenu_nav .nav-link.active,
+#submenu_nav .nav-link:focus {
     color: var(--bs-light) !important;
     background: var(--cc-green-dark);
 }
@@ -171,6 +170,13 @@ header h1 {
 
 
 /******** start content part ********/
+.btn-primary,
+.btn-primary:active,
+.btn-primary:hover,
+.btn-primary:focus {
+    color: var(--bs-light)
+}
+
 .anchor {
     opacity: 0;
     color: grey;
@@ -263,17 +269,12 @@ ul {
     min-width: 1150px;
 }
 
-input:focus, textarea:focus {
-    box-shadow: none !important;
-}
-
 a.dark-link, button.dark-link {
-    color: #f5f5ef !important;
+    color: var(--bs-light) !important;
 }
 
 a.dark-link:hover, button.dark-link:hover {
-    text-decoration: none !important;
-    color: #4CAF50 !important;
+    color: var(--bs-primary) !important;
 }
 
 .content-box {
@@ -284,7 +285,7 @@ a.dark-link:hover, button.dark-link:hover {
 }
 
 .item-box {
-    background-color: #4CAF50;
+    background-color: var(--bs-primary);
     width: 100px;
     height: 100px;
     padding: 0.5rem;
@@ -292,6 +293,11 @@ a.dark-link:hover, button.dark-link:hover {
     display: flex;
     align-items: center;
     overflow: hidden; 
+    text-decoration: none;
+}
+
+.item-box:hover {
+    background-color: var(--cc-green-dark);
 }
 
 .item-box span {
@@ -306,11 +312,16 @@ a.dark-link:hover, button.dark-link:hover {
    hyphens: auto;
 }
 
+.btn:focus,
+select:focus,
 input:focus {
     box-shadow: none !important;
 }
 
 /******** footer part ********/
+main {
+    margin-bottom: 12em !important; /*space overlapped by footer*/
+}
 
 footer {
     color: #f5f5ef;
@@ -342,5 +353,5 @@ footer a[href] {
 }
 
 footer a[href]:hover {
-    text-decoration: underline;
+    text-decoration: underline !important;
 }
