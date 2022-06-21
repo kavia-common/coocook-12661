@@ -53,7 +53,7 @@
                         </div>
 
                         <div class="collapse navbar-collapse flex-column" id="navbar">
-                            <div class="navbar-nav container-md d-flex justify-content-between align-items-center w-100 py-2 px-2">
+                            <div class="navbar-nav container-md d-flex justify-content-between align-items-center w-100 p-2">
                                 <div class="d-flex gap-2 mx-2">
                                     <a class="navbar-brand d-flex align-items-center text-white fs-4 fw-bold" href="[% homepage_url %]">[% name | html %]</a>
                                     <ul class="d-flex p-0 m-0" id="project_nav">
@@ -73,12 +73,12 @@
                                     <a class="btn btn-sm dark-link" href="[% login_url %]">Sign in</a>
 [% END %]
 [% IF register_url %]
-                                    <a class="btn btn-outline-light btn-sm dark-link" href="[% register_url %]">Sign up</a>
+                                    <a class="btn btn-outline-light btn-sm" href="[% register_url %]">Sign up</a>
 [% END %]
 
 [% IF user %]
                                     <div class="dropdown">
-                                        <a class="nav-link dropdown-toggle dark-link" href="#" id="navbarDarkDropdownMenuLink" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                        <a class="nav-link dropdown-toggle text-white" href="#" id="navbarDarkDropdownMenuLink" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                                             <i class="material-icons">person</i> [% user.display_name | html %]
                                         </a>
                                         <ul class="dropdown-menu dropdown-menu-end dropdown-menu-dark" aria-labelledby="navbarDarkDropdownMenuLink">
@@ -88,7 +88,7 @@
     [% END %]
     [% IF logout_url %]
                                             <li><form class="px-3 py-2" method="post" action="[% logout_url %]">
-                                                <button class="btn btn-sm btn-outline-light dark-link w-100" name="logout">Sign out</button>
+                                                <button class="btn btn-sm btn-outline-light w-100" name="logout">Sign out</button>
                                             </form></li>
     [% END %]
                                         </ul>
@@ -98,21 +98,21 @@
                                 </div>
                             </div>
 
-                            <div class="w-100" id="submenu_nav">
+                            <div class="w-100 bg-primary" id="submenu_nav">
                                 <div class="navbar-nav d-flex justify-content-between align-items-center container-md px-2">
                                     <ul class="d-flex p-0 m-0">
 [% FOR item IN submenu_items;
     IF item.url %]
                                         <li class="nav-item"><a class="nav-link text-dark" href="[% item.url %]">[% item.text %]</a></li>
     [% ELSE; # TODO setting href="" doesn’t work if page is response to POST request and URL isn’t available via GET %]
-                                        <li class="nav-item active"><a class="nav-link" href="" class="current">[% item.text %]</a></li>
+                                        <li class="nav-item"><a class="nav-link text-dark active" aria-current="page" href="">[% item.text %]</a></li>
     [% END;
 END %]
                                     </ul>
                                     <div>
 [% IF logout_url %]
     [% IF project %]
-                                        <a class="text-dark my-2" href="[% project_urls.project %]">project [% project.name | html%]</a>
+                                        <li class="nav-item"><a class="text-dark nav-link" href="[% project_urls.project %]">project <b>[% project.name | html%]</b></a></li>
     [% ELSE %]
                                         <p class="text-dark my-2">Please create or choose a project now.</p>
     [% END %]
@@ -128,8 +128,8 @@ END %]
         </nav>
     </header>
 
-    <main class="container-md mb-2">
-        <div class="row my-3">
+    <main class="container-md py-3">
+        <div class="row">
             <div class="col-12">
             [% WHILE (message = messages.next) %]
                 <div class="alert alert-[% SWITCH message.type; CASE "debug" %]dark[% CASE "warn" %]warning[% CASE "error" %]danger[% CASE %]success[% END %]" role="alert">
@@ -192,7 +192,6 @@ END %]
                 </div>
 [% END %]
 
-
                 <div class="col-md">
                     <h3><span class="tiny">About [% name | html %]</span></h3>
                     <ul class="list-unstyled small">
@@ -204,42 +203,6 @@ END %]
                     </ul>
 
                 </div>
-            </div>
-
-            <div class="col-md col-sm-6 mb-3 mb-md-0">
-                <h3><span class="tiny">Get Help</span></h3>
-                <ul class="list-unstyled small m-0">
-                    [% IF faq_url %]
-                    <li><a href="[% faq_url %]"><abbr title="Frequently Asked Questions">FAQ</abbr></a></li>
-                    [% END %]
-                    [% FOR help_link IN help_links %]
-                    <li><a href="[% help_link.url %]">[% help_link.title | html %]</a></li>
-                    [% END %]
-                </ul>
-            </div>
-
-            [% IF admin_url %]
-            <div class="col-md col-sm-6 mb-3 mb-md-0">
-                <h3><span class="tiny"><a href="[% admin_url %]">Admin</a></span></h3>
-                <ul class="list-unstyled small m-0">
-                    <li><a href="[% admin_urls.faq %]">FAQ</a></li>
-                    <li><a href="[% admin_urls.organizations %]">Organizations</a></li>
-                    <li><a href="[% admin_urls.projects %]">Projects</a></li>
-                    <li><a href="[% admin_urls.terms %]">Terms</a></li>
-                    <li><a href="[% admin_urls.users %]">Users</a></li>
-                </ul>
-            </div>
-            [% END %]
-
-            <div class="col-md col-sm-6 mb-3 mb-md-0">
-                <h3><span class="tiny">About [% name | html %]</span></h3>
-                <ul class="list-unstyled small m-0">
-                    <li><a href="[% statistics_url %]">Statistics</a></li>
-                    <li><a href="[% about_url %]">[% about_title %]</a></li>
-                    [% IF terms_url %]
-                    <li><a href="[% terms_url %]">Terms</a></li>
-                    [% END %]
-                </ul>
             </div>
 
         </div>
