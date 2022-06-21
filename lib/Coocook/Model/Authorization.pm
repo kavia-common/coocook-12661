@@ -25,6 +25,8 @@ my @rules = (
               view_user_projects
               view_user
               view_organization
+              autocomplete_users
+              autocomplete_organizations
               logout
             >
         ],
