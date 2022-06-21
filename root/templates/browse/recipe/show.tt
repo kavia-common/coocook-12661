@@ -1,11 +1,12 @@
 [% escape_title( 'Recipe', recipe.name ) %]
 
+<div class="content-box">
 [% IF project_url %]
     <p>
         from project <a href="[% project_url %]">[% recipe.project.name | html %]</a>
      [% IF import_url %]
         <form method="get" action="[% import_url %]" class="inline">
-            <input type="submit" value="Import" title="Import this recipe into one of your projects">
+            <input type="submit" value="Import" title="Import this recipe into one of your projects" class="btn btn-primary">
         </form>
     [% END %]
     </p>
@@ -14,27 +15,36 @@
 [% END %]
 
 <form method="get" action="">
-Servings:
-<input type="number" name="servings" min="1" value="[% servings %]">
-<input type="submit" value="Show">
+    <div class="row g-3 align-items-center mb-3">
+        <div class="col-auto">
+            <label for="servings" class="col-form-label">Servings:</label>
+        </div>
+        <div class="col-auto" style="width:100px;">
+            <input type="number" name="servings" id="servings" min="1" value="[% servings %]" class="form-control">
+        </div>
+        <div class="col-auto">
+            <input type="submit" value="Show" class="btn btn-primary">
+        </div>
+    </div>
 </form>
 
-<p>Tags:
-<ul>
+<div>Tags:
+<ul class="list-unstyled d-flex flex-wrap m-0">
 [% FOR tag IN recipe.tags %]
-    <li>&#x1f3f7;[% tag.name | html %]</li>
+    <li><span class="badge rounded-pill bg-secondary">[% tag.name | html %]</span></li>
 [% END %]
 </ul>
-</p>
+</div>
+</div>
 
 [% BLOCK ingredients_table;
     IF ingredients.size %]
-<table>
+<table class="table">
     <thead>
         <tr>
-            <th>Amount</th>
-            <th>Article</th>
-            <th>Comment</th>
+            <th scope="col">Amount</th>
+            <th scope="col">Article</th>
+            <th scope="col">Comment</th>
         </tr>
     </thead>
     <tbody>
@@ -53,15 +63,21 @@ END %]
 [% USE Markdown %]
 
 [% IF recipe.preparation OR prepared_ingredients.size %]
-    <h2>Preparation</h2>
-
+<div class="card my-4">
+    <div class="card-header"><h3 class="my-2">Preparation</h3></div>
+    <div class="card-body">
     [% PROCESS ingredients_table ingredients=prepared_ingredients %]
 
     [% recipe.preparation | markdown %]
+    </div>
+</div>
 [% END %]
 
-<h2>Description</h2>
-
+<div class="card my-4">
+    <div class="card-header"><h3 class="my-2">Description</h3></div>
+    <div class="card-body">
 [% PROCESS ingredients_table ingredients=not_prepared_ingredients %]
 
 [% recipe.description | markdown %]
+    </div>
+</div>
