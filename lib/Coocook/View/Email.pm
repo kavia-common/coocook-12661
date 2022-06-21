@@ -37,7 +37,7 @@ around generate_message => sub {
     my $self = shift;
     my $attr = $_[1];
 
-    # workaround for https://github.com/dboehmer/coocook/issues/139
+    # workaround for https://gitlab.com/coocook/coocook/issues/139
     # be more specific what kind of header we have
     # https://metacpan.org/pod/release/RJBS/Email-MIME-1.949/lib/Email/MIME.pm#header
     $attr->{header_str} = delete $attr->{header};

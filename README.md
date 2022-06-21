@@ -2,7 +2,7 @@
 
 [![build status](https://travis-ci.org/dboehmer/coocook.svg?branch=master)](https://travis-ci.org/dboehmer/coocook)
 [![dishes served](https://coocook.org/badge/dishes_served.svg)](https://coocook.org/statistics)
-[![license](https://img.shields.io/github/license/dboehmer/coocook.svg)](https://github.com/dboehmer/coocook/blob/master/LICENSE)
+[![license](https://img.shields.io/gitlab/v/license/coocook/coocook)](LICENSE)
 
 Web application for collecting recipes and making food plans
 
@@ -23,7 +23,7 @@ Web application for collecting recipes and making food plans
 
 Get source code:
 
-    $ git clone https://github.com/dboehmer/coocook.git
+    $ git clone https://gitlab.com/coocook/coocook.git
     $ cd coocook/
 
 ### Configure database
@@ -114,10 +114,10 @@ Daniel Böhmer <post@daniel-boehmer.de>
 ## Contributors
 
 * [@ChristinaSi](https://github.com/ChristinaSi) Christina Sixtus
-* [@moseschmiedel](https://github.com/moseschmiedel) Mose Schmiedel
+* [@moseschmiedel](https://gitlab.com/moseschmiedel) Mose Schmiedel
 * [@rico-hengst](https://github.com/rico-hengst) Rico Hengst
-* [@kuro610](https://github.com/kuro610) Kurt Roscher
-* [@tjfoerster](https://github.com/tjfoerster) Timon Förster
+* [@kuro610](https://gitlab.com/kuro610) Kurt Roscher
+* [@tjfoerster](https://gitlab.com/tjfoerster) Timon Förster
 
 ## Copyright and License
 

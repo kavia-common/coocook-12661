@@ -30,7 +30,7 @@ sub AUTOLOAD {
 
         my $package = ref $self->_user;
 
-        # fixes https://github.com/dboehmer/coocook/issues/140
+        # fixes https://gitlab.com/coocook/coocook/issues/140
         # resembles Perl default error message
         croak qq(Can't locate object method "$method" via package $package);
 
