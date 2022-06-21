@@ -117,4 +117,29 @@ sub remove_from_purchase_list {
     return 1;
 }
 
+sub for_ingredients_editor {
+    my $self = shift;
+
+    my $unit              = $self->unit;
+    my @convertible_units = $unit->convertible_into->all;
+
+    # transform Result::Unit objects into plain hashes
+    for ( $unit, @convertible_units ) {
+        my $u = $_;
+
+        $_ = { map { $_ => $u->get_column($_) } qw<id short_name long_name> };
+    }
+
+    return {
+            id           => $self->id,
+            prepare      => $self->prepare,
+            position     => $self->position,
+            value        => $self->value,
+            comment      => $self->comment,
+            article      => { name => $self->article->name, comment => $self->article->comment },
+            current_unit => $unit,
+            units        => \@convertible_units,
+        }
+}
+
 1;
