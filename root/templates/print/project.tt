@@ -1,14 +1,14 @@
 [% USE Markdown;
 project.description | markdown %]
 
-<table id="days">
+<table class="table">
 <thead>
     <tr>
-        <th>Day</th>
-        <th>Meal</th>
-        <th>Dishes</th>
+        <th scope="col">Day</th>
+        <th scope="col">Meal</th>
+        <th scope="col">Dishes</th>
 [% FOR column IN extra_columns %]
-        <th>[% column | html %]</th>
+        <th scope="col">[% column | html %]</th>
 [% END %]
     </tr>
 </thead>
@@ -61,15 +61,6 @@ END %]
 
 <style>
 /* TODO move to global CSS or page-specific CSS */
-
-table#days {
-    border-collapse: collapse;
-}
-
-table#days th,
-table#days td {
-    border: solid 1px black;
-}
 
 .comment {
     color: DarkGrey;
