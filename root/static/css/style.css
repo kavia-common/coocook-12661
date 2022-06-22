@@ -233,7 +233,7 @@ ul {
     min-width: 1150px;
 }
 
-input:focus {
+input:focus, textarea:focus {
     box-shadow: none !important;
 }
 

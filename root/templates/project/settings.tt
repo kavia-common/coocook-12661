@@ -2,44 +2,47 @@
 
 <div class="card mb-4">
     <div class="card-header">
-        <h3>Description</h3>
+        <h3 class="my-2">Description</h3>
     </div>
     <div class="card-body">
         <div class="row">
             <form method="post" action="[% update_url %]" class="col">
-            <div class="row mb-2">
-                <div class="col-sm-6 mb-sm-0 mb-2">
+            <div class="row mb-3">
+                <div class="col-sm-6 mb-sm-0 mb-3">
                     <textarea class="form-control with-markdown-preview" name="description" rows="10">[% project.description | html %]</textarea>
                 </div>
             </div>
-            <input type="submit" value="Update description">
+            <input type="submit" value="Update description" class="btn btn-primary">
             </form>
         </div>
     </div>
 </div>
 
 <form action="[% rename_url %]" method="post">
-    <div class="card">
-        <div class="card-header"><h3>Rename project <em>[% project.name | html %]</em></h3></div>
+    <div class="card mb-4">
+        <div class="card-header"><h3 class="my-2">Rename project <em>[% project.name | html %]</em></h3></div>
 
-    <div class="card-body">
-        <p>
-        <input type="text" name="name" value="[% project.name | html %]">
-        <input type="submit" value="Rename project">
-        </p>
-
-        <p>
-            Renaming a project is safe.
-            Links and bookmarks will stay intact.
-            Keep in mind that other users of your project might be confused, though.
-        </p>
-    </div>
+        <div class="card-body">
+            <div class="row g-2 mb-3 align-items-center">
+                <div class="col-auto">
+                    <input type="text" name="name" value="[% project.name | html %]" class="form-control">
+                </div>
+                <div class="col-auto">
+                    <input type="submit" value="Rename project" class="btn btn-primary">
+                </div>
+            </div>
+            <p class="m-0">
+                Renaming a project is safe.
+                Links and bookmarks will stay intact.
+                Keep in mind that other users of your project might be confused, though.
+            </p>
+        </div>
     </div>
 </form>
 
 <form method="post" action="[% visibility_url %]">
-    <div class="card">
-        <div class="card-header"><h3>Visibility</h3></div>
+    <div class="card mb-4">
+        <div class="card-header"><h3 class="my-2">Visibility</h3></div>
 
     <div class="card-body">
         <p>Project is: <strong>[% project.is_public ? 'public' : '🔒private' %]</strong></p>
@@ -47,56 +50,56 @@
 [% IF NOT project.is_public %]
         <input type="hidden" name="public" value="on">
 [% END %]
-        <p>
-        <input type="submit" value="[% project.is_public ? 'Make 🔒private' : 'Make public' %]">
-        </p>
-
+        <input type="submit" value="[% project.is_public ? 'Make 🔒private' : 'Make public' %]" class="btn btn-primary mb-3">
         <p>
             Public projects can be viewed by anyone, even without logging in
             and might be indexed by search engines.
         </p>
-        <p>
+        <p class="m-0">
             Private projects are only visible to users with permissions on this project.
         </p>
     </div>
     </div>
 </form>
 
-<div class="card">
-    <div class="card-header"><h3>Archiving</h3></div>
+<div class="card mb-4">
+    <div class="card-header"><h3 class="my-2">Archiving</h3></div>
 
-<div class="card-body">
-    <p>This project is [% project.archived ? '📁' : '<strong>not</strong>' %] archived.</p>
+    <div class="card-body">
+        <p>This project is [% project.archived ? '📁' : '<strong>not</strong>' %] archived.</p>
 
-    <form method="post" action="[% project.archived ? project_urls.unarchive : project_urls.archive %]">
-        <p>
-        <input type="submit" name="[% project.archived ? 'unarchive' : 'archive' %]" value="[% project.archived ? 'Un-archive' : '📁 Archive' %]">
+        <form method="post" action="[% project.archived ? project_urls.unarchive : project_urls.archive %]">
+            <input type="submit" name="[% project.archived ? 'unarchive' : 'archive' %]" value="[% project.archived ? 'Un-archive' : '📁 Archive' %]" class="btn btn-primary mb-3">
+        </form>
+
+        <p class="m-0">
+            Archived projects are read-only and not displayed on your dashboard
+            but can still be viewed or be a source to import from.
+            You can retract them from the archive (“un-archived”) at any time.
         </p>
-    </form>
-
-    <p>
-        Archived projects are read-only and not displayed on your dashboard
-        but can still be viewed or be a source to import from.
-        You can retract them from the archive (“un-archived”) at any time.
-    </p>
-</div>
+    </div>
 </div>
 
 <form method="post" action="[% delete_url %]" name="delete">
-    <div class="card">
-        <div class="card-header"><h3>Delete project <em>[% project.name | html %]</em></h3></div>
+    <div class="card mb-4">
+        <div class="card-header"><h3 class="my-2">Delete project <em>[% project.name | html %]</em></h3></div>
 
-    <div class="card-body">
-        <p>To confirm enter the name of the project you want to delete.</p>
+        <div class="card-body">
+            <p>To confirm enter the name of the project you want to delete.</p>
 
-        <p>
-        <input type="text" name="confirmation" autocomplete="off">
-        <input type="submit" value="Delete project" style="color:DarkRed; font-weight: bold">
-        </p>
+            <div class="row g-2 mb-3 align-items-center">
+                <div class="col-auto">
+                    <input type="text" name="confirmation" autocomplete="off" class="form-control">
+                </div>
+                <div class="col-auto">
+                    <input type="submit" value="Delete project" class="btn btn-danger">
+                </div>
+            </div>
 
-        <p>
-            All project data (recipes, dishes, purchase lists, etc.) will be permanently deleted.
-            Deleted projects cannot be recovered from the [% name %] database.</p>
-    </div>
+            <p class="m-0">
+                All project data (recipes, dishes, purchase lists, etc.) will be permanently deleted.
+                Deleted projects cannot be recovered from the [% name %] database.
+            </p>
+        </div>
     </div>
 </form>
