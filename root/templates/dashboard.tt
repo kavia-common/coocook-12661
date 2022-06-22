@@ -1,41 +1,50 @@
-<h2>My active projects</h2>
-
-<ul>
-[% FOR proj IN my_projects; # don't overwrite $project! %]
-    <li>[% '🔒' UNLESS proj.is_public %]<a href="[% proj.url %]">[% proj.name | html %]</a></li>
-[% END %]
-</ul>
-
-<p><a href="[% all_my_projects_url %]">All my projects</a></p>
-
 <form method="post" action="[% project_create_url %]">
-<div class="card">
-    <div class="card-header"><h3>Create new project</h3></div>
+<div class="card mb-4">
+    <div class="card-header"><h3 class="my-2">Create new project</h3></div>
 
-<div class="card-body">
-    <input type="text" name="name" placeholder="name">
-
-    <input type="radio" name="is_public" value="on" id="is_public" [% 'checked' UNLESS can_create_private_project %]>
-    <label for="is_public">public</label>
-    
-    <input type="radio" name="is_public" value=""   id="is_private" [% can_create_private_project ? 'checked' : 'disabled' %]>
-    <label for="is_private" [% 'style="color:grey" title="your account may not create private projects"' UNLESS can_create_private_project %]>🔒private</label>
-
-    <input type="submit" value="Create project">
-</div>
+    <div class="card-body">
+        <div class="row g-3 align-items-center">
+            <div class="col-auto">
+                <input type="text" name="name" placeholder="name" class="form-control">
+            </div>
+            <div class="col-auto">
+                <input type="radio" name="is_public" value="on" id="is_public" [% 'checked' UNLESS can_create_private_project %] class="form-check-input">
+                <label for="is_public" class="form-check-label">public</label>
+            </div>
+            <div class="col-auto">
+                <input type="radio" name="is_public" value="" id="is_private" [% can_create_private_project ? 'checked' : 'disabled' %] class="form-check-input">
+                <label for="is_private" [% 'style="color:grey" title="your account may not create private projects"' UNLESS can_create_private_project %] class="form-check-label">🔒private</label>
+            </div>
+            <div class="col-auto">
+                <input type="submit" value="Create project" class="btn btn-primary">
+            </div>
+        </div>
+    </div>
 </div>
 </form>
 
-[% INCLUDE 'includes/recipes_of_the_day.tt' %]
+<div class="content-box">
+    <h2>My active projects</h2>
 
-<h2>Other public projects</h2>
+    <ul class="list-unstyled d-flex flex-wrap gap-3">
+    [% FOR proj IN my_projects; # don't overwrite $project! %]
+        <li><a class="item-box text-white" href="[% proj.url %]">[% '🔒' UNLESS proj.is_public %] [% proj.name | html %]</a></li>
+    [% END %]
+    </ul>
 
-[% IF other_projects.size == 0 %]
-    <p>None yet.</p>
-[% ELSE %]
-<ul>
-[% FOR proj IN other_projects; # don't overwrite $project! %]
-    <li><a href="[% proj.url %]">[% proj.name | html %]</a></li>
-[% END %]
-</ul>
-[% END %]
+    <p><a href="[% all_my_projects_url %]">All my projects</a></p>
+
+    [% INCLUDE 'includes/recipes_of_the_day.tt' %]
+
+    <h2>Other public projects</h2>
+
+    [% IF other_projects.size == 0 %]
+        <p>None yet.</p>
+    [% ELSE %]
+    <ul class="list-unstyled d-flex flex-wrap gap-3">
+    [% FOR proj IN other_projects; # don't overwrite $project! %]
+        <li><a class="item-box text-white" href="[% proj.url %]">[% proj.name | html %]</a></li>
+    [% END %]
+    </ul>
+    [% END %]
+</div>

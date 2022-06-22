@@ -10,7 +10,7 @@
             <div class="d-flex justify-content-between">
                 <div>
                     <input id="store_username" class="form-check-input" type="checkbox" name="store_username" [% 'checked' IF store_username %]>
-                    <label for="store_username">Remember me</label>
+                    <label for="store_username">Remember username for next login</label>
                 </div>
                 <a href="[% recover_url %]">Lost your password?</a>
             </div>
