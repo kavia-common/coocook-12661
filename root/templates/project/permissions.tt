@@ -1,11 +1,11 @@
 [% title = "Permissions" %]
 
-<table>
+<table class="table">
     <thead>
         <tr>
-            <th>User/Organization</th>
-            <th>Role</th>
-            <th colspan="2">Actions</th>
+            <th scope="col">User/Organization</th>
+            <th scope="col">Role</th>
+            <th scope="col">Actions</th>
         </tr>
     </thead>
     <tbody>
@@ -23,30 +23,40 @@
             <td>
     [% IF permission.edit_url %]
                 <form method="post" action="[% permission.edit_url %]" class="inline">
-                    <select name="role">
+                    <div class="row g-2 align-items-center">
+                        <div class="col-auto">
+                        <select name="role" class="form-select">
         [% FOR role IN roles %]
-                        <option value="[% role %]" [% 'selected' IF permission.role == role %]>[% role %]</option>
+                            <option value="[% role %]" [% 'selected' IF permission.role == role %]>[% role %]</option>
         [% END %]
-                    </select>
-                    <input type="submit" value="Save">
+                        </select>
+                        </div>
+                        <div class="col-auto">
+                        <input type="submit" value="Save" class="btn btn-primary">
+                        </div>
+                    </div>
                 </form>
     [% ELSE %]
                 [% permission.role %]
     [% END %]
             </td>
             <td>
+                <div class="row g-2 align-items-center">
     [% IF permission.revoke_url %]
-                <form method="post" action="[% permission.revoke_url %]" class="inline">
-                    <input type="submit" value="Revoke">
-                </form>
+                    <div class="col-auto">
+                        <form method="post" action="[% permission.revoke_url %]" class="inline">
+                            <input type="submit" value="Revoke" class="btn btn-primary">
+                        </form>
+                    </div>
     [% END %]
-            </td>
-            <td>
     [% IF permission.make_owner_url %]
-                <form method="post" action="[% permission.make_owner_url %]" class="inline">
-                    <input type="submit" value="Transfer ownership">
-                </form>
+                    <div class="col-auto">
+                        <form method="post" action="[% permission.make_owner_url %]" class="inline">
+                            <input type="submit" value="Transfer ownership" class="btn btn-primary">
+                        </form>
+                    </div>
     [% END %]
+                </div>
             </td>
         </tr>
 [% END %]   
@@ -54,10 +64,10 @@
 </table>
 
 [% IF add_permission_url %]
-<p>You need another user with role <em>admin</em> to transfer ownership to them.</p>
+<div class="alert alert-warning">You need another user with role <em>admin</em> to transfer ownership to them.</div>
 
 <div class="card">
-    <div class="card-header"><h3>Add permission</h3></div>
+    <div class="card-header"><h3 class="my-2">Add permission</h3></div>
 
 <div class="card-body">
 
@@ -65,21 +75,26 @@
     <p>Select the name of the other user (or organization). That’s the name they use to login and that is distinct on [% name %].</p>
 
     <form method="post" action="[% add_permission_url %]">
-        <select name="id">
+        <div class="row g-2 align-items-center">
+            <div class="col-auto">
+                <select name="id" class="form-select">
 [% FOR other_identity IN other_identities %]
-            <option value="[% other_identity.name %]">[% other_identity.name; other_identity.is_organization ? '👥' : '👤' %]</option>
+                    <option value="[% other_identity.name %]">[% other_identity.name; other_identity.is_organization ? '👥' : '👤' %]</option>
 [% END %]
-        </select>
-
-        as
-
-        <select name="role">
+                </select>
+            </div>
+            <div class="col-auto">as</div>
+            <div class="col-auto">
+                <select name="role" class="form-select">
 [% FOR role IN roles %]
-            <option value="[% role %]">[% role %]</option>
+                    <option value="[% role %]">[% role %]</option>
 [% END %]
-        </select>
-
-        <input type="submit" value="Add">
+                </select>
+            </div>
+            <div class="col-auto">
+                <input type="submit" value="Add" class="btn btn-primary">
+            </div>
+        </div>
     </form>
 [% ELSE %]
     <p>No more users/organizations. You need to let users sign up or create organizations before giving them permission.</p>
