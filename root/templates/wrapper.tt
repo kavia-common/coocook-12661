@@ -129,8 +129,8 @@ END %]
     </header>
 
     <main class="container-md py-3">
-        <div class="row">
-            <div class="col-12">
+        <div class="row my-3">
+            <div id="messages" class="col-12">
             [% WHILE (message = messages.next) %]
                 <div class="alert alert-[% SWITCH message.type; CASE "debug" %]dark[% CASE "warn" %]warning[% CASE "error" %]danger[% CASE %]success[% END %]" role="alert">
                 [% IF message.html;
@@ -143,7 +143,7 @@ END %]
             </div>
             <div class="col-12">
                 <h1 id="print_h1" style="display: none">[% name | html; IF project %]: [% project.name | html; END %]</h1>
-                <h2>
+                <h2 class="display-3">
                 [% IF html_title;
                     html_title; # may contain HTML
                 ELSIF title;
