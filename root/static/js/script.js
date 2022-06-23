@@ -75,3 +75,13 @@ function initTootips() {
 }
 
 initTootips();
+
+function alertMessage(message, typ="success", dismissible=false, targetId="messages") {
+    const alert = document.createElement("div");
+    alert.className = `alert alert-${typ}${dismissible ? " alert-dismissible fade show" : ""}`;
+    alert.ariaRoleDescription = "alert";
+    alert.innerHTML = message;
+    if (dismissible) alert.innerHTML += `<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>`;
+
+    document.getElementById(targetId).append(alert);
+}
