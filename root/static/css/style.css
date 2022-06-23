@@ -21,8 +21,17 @@ textarea {
     padding: .25rem;
 }
 
+/*** 24px + .5rem per button, 1rem td padding, .5rem space ***/
 .btn-icon-1 {
     width: calc(24px + 1.5rem);
+}
+
+.btn-icon-2 {
+    width: calc(48px + 2.5rem);
+}
+
+.btn-icon-3 {
+    width: calc(72px + 3.5rem);
 }
 
 .table colgroup+thead {
