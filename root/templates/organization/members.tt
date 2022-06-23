@@ -1,50 +1,63 @@
-[% escape_title( 'Organization members of', organization.display_name ) %]
+[% escape_title( 'Organization members of', organization.display_name );
+has_admin = 0 %]
 
-<p><a href="[% organization_url %]">Back to organization page</a></p>
+<div class="row my-3">
+    <div class="col">
+        <a class="btn btn-outline-primary" href="[% organization_url %]">Back to organization page</a>
+    </div>
+</div>
 
-<table>
-    <thead>
-        <tr>
-            <th>User</th>
-            <th>Role</th>
-            <th>Actions</th>
-    </thead>
-    <tbody>
-[% FOR g_u IN organizations_users %]
-        <tr>
-            <td>[% link_user(g_u.user, g_u.user_url) %]</td>
-            <td>
-    [% IF g_u.edit_url %]
-                <form method="post" action="[% g_u.edit_url %]" class="inline">
-                    <select name="role">
-        [% FOR role IN roles %]
-                        <option value="[% role %]" [% 'selected' IF g_u.role == role %]>[% role %]</option>
+<div class="table-responsive my-3">
+    <table class="table align-middle m-0" style="min-width:510px;">
+        <thead>
+            <tr>
+                <th>User</th>
+                <th>Role</th>
+                <th class="btn-icon-2">Actions</th>
+        </thead>
+        <tbody>
+        [% FOR g_u IN organizations_users %]
+            <tr>
+                <td>[% link_user(g_u.user, g_u.user_url) %]</td>
+                <td>
+                [% IF g_u.edit_url %]
+                    <form class="input-group" method="post" action="[% g_u.edit_url %]" style="width:150px">
+                        <select class="form-control form-control-sm" name="role">
+                        [% FOR role IN roles %]
+                            <option value="[% role %]" [% 'selected' IF g_u.role == role %]>[% role %]</option>
+                        [% END %]
+                        </select>
+                        <button class="btn btn-outline-secondary btn-sm material-icons" type="submit" title="Update role">done</button>
+                    </form>
+                [% ELSE %]
+                    <span class="px-2">[% g_u.role %]</span>
+                [% END %]
+                </td>
+                <td>
+                    <div class="d-flex justify-content-end">
+                    [% IF g_u.transfer_ownership_url;
+                        has_admin = 1 %]
+                        <form class="inline" name="transfer-ownership" method="post" action="[% g_u.transfer_ownership_url %]">
+                            <button class="btn btn-outline-secondary btn-sm btn-quad material-icons" type="submit" title="Transfer ownership">sync_alt</button>
+                        </form>
+                    [% END %]
+                    [% IF g_u.remove_url %]
+                        <form class="ms-2" method="post" action="[% g_u.remove_url %]">
+                            <button class="btn btn-outline-danger btn-sm btn-quad material-icons" type="submit" title="Remove">delete_forever</button>
+                        </form>
+                    [% END %]
+                    </div>
+                </td>
+            </tr>
         [% END %]
-                    </select>
-                    <input type="submit" value="Save">
-                </form>
-    [% ELSE %]
-                [% g_u.role %]
-    [% END %]
-            </td>
-            <td>
-                [% IF g_u.remove_url %]
-                    <form class="inline" method="post" action="[% g_u.remove_url %]">
-                        <input type="submit" value="Remove">
-                    </form>
-                [% END %]
-                [% IF g_u.transfer_ownership_url %]
-                    <form class="inline" name="transfer-ownership" method="post" action="[% g_u.transfer_ownership_url %]">
-                        <input type="submit" value="Transfer ownership">
-                    </form>
-                [% END %]
-            </td>
-        </tr>
-[% END %]
-    </tbody>
-</table>
+        </tbody>
+    </table>
+</div>
 
-<p>You need another member with role <em>admin</em> to transfer ownership to them.</p>
+[% IF has_admin == 0 %]
+    <p class="mb-5">You need another member with role <em>admin</em> to transfer ownership to them.</p>
+[% END %]
+
 
 <div class="card my-3">
     <div class="card-header">

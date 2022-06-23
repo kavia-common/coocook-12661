@@ -46,7 +46,7 @@ MACRO link_organization(organization, url) BLOCK;
 
 MACRO link_user(user, url) BLOCK;
     THROW "no URL" UNLESS url ~%]
-    👤 [% user.name %] <a href="[% url %]">[% user.display_name | html %]</a>
+    👤 <a href="[% url %]" title="Show user profile">[% user.display_name | html %]</a> (<span class="username">[% user.name %]</span>)
 [%~ END;
 
 MACRO numerus(number, singular, plural, opts) BLOCK; # apply correct grammatical number
