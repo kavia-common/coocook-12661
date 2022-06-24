@@ -30,8 +30,8 @@ html_title = html_title _ ' for ' _ display_date(list.date, {html=>1});
 					<th>Comment</th>
 				</tr>
 			</thead>
-			<tbody>
 			[% FOREACH item IN section.items %]
+			<tbody>
 				<tr>
 					[% rowspan = item.ingredients.size;
 					IF item.offset;
@@ -50,10 +50,10 @@ html_title = html_title _ ' for ' _ display_date(list.date, {html=>1});
 								<input id="total" class="form-control" type="number" min="0" step="any" name="total" list="values-[% loop.count %]" value="[% item.value + item.offset %]">
 								<span class="input-group-text">[% display_unit( item.unit, {html=>1} ) %]</span>
 							</div>
-							<button class="btn btn-outline-primary ms-1 material-icons" type="submit" title="Update amount">sync</button>
+							<button class="btn btn-outline-primary ms-1 material-icons" type="submit" title="Update amount">done</button>
 						</form>
-						[% IF item.convert_url %]
-						<form id="units-[% loop.count %]" class="d-flex flex-wrap border rounded my-1 w-100" name="convert" method="post" action="[% item.convert_url %]">
+						[% IF item.convert_url && item.convertible_into.size %]
+						<form id="units-[% loop.count %]" class="d-flex flex-wrap justify-content-end border rounded my-1 w-100" name="convert" method="post" action="[% item.convert_url %]" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Click on one of the units, to convert the displayed value to this unit">
 							[% FOREACH unit IN item.convertible_into %]
 							<button class="btn btn-outline-secondary btn-sm m-1" type="submit" name="unit" value="[% unit.id %]">[% unit.short_name | html %]</button>
 							[% END %]
@@ -91,10 +91,9 @@ html_title = html_title _ ' for ' _ display_date(list.date, {html=>1});
 					</td>
 					<td></td>
 				</tr>
-					[% END;
-					
-			END %]
+					[% END %]
 			</tbody>
+			[% END %]
 		</table>
 		
 	</div>
