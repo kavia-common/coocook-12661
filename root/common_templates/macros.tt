@@ -41,7 +41,7 @@ END;
 MACRO link_organization(organization, url) BLOCK;
     THROW "no URL" UNLESS url;
     # the font we use has no glyph for groups as of December 2020 ~%]
-    <i class="material-icons">group</i> [% organization.name %] <a href="[% url %]">[% organization.display_name | html %]</a>
+    🌐 <a href="[% url %]" title="Show organiztion">[% organization.display_name | html %]</a> (<span class="organization">[% organization.name %]</span>)
 [%~ END;
 
 MACRO link_user(user, url) BLOCK;
