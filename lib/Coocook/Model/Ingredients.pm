@@ -97,12 +97,14 @@ sub for_ingredients_editor {
     my @ingredients = map {
         my $unit              = $_->{unit};
         my @convertible_units = $unit->convertible_into->all;
+        my @units;
 
         # transform Result::Unit objects into plain hashes
-        for ( $unit, @convertible_units ) {
+        $unit = { map { $_ => $unit->get_column($_) } qw<id short_name long_name> };
+        for (@convertible_units) {
             my $u = $_;
 
-            $_ = { map { $_ => $u->get_column($_) } qw<id short_name long_name> };
+            push @units, { map { $_ => $u->get_column($_) } qw<id short_name long_name> };
         }
 
         {
@@ -113,7 +115,7 @@ sub for_ingredients_editor {
             comment      => $_->{comment},
             article      => { name => $_->{article}->name, comment => $_->{article}->comment },
             current_unit => $unit,
-            units        => \@convertible_units,
+            units        => \@units,
         }
     } @$ingredients;
 

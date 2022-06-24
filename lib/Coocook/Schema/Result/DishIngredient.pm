@@ -131,15 +131,15 @@ sub for_ingredients_editor {
     }
 
     return {
-            id           => $self->id,
-            prepare      => $self->prepare,
-            position     => $self->position,
-            value        => $self->value,
-            comment      => $self->comment,
-            article      => { name => $self->article->name, comment => $self->article->comment },
-            current_unit => $unit,
-            units        => \@convertible_units,
-        }
+        id           => $self->id,
+        prepare      => $self->prepare,
+        position     => $self->position,
+        value        => $self->value,
+        comment      => $self->comment,
+        article      => { name => $self->article->name, comment => $self->article->comment },
+        current_unit => $unit,
+        units        => \@convertible_units,
+    };
 }
 
 1;
