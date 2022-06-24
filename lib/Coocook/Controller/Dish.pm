@@ -234,7 +234,7 @@ sub reposition : POST Chained('/project/base') PathPart('dish_ingredient/reposit
     $c->detach( redirect => [ $ingredient->dish_id, '#ingredients' ] );
 }
 
-sub getAllIngredientsAjax : GET PathPart('ingredients') HEAD Does('~Ajax') Chained('base') {
+sub getAllIngredientsAjax : GET PathPart('ingredients') HEAD Does('~Ajax') Chained('base') RequiresCapability('view_project') {
     my ( $self, $c ) = @_;
 
     my $ingredients = $c->model('Ingredients')->new(
