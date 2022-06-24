@@ -37,7 +37,7 @@ has_admin = 0 %]
                     <div class="d-flex justify-content-end">
                     [% IF g_u.transfer_ownership_url;
                         has_admin = 1 %]
-                        <form class="inline" name="transfer-ownership" method="post" action="[% g_u.transfer_ownership_url %]">
+                        <form name="transfer-ownership" method="post" action="[% g_u.transfer_ownership_url %]">
                             <button class="btn btn-outline-secondary btn-sm btn-quad material-icons" type="submit" title="Transfer ownership">sync_alt</button>
                         </form>
                     [% END %]
@@ -55,7 +55,7 @@ has_admin = 0 %]
 </div>
 
 [% IF has_admin == 0 %]
-    <p class="mb-5">You need another member with role <em>admin</em> to transfer ownership to them.</p>
+    <div class="alert alert-warning mb-5">You need another member with role <em>admin</em> to transfer ownership to them.</div>
 [% END %]
 
 
