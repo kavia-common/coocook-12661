@@ -66,38 +66,43 @@
 [% IF add_permission_url %]
 <div class="alert alert-warning">You need another user with role <em>admin</em> to transfer ownership to them.</div>
 
-<div class="card">
-    <div class="card-header"><h3 class="my-2">Add permission</h3></div>
-
-<div class="card-body">
-
-[% IF other_identities %]
-    <p>Select the name of the other user (or organization). That’s the name they use to login and that is distinct on [% name %].</p>
-
-    <form method="post" action="[% add_permission_url %]">
-        <div class="row g-2 align-items-center">
-            <div class="col-auto">
-                <select name="id" class="form-select">
-[% FOR other_identity IN other_identities %]
-                    <option value="[% other_identity.name %]">[% other_identity.name; other_identity.is_organization ? '👥' : '👤' %]</option>
-[% END %]
-                </select>
+<div class="card my-3">
+    <div class="card-header">
+        <h3>Add permission</h3>
+    </div>
+    <div class="card-body">
+    [% IF other_identities %]
+        <div id="add-perm-msg"></div>
+        <form method="post" action="[% add_permission_url %]" id="add-member">
+            <div class="mb-2">
+                <label for="user" class="form-label">User/Organization</label>
+                <cc-autocomplete id="user" endpoint='{"url": "/autocomplete/organizations_users"}' render="renderUserOrgOption" filter="filterUserOrg" input-name="id" msg-func="alertMessage" invalid='["Please select an user or organization", "danger", false, "add-perm-msg"]'></cc-autocomplete>
             </div>
-            <div class="col-auto">as</div>
-            <div class="col-auto">
-                <select name="role" class="form-select">
-[% FOR role IN roles %]
+            <div class="mb-2">
+                <label for="role" class="form-label">Role</label>
+                <select id="role" class="form-control" name="role">
+                [% FOR role IN roles %]
                     <option value="[% role %]">[% role %]</option>
-[% END %]
+                [% END %]
                 </select>
             </div>
-            <div class="col-auto">
-                <input type="submit" value="Add" class="btn btn-primary">
+            <div class="d-flex justify-content-end">
+                <input class="btn btn-primary" type="submit" value="Add">
             </div>
-        </div>
-    </form>
-[% ELSE %]
-    <p>No more users/organizations. You need to let users sign up or create organizations before giving them permission.</p>
-[% END %]
+        </form>
+    [% ELSE %]
+        <p>No more users/organizations. You need to let users sign up or create organizations before giving them permission.</p>
+    [% END %]
+    </div>
 </div>
+<script>
+    function renderUserOrgOption(data) {
+        return [`${data.type === "user" ? "👤" : "🌐"} ${data.display_name} (${data.name})`, data.name];
+    }
+    userList = Array.from(document.querySelectorAll(".username"), elem => elem.innerText);
+    orgList = Array.from(document.querySelectorAll(".organization"), elem => elem.innerText);
+    function filterUserOrg(data) {
+        return data.filter(elem => !userList.includes(elem.name)).filter(elem => !orgList.includes(elem.name)).sort((a, b) => a.display_name > b.display_name);
+    }
+</script>
 [% END %]
