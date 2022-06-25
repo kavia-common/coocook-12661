@@ -76,6 +76,7 @@
         </div>
     </div>
 </div>
+</form>
 			
 <script>
 const ingredientsEditorData = {
@@ -86,9 +87,6 @@ const ingredientsEditorData = {
 </script>
 
 <div id="ingredients-editor"></div>
-<script type="module" src="/static/lib/ingredients_editor/index.js"></script>
-
-</form>
 
 [% INCLUDE 'includes/forms/ingredients_add.tt' %]
 

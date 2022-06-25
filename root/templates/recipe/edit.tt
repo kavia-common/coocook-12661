@@ -79,9 +79,16 @@
         </div>
     </div>
 </div>
-
-[% INCLUDE 'includes/forms/ingredients_editor.tt' %]
-
 </form>
+
+<script>
+const ingredientsEditorData = {
+    project_id: [% recipe.project.id %],
+    project_name: "[% recipe.project.name %]",
+    recipe_id: [% recipe.id %],
+};
+</script>
+
+<div id="ingredients-editor"></div>
 
 [% INCLUDE 'includes/forms/ingredients_add.tt' %]
