@@ -14,8 +14,8 @@
             <td>[% section.name | html %]</td>
             <td>[% section.article_count %]</td>
             <td>
-                <div class="d-flex justify-content-end">
-                    <button class="btn btn-outline-primary btn-sm btn-quad update" title="Rename shop section" data-url="[% section.update_url %]" data-name="[% section.name | html %]"  data-bs-toggle="modal" data-bs-target="#updateSection">
+                <div class="d-flex">
+                    <button class="btn btn-outline-dark btn-sm btn-quad update" title="Rename shop section" data-url="[% section.update_url %]" data-name="[% section.name | html %]"  data-bs-toggle="modal" data-bs-target="#updateSection">
                         <i class="material-icons">edit</i>
                     </button>
                     [% IF section.delete_url %]
