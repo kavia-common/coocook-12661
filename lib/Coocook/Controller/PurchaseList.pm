@@ -37,7 +37,7 @@ sub submenu : Chained('/project/base') PathPart('') CaptureArgs(0) {
 
 =cut
 
-sub index : GET HEAD Chained('submenu') PathPart('purchase_lists') Args(0)
+sub index : GET HEAD Chained('submenu') PathPart('purchase_lists') Args(0) Does('~HasJS')
   RequiresCapability('view_project') {
     my ( $self, $c ) = @_;
 
