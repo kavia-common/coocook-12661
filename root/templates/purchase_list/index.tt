@@ -17,7 +17,7 @@
             <td>[% list.item_count %]</td>
             <td>
                 <div class="d-flex justify-content-between">
-                    <button class="btn btn-outline-primary btn-sm btn-quad update" title="Rename purchase list" data-url="[% list.update_url %]" data-name="[% list.name | html %]"  data-bs-toggle="modal" data-bs-target="#updateList">
+                    <button class="btn btn-outline-dark btn-sm btn-quad update" title="Rename purchase list" data-url="[% list.update_url %]" data-name="[% list.name | html %]"  data-bs-toggle="modal" data-bs-target="#updateList">
                         <i class="material-icons">edit</i>
                     </button>
                     <form action="[% list.delete_url %]" method="post">
