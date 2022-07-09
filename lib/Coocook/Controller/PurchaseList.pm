@@ -83,7 +83,7 @@ sub base : Chained('submenu') PathPart('purchase_list') CaptureArgs(1) {
     $c->stash( list  => $lists->find($id) || $c->detach('/error/not_found') );
 }
 
-sub edit : GET HEAD Chained('base') PathPart('') Args(0) RequiresCapability('view_project') {
+sub edit : GET HEAD Chained('base') PathPart('') Args(0) Does('~HasJS') Does('~HasCSS') RequiresCapability('view_project') {
     my ( $self, $c ) = @_;
 
     my $list = $c->model('PurchaseList')->new( list => $c->stash->{list} );
@@ -95,6 +95,8 @@ sub edit : GET HEAD Chained('base') PathPart('') Args(0) RequiresCapability('vie
 
     $c->has_capability('edit_project')
       or return;
+
+    push @{ $c->stash->{css} }, '/css/print.css';
 
     for my $sections ( @{ $c->stash->{sections} } ) {
         for my $item ( @{ $sections->{items} } ) {
