@@ -42,8 +42,8 @@
 	    <div class="row mb-3">
             <div class="col-md">
                 <label for="servings" class="form-label">Servings</label>
-                <input id="servings" class="form-control" type="number" name="servings" value="[% dish.servings %]" readonly>
-	    		<small class="text-muted">For a recalculation see <a href="#section_recalculate_values">form</a> below.</small>
+                <input id="servings" class="form-control" type="number" name="servings" value="[% dish.servings %]" min="1">
+	    		<small class="text-muted">Changing the number here <strong>does not recalculate</strong> the amounts of ingredients. For recalculating see <a href="#section_recalculate_values">the form</a> below.</small>
 	    	</div>
             <div class="col-md mt-3 mt-md-0">
 	    		<label for="prepare_at_meal" class="form-label">Prepare at meal</label>

@@ -51,7 +51,7 @@
             </div>
             <div class="col-md mt-3 mt-md-0">
                 <label for="servings" class="form-label">Servings</label>
-                <input id="servings" class="form-control" type="number" name="servings" value="[% recipe.servings %]">
+                <input id="servings" class="form-control" type="number" name="servings" value="[% recipe.servings %]" min="1">
             </div>
         </div>
         <div class="mb-3">
