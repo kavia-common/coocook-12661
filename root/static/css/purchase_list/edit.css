@@ -1,0 +1,14 @@
+@media print {
+    .shop-section {
+        color: #000 !important;
+        font-weight: bold;
+    }
+
+    .pl-editor {
+        min-width: unset;
+    }
+
+    thead th {
+        font-weight: normal;
+    }
+}

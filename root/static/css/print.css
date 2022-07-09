@@ -1,12 +1,19 @@
-@media print {
+.print {
+    display: none;
+}
 
+@media print {
     /* hide browser navigation elements */
     header, footer {
         display: none;
     }
 
-    main {
-        padding-bottom: 15px;
+    .print {
+        display: unset !important;
+    }
+
+    button, .no-print {
+        display: none !important;
     }
 
     #print_h1 {
@@ -17,16 +24,15 @@
         color: inherit !important;
     }
 
-    main a:hover {
-        text-decoration: underline;
-    }
-
     table {
         border-collapse: collapse;
     }
 
-    table td, table th {
+    td, th, tbody {
         border: 1px solid black;
+    }
+    
+    td, th {
         padding: 0.1em 0.25em;
         vertical-align: top;
     }
