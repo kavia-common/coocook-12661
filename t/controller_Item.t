@@ -69,7 +69,7 @@ subtest "change item total" => sub {
     $t->submit_form_ok(
         {
             form_name   => 'remove-offset',
-            form_number => 11,
+            form_number => 10,
             button      => 'offset',
         },
         "Remove offset"
@@ -87,7 +87,7 @@ subtest "change item total" => sub {
 
     $t->submit_form_ok(
         {
-            form_number => 9,
+            form_number => 8,
         },
         "Remove ingredient"
     );
