@@ -208,7 +208,7 @@ $t->login_fails( 'test2', 's3cr3t' );    # not verified
     cmp_ok $t2 - $t1, '>', 1, "login request took more than 1 second";
 }
 
-$t->follow_link_ok( { text => 'settings Settings' } );
+$t->follow_link_ok( { text => 'Settings' } );
 
 $t->submit_form_ok(
     {
