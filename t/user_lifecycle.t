@@ -158,8 +158,8 @@ subtest "verify email address" => sub {
     # - maybe display a page with a POST button first?
     # - but every website I know does it with a simple GET
 
-    my $sign_in_value = $t->findnodes('/html/body/div[4]/div/div')->[0]->string_value();
-
+    my $sign_in_value =
+      $t->findnodes('/html/body/div/div/div[3]/div[1]/div[1]/h2')->[0]->string_value();
     like $sign_in_value, qr/sign in/i, "got redirected to login page";
 
     $t->input_has_value( username => 'test', "username is prefilled in login form" );
