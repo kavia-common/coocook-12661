@@ -96,8 +96,7 @@ sub auto : Private {
         ],
         js => [
             '/lib/bootstrap/dist/js/bootstrap.bundle' . ( $c->debug ? '.js' : '.min.js' ),
-            '/lib/marked/marked.min.js',
-            '/js/script.js',
+            '/lib/marked/marked.min.js', '/js/script.js',
         ],
     );
 

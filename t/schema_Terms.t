@@ -56,7 +56,7 @@ subtest neighbors => sub {
     is $d->neighbors(-1)->count => 3, "D->neighbors(-1)";
     is $d->neighbors(+1)->count => 1, "D->neighbors(+1)";
 
-    like dies { $c->neighbors( () ) },  qr/defined/, "argument missing";
+    like dies { $c->neighbors( () ) }, qr/defined/, "argument missing";
     like dies { $c->neighbors(undef) }, qr/defined/, "undef";
     like dies { $c->neighbors(0) },     qr/zero/,    "0";
 };
