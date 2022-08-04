@@ -85,6 +85,9 @@ sub index : GET HEAD Chained('/project/submenu') PathPart('permissions') Args(0)
         roles       => [ grep { $_ ne 'owner' } $c->model('Authorization')->project_roles ],
         template    => 'project/permissions.tt',
     );
+
+    push @{ $c->stash->{js} }, '/js/autocomplete.js';
+
 }
 
 sub add : POST Chained('/project/base') PathPart('permissions/add') Args(0) CustomAuthz {

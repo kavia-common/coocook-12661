@@ -5,6 +5,7 @@ use Test2::V0 qw(:DEFAULT !meta);
 use Carp;
 use Email::Sender::Simple;
 use HTML::Meta::Robots;
+use JSON::MaybeXS;
 use Regexp::Common 'URI';
 use Scope::Guard qw< guard >;
 use TestDB;
@@ -471,6 +472,17 @@ sub input_has_value {
 
     is( $inputs[0]->value => $value, $name || "Input with name '$input' has value '$value'" )
       or note $self->content;
+}
+
+sub json_is {
+    my ( $self, $expected, $name ) = @_;
+
+    local $Test::Builder::Level = $Test::Builder::Level + 1;
+
+    $name ||= "JSON in response content";
+
+    my $json = decode_json $self->content;
+    is $json => $expected, $name;
 }
 
 sub redirect_is {

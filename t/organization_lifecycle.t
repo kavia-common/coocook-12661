@@ -38,7 +38,8 @@ $t->text_contains("Organization $display_name");
 
 $t->follow_link_ok( { text => 'Manage memberships' } );
 
-$t->submit_form_ok( { with_fields => { name => 'other', role => 'member' } } );
+$t->submit_form_ok(
+    { form_id => 'add-member', with_fields => { name => 'other', role => 'member' } } );
 
 $t->text_lacks('Transfer ownership');
 $t->submit_form_ok( { with_fields => { role => 'admin' } } );
