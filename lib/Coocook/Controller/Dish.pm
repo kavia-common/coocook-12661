@@ -238,6 +238,25 @@ sub getAllIngredientsAjax : GET PathPart('ingredients') HEAD Does('~Ajax') Chain
   RequiresCapability('view_project') {
     my ( $self, $c ) = @_;
 
+    # my $ingredients_rs = $c->stash->{dish}->ingredients;
+
+    # my $sorted_normal_ingredients =
+    #   $ingredients_rs->search( { prepare => 0 }, { order_by => $ingredients_rs->me('position') } );
+    # my $sorted_prepare_ingredients =
+    #   $ingredients_rs->search( { prepare => 1 }, { order_by => $ingredients_rs->me('position') } );
+
+    # for ( $sorted_normal_ingredients, $sorted_prepare_ingredients ) {
+    #     my $pos = 1;
+    #     while ( my $ingredient = $_->next ) {
+    #         warn 'NORMALIZE: ' . $ingredient->id . ': pos => ' . $pos;
+    #         $ingredient->update(
+    #             {
+    #                 position => $pos++
+    #             }
+    #         );
+    #     }
+    # }
+
     my $ingredients = $c->model('Ingredients')->new(
         project     => $c->project,
         ingredients => $c->stash->{dish}->ingredients,
@@ -270,6 +289,28 @@ sub updateAjax : POST PathPart('ingredients/update') Does('~Ajax') Chained('base
     $c->stash->{json_data} = { id => $ingrDB->id };
 }
 
+sub prependAjax : POST PathPart('ingredients/prepend') Does('~Ajax') Chained('base')
+  RequiresCapability('edit_project') {
+    my ( $self, $c ) = @_;
+
+    my $dish = $c->stash->{dish};
+
+    my $json          = $c->req->body_data;
+    my $ingredient_id = $json->{ingredientId};
+    my $prepare       = $json->{prepare};
+
+    my $ingredient = $dish->search_related('ingredients')->find($ingredient_id);
+    $ingredient->set_column( prepare => $prepare );
+    $ingredient->move_first();
+
+    my $ingredients = $c->model('Ingredients')->new(
+        project     => $c->project,
+        ingredients => $c->stash->{dish}->ingredients,
+    );
+
+    $c->stash->{json_data} = { success => 1, ingredients => $ingredients->for_ingredients_editor };
+}
+
 sub moveAjax : POST PathPart('ingredients/move') Does('~Ajax') Chained('base')
   RequiresCapability('edit_project') {
     my ( $self, $c ) = @_;
@@ -283,53 +324,7 @@ sub moveAjax : POST PathPart('ingredients/move') Does('~Ajax') Chained('base')
     my $source_db = $dish->search_related('ingredients')->find($source_id);
     my $target_db = $dish->search_related('ingredients')->find($target_id);
 
-    my $increase_position_after_target = 0;
-
-    my %new_source = (
-        position => $source_db->position,
-        prepare  => $source_db->prepare,
-    );
-
-    my $new_target_position = $target_db->position;
-
-    if ( $source_db->prepare == $target_db->prepare ) {
-        $new_source{position} = $target_db->position;
-        $new_target_position = $source_db->position;
-    }
-    else {
-        $new_source{prepare}            = $target_db->prepare;
-        $new_source{position}           = $target_db->position;
-        $new_target_position            = $target_db->position + 1;
-        $increase_position_after_target = 1;
-    }
-
-    $dish->txn_do(
-        sub {
-            $source_db->update(
-                {
-                    prepare  => $new_source{prepare},
-                    position => $new_source{position},
-                }
-            );
-            if ($increase_position_after_target) {
-                $dish->search_related('ingredients')->search_rs(
-                    {
-                        prepare  => $target_db->prepare,
-                        position => { '>' => $target_db->position }
-                    }
-                )->update(
-                    {
-                        position => \"position + 1"
-                    }
-                );
-            }
-            $target_db->update(
-                {
-                    position => $new_target_position,
-                }
-            );
-        }
-    );
+    $source_db->move_to_group( { prepare => $target_db->prepare }, $target_db->position );
     $c->stash->{json_data} = { success => 1 };
 }
 

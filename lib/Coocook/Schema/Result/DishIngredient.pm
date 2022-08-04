@@ -24,6 +24,7 @@ __PACKAGE__->add_columns(
 __PACKAGE__->set_primary_key('id');
 
 __PACKAGE__->position_column('position');
+__PACKAGE__->grouping_column('prepare');
 
 __PACKAGE__->grouping_column('dish_id');
 
