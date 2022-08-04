@@ -375,7 +375,7 @@ sub change_display_name_ok {
     local $Test::Builder::Level = $Test::Builder::Level + 1;
 
     subtest $name || "change display name", sub {
-        $self->follow_link_ok( { text => 'settings Settings' } );
+        $self->follow_link_ok( { text => 'Settings' } );
 
         $self->submit_form_ok(
             {
@@ -394,14 +394,14 @@ sub request_recovery_link_ok {
     local $Test::Builder::Level = $Test::Builder::Level + 1;
 
     subtest $name || "request recovery link for $email", sub {
-        my $logged_in = ( $self->text =~ m/settings Settings/ );
+        my $logged_in = ( $self->text =~ m/Settings/ );
 
         if ($logged_in) {
-            $self->follow_link_ok( { text => 'settings Settings' } );
+            $self->follow_link_ok( { text => 'Settings' } );
             $self->follow_link_ok( { text => 'request a recovery link' } );
         }
         else {
-            $self->follow_link_ok( { text => 'person Sign in' } );
+            $self->follow_link_ok( { text => 'Sign in' } );
             $self->follow_link_ok( { text => 'Lost your password?' } );
         }
 

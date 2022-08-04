@@ -167,7 +167,7 @@ subtest "timestamps are stored in UTC" => sub {
     ok $user->update( { map { $_ => undef } qw< token_created token_expires > } ),
       "set columns NULL to avoid false positives";
 
-    $t->follow_link_ok( { text        => 'settings Settings' } );
+    $t->follow_link_ok( { text        => 'Settings' } );
     $t->submit_form_ok( { with_fields => { new_email => 'x@example.com' } } );
     $user->discard_changes();
     like( $user->get_column($_) => $utc_regex, "column '$_' is in UTC" )

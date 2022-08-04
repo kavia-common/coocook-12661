@@ -21,7 +21,7 @@ my $year = DateTime->today->year;
 $t->get_ok('/');
 $t->login_ok( 'john_doe', 'P@ssw0rd' );
 
-$t->follow_link_ok( { text => 'settings Settings' } );
+$t->follow_link_ok( { text => 'Settings' } );
 $t->submit_form_fails( { with_fields => { new_email => 'invalid' } },
     "post invalid email address" );
 my $content_invalid_email = $t->content;
@@ -115,7 +115,7 @@ $t->text_lacks($johns_cancelled_email);
 cols_are_null();
 is $john_doe->email_fc => $johns_old_email, "email address wasn't changed";
 
-$t->follow_link_ok( { text        => 'settings Settings' } );
+$t->follow_link_ok( { text        => 'Settings' } );
 $t->submit_form_ok( { with_fields => { new_email => $johns_new_email } } );
 
 $t->email_count_is(2);
