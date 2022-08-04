@@ -25,6 +25,11 @@ class Autocomplete extends HTMLElement {
         const self = this;
         this.setupEndpoint();
 
+        // delete all elements with class 'delete-by-autocomplete-js'
+        for (const node of document.getElementsByClassName('delete-by-autocomplete-js')) {
+            node.remove();
+        }
+
         // Create a shadow root
         const shadow = this.attachShadow({mode: "open"});
         
