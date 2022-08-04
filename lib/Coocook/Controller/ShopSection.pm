@@ -23,8 +23,8 @@ Catalyst Controller.
 
 =cut
 
-sub index : GET HEAD Chained('/purchase_list/submenu') PathPart('shop_sections') Args(0) Does('~HasJS')
-  RequiresCapability('view_project') {
+sub index : GET HEAD Chained('/purchase_list/submenu') PathPart('shop_sections') Args(0)
+  Does('~HasJS') RequiresCapability('view_project') {
     my ( $self, $c ) = @_;
 
     my @shop_sections = $c->project->shop_sections->with_article_count->sorted->hri->all;
