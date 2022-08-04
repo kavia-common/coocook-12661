@@ -131,11 +131,11 @@ my $project = $t->schema->resultset('Project')->create(
 my $id = $project->id;
 
 message_contains('archived');
-$t->content_lacks('Un-archive this project');
+$t->content_lacks('unarchive this project');
 
 $t->login_ok( john_doe => 'P@ssw0rd' );
 message_contains('archived');
-$t->content_contains('Un-archive this project');
+$t->content_contains('unarchive this project');
 $t->logout_ok();
 
 $project->update( { archived => undef } );
