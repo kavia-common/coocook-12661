@@ -118,10 +118,10 @@ subtest fk_checks_off_do => sub {
     ok $db->sqlite_pragma('foreign_keys'), "PRAGMA foreign_keys is enabled after fk_checks_off_do()";
 
     ok $db->sqlite_pragma( foreign_keys => 0 ), "disable PRAGMA foreign_keys";
-    ok !$db->sqlite_pragma('foreign_keys'),     "... PRAGMA foreign_keys is disabled";
+    ok !$db->sqlite_pragma('foreign_keys'), "... PRAGMA foreign_keys is disabled";
 
     ok $db->sqlite_pragma( foreign_keys => 1 ), "enable PRAGMA foreign_keys";
-    ok $db->sqlite_pragma('foreign_keys'),      "... PRAGMA foreign_keys is enabled";
+    ok $db->sqlite_pragma('foreign_keys'), "... PRAGMA foreign_keys is enabled";
 
     $db->fk_checks_off_do( sub { is join( '', @_ ) => 'abc', "fk_checks_off_do() passes args" },
         'a' .. 'c' );
@@ -163,6 +163,6 @@ subtest assert_no_sth => sub {
     my $projects = $db->resultset('Project');
 
     ok lives { $projects->assert_no_sth }, "Passes before next()";
-    ok $projects->next,                    "Call next()";
+    ok $projects->next, "Call next()";
     like dies { $projects->assert_no_sth }, qr/Statement/, "Fails after next()";
 };
