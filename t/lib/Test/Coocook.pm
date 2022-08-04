@@ -8,6 +8,7 @@ use HTML::Meta::Robots;
 use Regexp::Common 'URI';
 use Scope::Guard qw< guard >;
 use TestDB;
+use WWW::Mechanize::TreeBuilder;
 
 BEGIN {
     # don't actually send any emails
@@ -56,6 +57,8 @@ sub new {
 
     $config
       and $self->reload_config($config);
+
+    WWW::Mechanize::TreeBuilder->meta->apply( $self, tree_class => 'HTML::TreeBuilder::XPath' );
 
     return $self;
 }
