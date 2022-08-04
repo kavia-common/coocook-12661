@@ -92,6 +92,8 @@ on 'test' => sub {
   requires "Test::More" => "0";
   requires "Test::Output" => "0";
   requires "Test::WWW::Mechanize::Catalyst" => "0";
+  requires "WWW::Mechanize::TreeBuilder" => "0";
+  requires "HTML::TreeBuilder::XPath" => "0";
   requires "Time::HiRes" => "0";
 };
 
