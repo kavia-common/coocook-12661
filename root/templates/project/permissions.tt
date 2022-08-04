@@ -46,7 +46,7 @@ has_admin = 0 %]
     [% IF permission.revoke_url %]
                     <div class="col-auto">
                         <form method="post" action="[% permission.revoke_url %]" class="inline">
-                            <input type="submit" value="Revoke" class="btn btn-primary">
+                            <button type="submit" title="Revoke" class="btn btn-outline-danger btn-sm btn-quad material-icons">delete_forever</button>
                         </form>
                     </div>
     [% END %]
