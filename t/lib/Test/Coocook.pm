@@ -312,7 +312,7 @@ sub login {
 
     local $Test::Builder::Level = $Test::Builder::Level + 1;
 
-    $self->follow_link_ok( { text => 'person Sign in' } );
+    $self->follow_link_ok( { text => 'Sign in' } );
 
     $self->submit_form_ok(
         {
