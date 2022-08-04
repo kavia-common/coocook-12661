@@ -158,7 +158,9 @@ subtest "verify email address" => sub {
     # - maybe display a page with a POST button first?
     # - but every website I know does it with a simple GET
 
-    $t->title_like( qr/sign in/i, "got redirected to login page" );
+    my $sign_in_value = $t->findnodes('/html/body/div[4]/div/div')->[0]->string_value();
+
+    like $sign_in_value, qr/sign in/i, "got redirected to login page";
 
     $t->input_has_value( username => 'test', "username is prefilled in login form" );
 };
@@ -190,7 +192,7 @@ $t->email_like(qr{ /admin/user/test2 }x);
 $t->shift_emails();
 
 for my $user2 ( $schema->resultset('User')->find( { name => 'test2' } ) ) {
-    ok !$user2->has_any_role('site_owner'),      "2nd user created hasn't 'site_owner' role";
+    ok !$user2->has_any_role('site_owner'), "2nd user created hasn't 'site_owner' role";
     ok $user2->has_any_role('private_projects'), "2nd user created has 'private_projects' role";
 }
 
