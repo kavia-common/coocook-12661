@@ -122,9 +122,11 @@ sub for_ingredients_editor {
     my $self = shift;
 
     my $unit              = $self->unit;
-    my @convertible_units = $self->article->units->search({
+    my @convertible_units = $self->article->units->search(
+        {
             id => { '!=' => $unit->id },
-        })->all;
+        }
+    )->all;
 
     # transform Result::Unit objects into plain hashes
     for ( $unit, @convertible_units ) {

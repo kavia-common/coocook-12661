@@ -96,9 +96,11 @@ sub for_ingredients_editor {
 
     my @ingredients = map {
         my $unit              = $_->{unit};
-        my @convertible_units = $_->{article}->units->search({
+        my @convertible_units = $_->{article}->units->search(
+            {
                 id => { '!=' => $unit->id },
-            })->all;
+            }
+        )->all;
         my @units;
 
         # transform Result::Unit objects into plain hashes

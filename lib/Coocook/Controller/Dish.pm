@@ -257,9 +257,9 @@ sub updateAjax : POST PathPart('ingredients/update') Does('~Ajax') Chained('base
     my $ingrDB = $dish->search_related('ingredients')->find( $ingredient->{id} );
     $ingrDB->update(
         {
-            value    => $ingredient->{value},
-            unit_id  => $ingredient->{current_unit}->{id},
-            comment  => $ingredient->{comment},
+            value   => $ingredient->{value},
+            unit_id => $ingredient->{current_unit}->{id},
+            comment => $ingredient->{comment},
         }
     );
 
@@ -315,11 +315,13 @@ sub moveAjax : POST PathPart('ingredients/move') Does('~Ajax') Chained('base')
     my $target_db = $dish->search_related('ingredients')->find($target_id);
 
     my $new_position;
-    if ($direction == 'upwards') {
+    if ( $direction == 'upwards' ) {
         $new_position = $target_db->position;
-    } elsif ($direction == 'downwards') {
-        $new_position = $target_db->position+1;
-    } else {
+    }
+    elsif ( $direction == 'downwards' ) {
+        $new_position = $target_db->position + 1;
+    }
+    else {
         die "Invalid move direction `$direction`";
     }
 
