@@ -4,6 +4,10 @@ const modalFormEl = document.getElementById('modalForm');
 const modalBodyEl = document.getElementById('modalBody');
 const modalConfirmEl = document.getElementById('modalConfirmElement');
 
+for (const node of document.getElementsByClassName('delete-by-project-edit-js')) {
+    node.remove();
+}
+
 const editMeal = (updateMealURL, nameValue, commentValue) => {
     const bodyHTML = `
     <div class="d-flex flex-column gap-2">

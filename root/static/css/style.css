@@ -361,6 +361,10 @@ cc-autocomplete {
     --list-hover-col: var(--list-col);
 }
 
+.delete-by-project-edit-js {
+    display: none;
+}
+
 /******** footer part ********/
 main {
     margin-bottom: 12em !important; /*space overlapped by footer*/
