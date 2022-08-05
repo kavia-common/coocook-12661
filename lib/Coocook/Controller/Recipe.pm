@@ -300,6 +300,114 @@ sub check_value : Private {
     my ( $self, $c, ) = @_;
 }
 
+sub getAllIngredientsAjax : GET PathPart('ingredients') HEAD Does('~Ajax') Chained('base')
+  RequiresCapability('view_project') {
+    my ( $self, $c ) = @_;
+
+    my $ingredients = $c->model('Ingredients')->new(
+        project     => $c->project,
+        ingredients => $c->stash->{recipe}->ingredients,
+    );
+
+    $c->stash->{json_data} = $ingredients->for_ingredients_editor;
+}
+
+sub updateAjax : POST PathPart('ingredients/update') Does('~Ajax') Chained('base')
+  RequiresCapability('edit_project') {
+    my ( $self, $c ) = @_;
+    my $json       = $c->req->body_data;
+    my $ingredient = $json->{ingredient};
+
+    my $recipe = $c->stash->{recipe};
+
+    my $ingrDB = $recipe->search_related('ingredients')->find( $ingredient->{id} );
+    $ingrDB->update(
+        {
+            value   => $ingredient->{value},
+            unit_id => $ingredient->{current_unit}->{id},
+            comment => $ingredient->{comment},
+        }
+    );
+
+    $c->stash->{json_data} = { id => $ingrDB->id };
+}
+
+sub prependAjax : POST PathPart('ingredients/prepend') Does('~Ajax') Chained('base')
+  RequiresCapability('edit_project') {
+    my ( $self, $c ) = @_;
+
+    my $recipe = $c->stash->{recipe};
+
+    my $json          = $c->req->body_data;
+    my $ingredient_id = $json->{ingredientId};
+    my $prepare       = $json->{prepare};
+
+    my $ingredient = $recipe->search_related('ingredients')->find($ingredient_id);
+    $ingredient->set_column( prepare => $prepare );
+    $ingredient->move_first();
+
+    $c->stash->{json_data} = { success => 1 };
+}
+
+sub appendAjax : POST PathPart('ingredients/append') Does('~Ajax') Chained('base')
+  RequiresCapability('edit_project') {
+    my ( $self, $c ) = @_;
+
+    my $recipe = $c->stash->{recipe};
+
+    my $json          = $c->req->body_data;
+    my $ingredient_id = $json->{ingredientId};
+    my $prepare       = $json->{prepare};
+
+    my $ingredient = $recipe->search_related('ingredients')->find($ingredient_id);
+    $ingredient->set_column( prepare => $prepare );
+    $ingredient->move_last();
+
+    $c->stash->{json_data} = { success => 1 };
+}
+
+sub moveAjax : POST PathPart('ingredients/move') Does('~Ajax') Chained('base')
+  RequiresCapability('edit_project') {
+    my ( $self, $c ) = @_;
+
+    my $recipe = $c->stash->{recipe};
+
+    my $json      = $c->req->body_data;
+    my $source_id = $json->{sourceId};
+    my $target_id = $json->{targetId};
+    my $direction = $json->{direction};
+
+    my $source_db = $recipe->search_related('ingredients')->find($source_id);
+    my $target_db = $recipe->search_related('ingredients')->find($target_id);
+
+    my $new_position;
+    if ( $direction == 'upwards' ) {
+        $new_position = $target_db->position;
+    }
+    elsif ( $direction == 'downwards' ) {
+        $new_position = $target_db->position + 1;
+    }
+    else {
+        die "Invalid move direction `$direction`";
+    }
+
+    $source_db->move_to_group( { prepare => $target_db->prepare }, $new_position );
+    $c->stash->{json_data} = { success => 1 };
+}
+
+sub deleteAjax : POST PathPart('ingredients/delete') Does('~Ajax') Chained('base')
+  RequiresCapability('edit_project') {
+    my ( $self, $c ) = @_;
+    my $json = $c->req->body_data;
+
+    my $recipe = $c->stash->{recipe};
+
+    my $ingrDB = $recipe->search_related('ingredients')->find( $json->{id} );
+    $ingrDB->delete();
+
+    $c->stash->{json_data} = { id => $ingrDB->id };
+}
+
 __PACKAGE__->meta->make_immutable;
 
 1;

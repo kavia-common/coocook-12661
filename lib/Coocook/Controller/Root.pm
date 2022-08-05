@@ -92,11 +92,14 @@ sub auto : Private {
         css => [
             '/lib/themed-bootstrap/themed' . ( $c->debug ? '.css' : '.min.css' ),
             '/css/material-design-icons.css',
+            '/lib/web_js_components/ingredients-editor/ingredients-editor_style.css',
             '/css/style.css',
         ],
         js => [
             '/lib/bootstrap/dist/js/bootstrap.bundle' . ( $c->debug ? '.js' : '.min.js' ),
-            '/lib/marked/marked.min.js', '/js/script.js',
+            '/lib/marked/marked' .                      ( $c->debug ? '.js' : '.min.js' ),
+            '/lib/web_js_components/ingredients-editor/ingredients-editor.umd.js',
+            '/js/script.js',
         ],
     );
 
