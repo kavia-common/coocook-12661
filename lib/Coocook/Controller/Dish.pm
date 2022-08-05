@@ -238,33 +238,12 @@ sub getAllIngredientsAjax : GET PathPart('ingredients') HEAD Does('~Ajax') Chain
   RequiresCapability('view_project') {
     my ( $self, $c ) = @_;
 
-    # my $ingredients_rs = $c->stash->{dish}->ingredients;
-
-    # my $sorted_normal_ingredients =
-    #   $ingredients_rs->search( { prepare => 0 }, { order_by => $ingredients_rs->me('position') } );
-    # my $sorted_prepare_ingredients =
-    #   $ingredients_rs->search( { prepare => 1 }, { order_by => $ingredients_rs->me('position') } );
-
-    # for ( $sorted_normal_ingredients, $sorted_prepare_ingredients ) {
-    #     my $pos = 1;
-    #     while ( my $ingredient = $_->next ) {
-    #         warn 'NORMALIZE: ' . $ingredient->id . ': pos => ' . $pos;
-    #         $ingredient->update(
-    #             {
-    #                 position => $pos++
-    #             }
-    #         );
-    #     }
-    # }
-
     my $ingredients = $c->model('Ingredients')->new(
         project     => $c->project,
         ingredients => $c->stash->{dish}->ingredients,
     );
 
     $c->stash->{json_data} = $ingredients->for_ingredients_editor;
-
-    #$c->forward('View::JSON');
 }
 
 sub updateAjax : POST PathPart('ingredients/update') Does('~Ajax') Chained('base')
