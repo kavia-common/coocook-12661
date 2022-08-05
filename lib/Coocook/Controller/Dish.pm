@@ -278,8 +278,6 @@ sub updateAjax : POST PathPart('ingredients/update') Does('~Ajax') Chained('base
     my $ingrDB = $dish->search_related('ingredients')->find( $ingredient->{id} );
     $ingrDB->update(
         {
-            prepare  => $ingredient->{prepare},
-            position => $ingredient->{position},
             value    => $ingredient->{value},
             unit_id  => $ingredient->{current_unit}->{id},
             comment  => $ingredient->{comment},
