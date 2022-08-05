@@ -86,7 +86,9 @@ const ingredientsEditorData = {
 };
 </script>
 
-<div id="ingredients-editor"></div>
+<div id="ingredients-editor"
+class="col-sm-12 py-3">
+</div>
 
 [% INCLUDE 'includes/forms/ingredients_add.tt' %]
 
