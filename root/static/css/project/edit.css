@@ -1,0 +1,5 @@
+.createMealOrDishBtn:hover,
+.createMealOrDishBtn:focus,
+.createMealOrDishBtn:active {
+    box-shadow: inset 1px 1px 0 var(--bs-secondary), inset -1px -1px 0 var(--bs-secondary);
+}

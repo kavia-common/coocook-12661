@@ -175,6 +175,10 @@ sub edit : GET HEAD Chained('submenu') PathPart('edit') Args(0) RequiresCapabili
         dish_from_recipe_url => $c->project_uri('/dish/from_recipe'),
         meal_create_url      => $c->project_uri('/meal/create'),
     );
+
+    push @{ $c->stash->{js} },  '/js/project/edit.js';
+    push @{ $c->stash->{css} }, '/css/project/edit.css';
+
 }
 
 sub settings : GET HEAD Chained('submenu') PathPart('settings') Args(0)
