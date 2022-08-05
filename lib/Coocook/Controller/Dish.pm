@@ -309,6 +309,28 @@ sub prependAjax : POST PathPart('ingredients/prepend') Does('~Ajax') Chained('ba
     $c->stash->{json_data} = { success => 1, ingredients => $ingredients->for_ingredients_editor };
 }
 
+sub appendAjax : POST PathPart('ingredients/append') Does('~Ajax') Chained('base')
+  RequiresCapability('edit_project') {
+    my ( $self, $c ) = @_;
+
+    my $dish = $c->stash->{dish};
+
+    my $json          = $c->req->body_data;
+    my $ingredient_id = $json->{ingredientId};
+    my $prepare       = $json->{prepare};
+
+    my $ingredient = $dish->search_related('ingredients')->find($ingredient_id);
+    $ingredient->set_column( prepare => $prepare );
+    $ingredient->move_last();
+
+    my $ingredients = $c->model('Ingredients')->new(
+        project     => $c->project,
+        ingredients => $c->stash->{dish}->ingredients,
+    );
+
+    $c->stash->{json_data} = { success => 1, ingredients => $ingredients->for_ingredients_editor };
+}
+
 sub moveAjax : POST PathPart('ingredients/move') Does('~Ajax') Chained('base')
   RequiresCapability('edit_project') {
     my ( $self, $c ) = @_;
