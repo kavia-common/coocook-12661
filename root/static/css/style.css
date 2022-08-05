@@ -186,6 +186,25 @@ header h1 {
     color: var(--bs-light)
 }
 
+.btn-outline-primary:active,
+.btn-outline-primary:hover,
+.btn-outline-primary:focus {
+    color: var(--bs-light)
+}
+
+.btn-secondary,
+.btn-secondary:active,
+.btn-secondary:hover,
+.btn-secondary:focus {
+    color: var(--bs-light)
+}
+
+.btn-outline-secondary:active,
+.btn-outline-secondary:hover,
+.btn-outline-secondary:focus {
+    color: var(--bs-light)
+}
+
 .anchor {
     opacity: 0;
     color: grey;
@@ -322,6 +341,7 @@ a.dark-link:hover, button.dark-link:hover {
 }
 
 .btn:focus,
+.btn-close:focus,
 select:focus,
 input:focus {
     box-shadow: none !important;

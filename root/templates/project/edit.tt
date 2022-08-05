@@ -10,7 +10,7 @@
     
     [% FOREACH meal IN day.meals %]
             <div class="row w-100 m-0 border-bottom py-3">
-                <div class="col-4 border-end">
+                <div class="col-4">
 
                     <div class="d-flex align-items-center gap-3 mb-3">
                         <h5 class="m-0">[% meal.name | html %]</h5>
@@ -37,39 +37,60 @@
 
                 <div class="col-8">
 
-                    <ul>
+                    <div class="list-group">
                     [% FOREACH dish IN meal.dishes %]
-                        <li>
-                            <a href="[% dish.url %]">[% dish.name | html %]</a> ([% dish.servings %] servings)
-                            [%~ IF dish.comment; ': '; dish.comment | html; END %]
-                        </li>
+                        <a class="list-group-item list-group-item-action px-2" href="[% dish.url %]">
+                            <i class="material-icons" style="color:#dee2e6;">drag_indicator</i>
+                            <span class="text-end" style="display:inline-block; min-width:30px;">[% dish.servings %]</span>
+                            <span style="color:#dee2e6;">|</span>
+                            <b>[% dish.name | html %]</b>
+                        [% IF dish.comment %]
+                            <span style="color:#dee2e6;">|</span>
+                            <i>[% dish.comment %]</i>
+                        [% END %]
+                        </a>
                     [% END %]
-                    </ul>
+                        <div class="list-group-item w-100 p-0">
+                            <div type="button" class="p-2 w-100 text-secondary d-flex justify-content-center align-items-center" data-bs-toggle="collapse" data-bs-target="#collapseCreateDishOn[% meal.id %]" aria-expanded="false" aria-controls="collapseCreateDishOn[% meal.id %]">Add Dish</div>
+                            <div class="collapse p-2" id="collapseCreateDishOn[% meal.id %]">
+                                
+                                <form action="[% dish_create_url %]" method="post">
+                                    <input type="hidden" name="meal" value="[% meal.id %]">
+                                    <div class="container mt-2 px-3">
+                                        <div class="row">
+                                            <input type="text"   name="name" placeholder="name" class="form-control col me-2">
+                                            <input type="number" name="servings" value="4" class="form-control col me-2">
+                                            <input type="submit" value="Create dish" class="btn btn-sm btn-outline-primary col">
+                                        </div>
+                                    </div>
+                                </form>
 
-                    <form name="create_dish" action="[% dish_create_url %]" method="post">
-                        <input type="hidden" name="meal" value="[% meal.id %]">
-                        <input type="text"   name="name" placeholder="name">
-                        <input type="number" name="servings" value="4">
-                        <input type="submit" value="Create dish">
-                    </form>
-                [% IF recipes.size %]
-                    <form action="[% dish_from_recipe_url %]" method="post">
-                        <input type="hidden" name="meal" value="[% meal.id %]">
-                        <select name="recipe">
-                    [% FOREACH recipe IN recipes %]
-                            <option value="[% recipe.id %]">[% recipe.name | html %]</option>
-                    [% END %]
-                        </select>
-                        <input type="number" name="servings" value="4">
-                        <input type="submit" value="Use recipe">
-                    </form>
-                [% END %]
+                            [% IF recipes.size %]
+                                <form action="[% dish_from_recipe_url %]" method="post">
+                                    <input type="hidden" name="meal" value="[% meal.id %]">
+                                    <div class="container px-3 mt-2">
+                                        <div class="row">
+                                            <select name="recipe" class="form-control col me-2">
+                                        [% FOREACH recipe IN recipes %]
+                                                <option value="[% recipe.id %]">[% recipe.name | html %]</option>
+                                        [% END %]
+                                            </select>
+                                            <input type="number" name="servings" value="4" class="form-control col me-2">
+                                            <input type="submit" value="Use recipe" class="btn btn-sm btn-outline-primary col">
+                                        </div>
+                                    </div>
+                                </form>
+                            [% END %]
+
+                            </div>
+                        </div>
+                    </div>
 
                 </div>
             </div>
 
     [% END %]
-            <div onclick="createMealOnDate('[% meal_create_url %]', '[% day.date.ymd %]')" type="button" class="w-100 p-2 text-secondary d-flex justify-content-center align-items-center"><i class="material-icons">add</i></div>
+            <div onclick="createMealOnDate('[% meal_create_url %]', '[% day.date.ymd %]')" type="button" class="createMealOrDishBtn w-100 p-2 text-secondary d-flex justify-content-center align-items-center"><i class="material-icons">add</i></div>
         </div>
     </div>
 [% END %]

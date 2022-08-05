@@ -55,9 +55,9 @@ const createMeal = (mealCreateURL, date) => {
     openModal("Add meal", mealCreateURL, bodyHTML, "Add meal");
 }
 
-const openModal = (title, mealCreateURL, bodyHTML, confirmText) => {
+const openModal = (title, formActionURL, bodyHTML, confirmText) => {
     modalTitleEl.innerHTML = title;
-    modalFormEl.setAttribute('action', mealCreateURL);
+    modalFormEl.setAttribute('action', formActionURL);
     modalBodyEl.innerHTML = bodyHTML;
     modalConfirmEl.setAttribute('value', confirmText);
     modal.show();
