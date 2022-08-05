@@ -310,8 +310,6 @@ sub getAllIngredientsAjax : GET PathPart('ingredients') HEAD Does('~Ajax') Chain
     );
 
     $c->stash->{json_data} = $ingredients->for_ingredients_editor;
-
-    #$c->forward('View::JSON');
 }
 
 sub updateAjax : POST PathPart('ingredients/update') Does('~Ajax') Chained('base')
@@ -325,8 +323,6 @@ sub updateAjax : POST PathPart('ingredients/update') Does('~Ajax') Chained('base
     my $ingrDB = $recipe->search_related('ingredients')->find( $ingredient->{id} );
     $ingrDB->update(
         {
-            prepare  => $ingredient->{prepare},
-            position => $ingredient->{position},
             value    => $ingredient->{value},
             unit_id  => $ingredient->{current_unit}->{id},
             comment  => $ingredient->{comment},
@@ -334,6 +330,40 @@ sub updateAjax : POST PathPart('ingredients/update') Does('~Ajax') Chained('base
     );
 
     $c->stash->{json_data} = { id => $ingrDB->id };
+}
+
+sub prependAjax : POST PathPart('ingredients/prepend') Does('~Ajax') Chained('base')
+  RequiresCapability('edit_project') {
+    my ( $self, $c ) = @_;
+
+    my $recipe = $c->stash->{recipe};
+
+    my $json          = $c->req->body_data;
+    my $ingredient_id = $json->{ingredientId};
+    my $prepare       = $json->{prepare};
+
+    my $ingredient = $recipe->search_related('ingredients')->find($ingredient_id);
+    $ingredient->set_column( prepare => $prepare );
+    $ingredient->move_first();
+
+    $c->stash->{json_data} = { success => 1 };
+}
+
+sub appendAjax : POST PathPart('ingredients/append') Does('~Ajax') Chained('base')
+  RequiresCapability('edit_project') {
+    my ( $self, $c ) = @_;
+
+    my $recipe = $c->stash->{recipe};
+
+    my $json          = $c->req->body_data;
+    my $ingredient_id = $json->{ingredientId};
+    my $prepare       = $json->{prepare};
+
+    my $ingredient = $recipe->search_related('ingredients')->find($ingredient_id);
+    $ingredient->set_column( prepare => $prepare );
+    $ingredient->move_last();
+
+    $c->stash->{json_data} = { success => 1 };
 }
 
 sub moveAjax : POST PathPart('ingredients/move') Does('~Ajax') Chained('base')
@@ -345,57 +375,21 @@ sub moveAjax : POST PathPart('ingredients/move') Does('~Ajax') Chained('base')
     my $json      = $c->req->body_data;
     my $source_id = $json->{sourceId};
     my $target_id = $json->{targetId};
+    my $direction = $json->{direction};
 
     my $source_db = $recipe->search_related('ingredients')->find($source_id);
     my $target_db = $recipe->search_related('ingredients')->find($target_id);
 
-    my $increase_position_after_target = 0;
-
-    my %new_source = (
-        position => $source_db->position,
-        prepare  => $source_db->prepare,
-    );
-
-    my $new_target_position = $target_db->position;
-
-    if ( $source_db->prepare == $target_db->prepare ) {
-        $new_source{position} = $target_db->position;
-        $new_target_position = $source_db->position;
-    }
-    else {
-        $new_source{prepare}            = $target_db->prepare;
-        $new_source{position}           = $target_db->position;
-        $new_target_position            = $target_db->position + 1;
-        $increase_position_after_target = 1;
+    my $new_position;
+    if ($direction == 'upwards') {
+        $new_position = $target_db->position;
+    } elsif ($direction == 'downwards') {
+        $new_position = $target_db->position+1;
+    } else {
+        die "Invalid move direction `$direction`";
     }
 
-    $recipe->txn_do(
-        sub {
-            $source_db->update(
-                {
-                    prepare  => $new_source{prepare},
-                    position => $new_source{position},
-                }
-            );
-            if ($increase_position_after_target) {
-                $recipe->search_related('ingredients')->search_rs(
-                    {
-                        prepare  => $target_db->prepare,
-                        position => { '>' => $target_db->position }
-                    }
-                )->update(
-                    {
-                        position => \"position + 1"
-                    }
-                );
-            }
-            $target_db->update(
-                {
-                    position => $new_target_position,
-                }
-            );
-        }
-    );
+    $source_db->move_to_group( { prepare => $target_db->prepare }, $new_position );
     $c->stash->{json_data} = { success => 1 };
 }
 
