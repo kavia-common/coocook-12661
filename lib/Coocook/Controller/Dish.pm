@@ -340,11 +340,21 @@ sub moveAjax : POST PathPart('ingredients/move') Does('~Ajax') Chained('base')
     my $json      = $c->req->body_data;
     my $source_id = $json->{sourceId};
     my $target_id = $json->{targetId};
+    my $direction = $json->{direction};
 
     my $source_db = $dish->search_related('ingredients')->find($source_id);
     my $target_db = $dish->search_related('ingredients')->find($target_id);
 
-    $source_db->move_to_group( { prepare => $target_db->prepare }, $target_db->position );
+    my $new_position;
+    if ($direction == 'upwards') {
+        $new_position = $target_db->position;
+    } elsif ($direction == 'downwards') {
+        $new_position = $target_db->position+1;
+    } else {
+        die "Invalid move direction `$direction`";
+    }
+
+    $source_db->move_to_group( { prepare => $target_db->prepare }, $new_position );
     $c->stash->{json_data} = { success => 1 };
 }
 
