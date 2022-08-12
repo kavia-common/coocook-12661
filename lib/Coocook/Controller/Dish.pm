@@ -185,30 +185,6 @@ sub update : POST Chained('base') Args(0) RequiresCapability('edit_project') {
 
             my $tags = $c->project->tags->from_names( $c->req->params->get('tags') );
             $dish->set_tags( [ $tags->all ] );
-
-            for my $ingredient ( $dish->ingredients->all ) {
-                my $item = $ingredient->item;
-
-                if ( $c->req->params->get( 'delete' . $ingredient->id ) ) {
-                    $ingredient->remove_from_purchase_list;
-                    $ingredient->delete;
-                }
-                else {
-                    $ingredient->update(
-                        {
-                            prepare => $dish->format_bool( !!$c->req->params->get( 'prepare' . $ingredient->id ) ),
-                            value   => $c->req->params->get( 'value' . $ingredient->id ) + 0,
-                            unit_id => $c->req->params->get( 'unit' . $ingredient->id ),
-                            comment => $c->req->params->get( 'comment' . $ingredient->id ),
-                        }
-                    );
-                }
-
-                $item and $item->in_storage or next;
-
-                $item->update_from_ingredients();
-
-            }
         }
     );
 

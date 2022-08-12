@@ -194,23 +194,6 @@ sub update : POST Chained('base') Args(0) RequiresCapability('edit_project') {
                     }
                 );
 
-                # ingredients
-                for my $ingredient ( $recipe->ingredients->all ) {
-                    if ( $c->req->params->get( 'delete' . $ingredient->id ) ) {
-                        $ingredient->delete;
-                        next;
-                    }
-
-                    $ingredient->update(
-                        {
-                            prepare => $recipe->format_bool( !!$c->req->params->get( 'prepare' . $ingredient->id ) ),
-                            value   => $c->req->params->get( 'value' . $ingredient->id ) + 0,
-                            unit_id => $c->req->params->get( 'unit' . $ingredient->id ),
-                            comment => $c->req->params->get( 'comment' . $ingredient->id ),
-                        }
-                    );
-                }
-
                 # tags
                 my $tags = $c->project->tags_from_names( $c->req->params->get('tags') );
                 $recipe->set_tags( [ $tags->all ] );
