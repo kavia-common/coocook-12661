@@ -1,5 +1,6 @@
 package Coocook::Schema::Result::User;
 
+use Carp;
 use Coocook::Model::Token;
 use DateTime;
 use Moose;
@@ -147,14 +148,42 @@ sub has_any_role {
     return $self->roles_users->results_exist( { role => { -in => $roles } } );
 }
 
+=head2 has_any_project_role( $project, @roles )
+
+=head2 has_any_project_role( $project, \@roles )
+
+Returns a boolen value indicating whether the user has direct
+permissions on the C<$project> with any of the C<@roles> or the
+user is member of any organization that has permissions
+on the C<$project> with any of the C<@roles>.
+
+C<@roles> should not be empty. If it is empty, the result
+is always false.
+
+=cut
+
 sub has_any_project_role {
     my $self    = shift;
     my $project = shift;
 
     my $roles = ( @_ == 1 and ref $_[0] eq 'ARRAY' ) ? $_[0] : \@_;
 
-    return $self->projects_users->results_exist(
+    if ( @$roles == 0 ) {
+        carp "has_any_project_role() with zero roles";
+        return;
+    }
+
+    return 1
+      if $self->projects_users->results_exist(
         { project_id => $project->id, role => { -in => $roles } } );
+
+    # organizations can never be owner
+    return if @$roles == 1 and $roles->[0] eq 'owner';
+
+    my $organizations_projects = $self->organizations->search_related('organizations_projects');
+
+    return $organizations_projects->results_exist(
+        { project_id => $project->id, $organizations_projects->me('role') => { -in => $roles } } );
 }
 
 sub has_any_organization_role {
