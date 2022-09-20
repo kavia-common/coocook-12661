@@ -106,5 +106,10 @@ for( const form of forms ) {
 
 // See documentation about 'beforeunload' event on https://developer.mozilla.org/en-US/docs/Web/API/Window/beforeunload_event
 window.addEventListener('beforeunload', (e) => {
-    if( hasUnsavedChanges ) e.preventDefault(); //
+    if( hasUnsavedChanges ) {
+        // Cancel the event as stated by the standard.
+        e.preventDefault();
+        // Chrome requires returnValue to be set.
+        e.returnValue = '';
+    }
 });
