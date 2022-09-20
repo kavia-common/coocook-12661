@@ -100,7 +100,7 @@ has_admin = 0 %]
 </div>
 <script>
     function renderUserOrgOption(data) {
-        return [`${data.type === "user" ? "👤" : "🌐"} ${data.display_name} (${data.name})`, data.name];
+        return [`${data.type === "user" ? "👤" : "👥"} ${data.display_name} (${data.name})`, data.name];
     }
     userList = Array.from(document.querySelectorAll(".username"), elem => elem.innerText);
     orgList = Array.from(document.querySelectorAll(".organization"), elem => elem.innerText);

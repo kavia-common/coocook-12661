@@ -1,6 +1,6 @@
 [% escape_title( 'Organization', organization.display_name ) %]
 
-<p>Name: 👥[% organization.name %]</p>
+<p>Name: 👥 [% organization.name %]</p>
 
 [% IF update_url %]
 <form class="inline" method="post" action="[% update_url %]">
