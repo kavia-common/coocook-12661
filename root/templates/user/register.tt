@@ -6,26 +6,26 @@
 
         <form method="post" action="[% post_register_url %]" class="d-flex flex-column gap-3">
             <div>
-                <input id="username" type="text" name="username" placeholder="username" pattern="[A-Za-z0-9_]+" value="[% last_input.username | html %]" [% 'autofocus' IF NOT last_input.username %] class="form-control">
+                <input id="username" type="text" name="username" placeholder="username" pattern="[A-Za-z0-9_]+" value="[% last_input.username | html %]" [% 'autofocus' IF NOT last_input.username %] class="form-control" required>
 [% IF example_username %]
                 e.g. <i>[% example_username | html %]</i>
 [% END %]
             </div>
-            <input id="email" type="email" name="email" placeholder="email address" value="[% last_input.email | html %]" [% 'autofocus' IF last_input.username AND NOT last_input.email %] class="form-control">         
+            <input id="email" type="email" name="email" placeholder="email address" value="[% last_input.email | html %]" [% 'autofocus' IF last_input.username AND NOT last_input.email %] class="form-control" required>
 [%~ IF use_hidden_input %]
             <input id="url" type="url" name="url" placeholder="address of your website" value="[%# THIS INPUT FIELD ONLY WORKS AS CAPTCHA! %]" class="form-control">
 [%~ END %]
             <div>
-                <input id="password"  type="password" placeholder="password" name="password" [% 'autofocus' IF last_input.username AND last_input.email %] class="form-control">
+                <input id="password"  type="password" placeholder="password" name="password" [% 'autofocus' IF last_input.username AND last_input.email %] class="form-control" required>
                 <span id="meter"></span>
             </div>
             <div>
-                <input id="password2" type="password" placeholder="confirm password" name="password2" class="form-control">
+                <input id="password2" type="password" placeholder="confirm password" name="password2" class="form-control" required>
                 <span id="comparator"></span>
             </div>
 [% label = "Sign up";
 IF terms %]
-            <input type="hidden" name="accept_terms" value="[% terms.id %]">
+            <input type="hidden" name="accept_terms" value="[% terms.id %]" required>
             <span>By clicking <em>[% label %]</em> you accept our <a href="[% terms.url %]">terms as of [% display_date(terms.valid_from, {html=>1}) %]</a>.</span>
 [% END %]
             <span>You will receive an email with a web link to verify your email address.</span>
