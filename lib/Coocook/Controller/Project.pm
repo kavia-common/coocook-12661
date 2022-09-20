@@ -97,7 +97,7 @@ sub base : Chained('/base') PathPart('project') CaptureArgs(2) {
         },
     );
 
-    if( $c->request->method eq "GET" or $c->request->method eq "HEAD" ) {
+    if ( $c->request->method eq "GET" or $c->request->method eq "HEAD" ) {
         $c->stash( inventory => $c->project->inventory );
     }
 }
