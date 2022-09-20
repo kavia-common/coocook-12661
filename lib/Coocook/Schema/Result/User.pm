@@ -167,6 +167,12 @@ sub has_any_organization_role {
         { organization_id => $organization->id, role => { -in => $roles } } );
 }
 
+sub is_member_of {
+    my ( $self, $organization ) = @_;
+
+    return $self->organizations_users->results_exist( { organization_id => $organization->id } );
+}
+
 sub roles {
     my $self = shift;
 

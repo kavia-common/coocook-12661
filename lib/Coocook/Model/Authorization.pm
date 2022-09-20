@@ -35,11 +35,7 @@ my @rules = (
         needs_input => [ 'organization', 'user' ],
         rule        => sub {
             my ( $organization, $user ) = @$_{ 'organization', 'user' };
-            return (
-                     $user->has_any_role('site_owner')
-                  or $user->search_related( organizations_users => { organization_id => $organization->id } )
-                  ->results_exist
-            );
+            return ( $user->has_any_role('site_owner') or $user->is_member_of($organization) );
         },
         grants_capabilities => [qw< view_organization_members >],
     },
@@ -48,9 +44,7 @@ my @rules = (
         rule        => sub {
             my ( $organization, $user ) = @$_{ 'organization', 'user' };
             return if $organization->owner_id == $user->id;    # owner must not leave
-            return $user->organizations_users->results_exist(
-                { organization_id => $organization->id }       # user is organization member?
-            );
+            return $user->is_member_of($organization);
         },
         grants_capabilities => [qw< leave_organization >],
     },
@@ -75,7 +69,7 @@ my @rules = (
             return unless grep { $role eq $_ } organization_roles();
 
             # is already organization member
-            return if $organization->organizations_users->results_exist( { user_id => $user_object->id } );
+            return if $user_object->is_member_of($organization);
 
             return (
                      $user->has_any_organization_role( $organization, qw< admin owner > )
