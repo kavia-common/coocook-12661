@@ -70,7 +70,7 @@ sub index : GET HEAD Chained('/organization/base') PathPart('members') Args(0)
         template            => 'organization/members.tt',
     );
 
-    push @{ $c->stash->{js} }, '/js/autocomplete.js';
+    push @{ $c->stash->{js} }, '/lib/web-js-components/autocomplete/autocomplete.es.js';
 }
 
 sub add : POST Chained('/organization/base') Args(0) CustomAuthz {
