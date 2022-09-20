@@ -7,7 +7,7 @@
 
             <div class="card-body">
                 
-                <form action="[% add_ingredient_url %]" method="post">
+                <form class="confirmIfUnsavedChanges" action="[% add_ingredient_url %]" method="post">
                         <div class="form-group row">
                             <label for="article" class="col-sm-2 col-form-label">Article</label>
                             <div class="col-sm-10">

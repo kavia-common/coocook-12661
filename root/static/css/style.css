@@ -343,7 +343,8 @@ a.dark-link:hover, button.dark-link:hover {
 .btn:focus,
 .btn-close:focus,
 select:focus,
-input:focus {
+input:focus, 
+textarea:focus {
     box-shadow: none !important;
 }
 

@@ -88,7 +88,7 @@
     [% END %]
     [% IF logout_url %]
                                             <li><form class="px-3 py-2" method="post" action="[% logout_url %]">
-                                                <button class="btn btn-sm btn-outline-light w-100" name="logout">Sign out</button>
+                                                <button class="btn btn-sm btn-outline-light dark-link w-100" name="logout">Sign out</button>
                                             </form></li>
     [% END %]
                                         </ul>
