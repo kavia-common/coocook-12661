@@ -96,6 +96,10 @@ sub base : Chained('/base') PathPart('project') CaptureArgs(2) {
             unarchive        => $c->project_uri('/project/unarchive'),
         },
     );
+
+    if( $c->request->method eq "GET" or $c->request->method eq "HEAD" ) {
+        $c->stash( inventory => $c->project->inventory );
+    }
 }
 
 sub submenu : Chained('base') PathPart('') CaptureArgs(0) {
@@ -128,7 +132,6 @@ sub show : GET HEAD Chained('submenu') PathPart('') Args(0) RequiresCapability('
         can_edit      => !!$c->has_capability('edit_project'),
         can_unarchive => !!$c->has_capability('unarchive_project'),
         days          => $days,
-        inventory     => $c->project->inventory,
     );
 }
 
