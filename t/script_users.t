@@ -17,25 +17,24 @@ like dies { Coocook::Script::Users->new( discard => 1, email_verified => 1 )->ru
 like dies { Coocook::Script::Users->new( discard => 0, blacklist => 1 )->run() },
   qr/blacklist/, "rejects blacklist=1 unless discard=1";
 
-my $now = DateTime::Format::SQLite->parse_datetime('2000-01-01 12:34:56');
+subtest _parse_created => sub {
+    my $now = DateTime::Format::SQLite->parse_datetime('2000-01-01 12:34:56');
 
-sub parse { $script->_parse_created( shift, $now ) }
+    like dies { $script->_parse_created( "foobar", $now ) }, qr/invalid/i;
 
-is parse(undef) => undef, "undef";
+    my @tests = (
+        [ undef() => undef ],
+        [ '+1d'   => { created => { '<=', '1999-12-31 12:34:56' } } ],
+        [ '-1w'   => { created => { '>=', '1999-12-25 12:34:56' } } ],
+        [ '+1m'   => { created => { '<=', '1999-12-01 12:34:56' } } ],
+        [ '-1y'   => { created => { '>=', '1999-01-01 12:34:56' } } ],
+    );
 
-like dies { parse("foobar") }, qr/invalid/i;
+    for (@tests) {
+        my ( $input => $expected ) = @$_;
 
-my @tests = (
-    [ '+1d' => { created => { '<=', '1999-12-31 12:34:56' } } ],
-    [ '-1w' => { created => { '>=', '1999-12-25 12:34:56' } } ],
-    [ '+1m' => { created => { '<=', '1999-12-01 12:34:56' } } ],
-    [ '-1y' => { created => { '>=', '1999-01-01 12:34:56' } } ],
-);
-
-for (@tests) {
-    my ( $input => $expected ) = @$_;
-
-    is parse($input) => $expected, $input;
-}
+        is $script->_parse_created( $input, $now ) => $expected, $input;
+    }
+};
 
 done_testing;
