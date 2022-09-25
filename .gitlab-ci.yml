@@ -19,7 +19,7 @@ prove:
     - cpanm --notest Devel::Cover
 
   script:
-    - PERL5OPT=-MDevel::Cover=-ignore,^perl5/ prove --lib --verbose
+    - AUTHOR_TESTING=1 PERL5OPT=-MDevel::Cover=-ignore,^perl5/ prove --lib --verbose
 
   after_script:
     - 'eval "$( perl -Iperl5/lib/perl5/ -Mlocal::lib=perl5/ )"'
