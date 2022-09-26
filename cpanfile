@@ -68,7 +68,6 @@ requires "perl" => "v5.16.0";
 requires "strict" => "0";
 requires "utf8" => "0";
 requires "warnings" => "0";
-recommends "Template::Plugin::Markdown" => "2.28";
 suggests "DBD::Pg" => "0";
 suggests "DateTime::Format::Pg" => "0";
 suggests "Sys::Hostname::FQDN" => "0";
