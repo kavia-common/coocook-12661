@@ -81,6 +81,7 @@ on 'test' => sub {
   requires "ExtUtils::MakeMaker" => "0";
   requires "File::Spec" => "0";
   requires "FindBin" => "0";
+  requires "HTML::TreeBuilder::XPath" => "0";
   requires "Import::Into" => "0";
   requires "Regexp::Common" => "0";
   requires "Scope::Guard" => "0";
@@ -98,9 +99,8 @@ on 'test' => sub {
   requires "Test::Perl::Critic" => "0";
   requires "Test::PerlTidy" => "0";
   requires "Test::WWW::Mechanize::Catalyst" => "0";
-  requires "WWW::Mechanize::TreeBuilder" => "0";
-  requires "HTML::TreeBuilder::XPath" => "0";
   requires "Time::HiRes" => "0";
+  requires "WWW::Mechanize::TreeBuilder" => "0";
 };
 
 on 'test' => sub {
