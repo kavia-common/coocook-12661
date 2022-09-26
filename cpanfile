@@ -116,7 +116,6 @@ on 'develop' => sub {
   requires "Test2::V0" => "0";
   requires "Test::Perl::Critic" => "0";
   requires "Test::PerlTidy" => "0";
-  requires "Test::Pod::Coverage" => "0";
 };
 
 on 'develop' => sub {
