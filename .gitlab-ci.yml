@@ -26,8 +26,4 @@ prove:
     - perl Makefile.PL
     - AUTHOR_TESTING=1 cover -ignore_re ^perl5/ -make 'make TEST_VERBOSE=1' -test
 
-  after_script:
-    - 'eval "$( perl -Iperl5/lib/perl5/ -Mlocal::lib=perl5/ )"'
-    - cover -summary | perl -nE '/^Total .+ (\d+\.\d+)$/ and say "TOTAL COVERAGE $1" '
-
-  coverage: '/TOTAL COVERAGE/'
+  coverage: '/^Total .+ (\d+\.\d+)$/'
