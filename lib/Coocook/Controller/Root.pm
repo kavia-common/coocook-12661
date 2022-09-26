@@ -89,12 +89,12 @@ sub auto : Private {
     );
 
     $c->stash(
-        css => [
+        css => [    # this comment makes perltidy not merge these lines
             '/lib/themed-bootstrap/themed' . ( $c->debug ? '.css' : '.min.css' ),
             '/css/material-design-icons.css',
             '/css/style.css',
         ],
-        js => [
+        js => [     # this comment makes perltidy not merge these lines
             '/lib/bootstrap/dist/js/bootstrap.bundle' . ( $c->debug ? '.js' : '.min.js' ),
             '/lib/marked/marked.min.js',
             '/js/script.js',

@@ -88,7 +88,8 @@ sub edit : GET HEAD Chained('base') PathPart('') Args(0) RequiresCapability('vie
         $ingredient->{reposition_url} = $c->project_uri( '/dish/reposition', $ingredient->{id} );
     }
 
-    push @{ $c->stash->{css} }, '/lib/web-js-components/ingredients-editor/ingredients-editor_index.css';
+    push @{ $c->stash->{css} },
+      '/lib/web-js-components/ingredients-editor/ingredients-editor_index.css';
     push @{ $c->stash->{js} }, '/lib/web-js-components/ingredients-editor/ingredients-editor.es.js';
 }
 
