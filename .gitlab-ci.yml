@@ -24,6 +24,6 @@ prove:
 
   script:
     - perl Makefile.PL
-    - AUTHOR_TESTING=1 cover -ignore_re ^perl5/ -make 'make TEST_VERBOSE=1' -test
+    - AUTHOR_TESTING=1 cover -ignore_re ^perl5/ -ignore_re SHSchema -make 'make TEST_VERBOSE=1' -test
 
   coverage: '/^Total .+ (\d+\.\d+)$/'
