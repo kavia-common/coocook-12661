@@ -8,9 +8,9 @@ use warnings;
 use strict;
 
 use Term::ANSIColor;
-use Cwd qw/abs_path getcwd/;
+use Cwd                   qw/abs_path getcwd/;
 use File::Copy::Recursive qw/rcopy/;
-use File::Path qw/rmtree make_path/;
+use File::Path            qw/rmtree make_path/;
 use File::Fetch;
 
 say colored( 'START INSTALLING COOCOOK JS COMPONENTS...', 'yellow' );

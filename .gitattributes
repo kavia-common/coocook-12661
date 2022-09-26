@@ -1,11 +1,11 @@
 # for documentation see
-# https://github.com/github/linguist#overrides
+# https://docs.gitlab.com/ee/user/project/highlighting.html
 
-*.pl  linguist-language=Perl
-*.pm  linguist-language=Perl
-*.t   linguist-language=Perl
-*.tt  linguist-language=HTML
-*.sql linguist-language=SQL
+*.pl  gitlab-language=Perl
+*.pm  gitlab-language=Perl
+*.t   gitlab-language=Perl
+*.tt  gitlab-language=HTML
+*.sql gitlab-language=SQL
 
 /cpanfile                                          linguist-generated=true
 /share/ddl/*/deploy/*/001-auto.sql                 linguist-generated=true

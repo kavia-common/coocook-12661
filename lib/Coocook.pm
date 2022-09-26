@@ -100,7 +100,7 @@ __PACKAGE__->config(
         },
         {
             title => "Report issues",
-            url   => 'https://github.com/dboehmer/coocook/issues',
+            url   => 'https://gitlab.com/coocook/coocook/-/issues',
         },
     ],
 

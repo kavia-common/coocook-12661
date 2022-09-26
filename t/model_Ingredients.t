@@ -54,31 +54,31 @@ is $ingredients->as_arrayref => array {
 
 is my $articles = $ingredients->all_articles => array {
     item object {
-        call name       => 'cheese';
+        call name => 'cheese';
         call_list units => array {
             item object { call short_name => 'g' };
             item object { call short_name => 'kg' };
         };
     };
     item object {
-        call name       => 'flour';
+        call name => 'flour';
         call_list units => array {
             item object { call short_name => 'g' };
             item object { call short_name => 'kg' };
         };
     };
     item object {
-        call name       => 'love';
+        call name => 'love';
         call_list units => [];
     };
     item object {
-        call name       => 'salt';
+        call name => 'salt';
         call_list units => array {
             item object { call short_name => 'g' };
         };
     };
     item object {
-        call name       => 'water';
+        call name => 'water';
         call_list units => array {
             item object { call short_name => 'l' };
         };
