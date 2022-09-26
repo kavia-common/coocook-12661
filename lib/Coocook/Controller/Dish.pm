@@ -2,7 +2,7 @@ package Coocook::Controller::Dish;
 
 use Moose;
 use MooseX::MarkAsMethods autoclean => 1;
-use JSON;
+use JSON::MaybeXS;
 
 BEGIN { extends 'Coocook::Controller' }
 

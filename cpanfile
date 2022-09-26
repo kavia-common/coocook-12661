@@ -42,7 +42,6 @@ requires "FindBin" => "0";
 requires "Getopt::Long" => "0";
 requires "HTML::Entities" => "0";
 requires "HTML::Meta::Robots" => "0";
-requires "JSON" => "0";
 requires "JSON::MaybeXS" => "0";
 requires "MIME::Base64::URLSafe" => "0";
 requires "Moose" => "0";
