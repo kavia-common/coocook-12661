@@ -22,7 +22,7 @@ has_admin = 0 %]
                 <td>
                 [% IF g_u.edit_url %]
                     <form class="input-group" method="post" action="[% g_u.edit_url %]" style="width:150px">
-                        <select class="form-control form-control-sm" name="role">
+                        <select class="form-select form-select-sm" name="role">
                         [% FOR role IN roles %]
                             <option value="[% role %]" [% 'selected' IF g_u.role == role %]>[% role %]</option>
                         [% END %]
@@ -74,7 +74,7 @@ has_admin = 0 %]
             </div>
             <div class="mb-2">
                 <label for="role" class="form-label">Role</label>
-                <select id="role" class="form-control" name="role">
+                <select id="role" class="form-select" name="role">
                 [% FOR role IN roles %]
                     <option value="[% role %]">[% role %]</option>
                 [% END %]

@@ -168,7 +168,7 @@
                                     <input type="hidden" name="meal" value="[% meal.id %]">
                                     <div class="container px-3 mt-2">
                                         <div class="row">
-                                            <select name="recipe" class="form-control col me-2">
+                                            <select name="recipe" class="form-select col me-2">
                                         [% FOREACH recipe IN recipes %]
                                                 <option value="[% recipe.id %]">[% recipe.name | html %]</option>
                                         [% END %]
