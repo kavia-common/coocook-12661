@@ -49,11 +49,11 @@ INSERT INTO "articles"
 ( 6,          2,               9,            NULL,              NULL,              NULL, 'other article',      '');
 
 INSERT INTO "meals"
-(id, project_id,        date,         name,                comment) VALUES
-( 1,          1,'2000-01-01',  'breakfast','Best meal of the day!'),
-( 2,          1,'2000-01-02',      'lunch',                     ''),
-( 3,          1,'2000-01-03',     'dinner',                     ''),
-( 9,          2,'2000-01-01', 'other meal',                     '');
+(id, project_id, position,         date,         name,                comment) VALUES
+( 1,          1, 1,        '2000-01-01',  'breakfast','Best meal of the day!'),
+( 2,          1, 2,        '2000-01-02',      'lunch',                     ''),
+( 3,          1, 3,        '2000-01-03',     'dinner',                     ''),
+( 9,          2, 4,        '2000-01-01', 'other meal',                     '');
 
 INSERT INTO "quantities"
 (id, project_id,       name, default_unit_id) VALUES
@@ -94,10 +94,10 @@ INSERT INTO "recipe_ingredients"
 
 
 INSERT INTO "dishes"
-(id, meal_id, from_recipe_id,         name, servings, prepare_at_meal_id,    preparation,                 description, comment) VALUES
-( 1,       1,           NULL,   'pancakes',        4,               NULL,             '',   'Make them really sweet!',      ''),
-( 2,       2,              1,      'pizza',        2,               NULL,             '',                          '',      ''),
-( 3,       3,           NULL,      'bread',        4,                  2,  'Bake bread!',                          '',      '');
+(id, meal_id, position, from_recipe_id,         name, servings, prepare_at_meal_id,    preparation,                 description, comment) VALUES
+( 1,       1,        1,           NULL,   'pancakes',        4,               NULL,             '',   'Make them really sweet!',      ''),
+( 2,       2,        2,              1,      'pizza',        2,               NULL,             '',                          '',      ''),
+( 3,       3,        3,           NULL,      'bread',        4,                  2,  'Bake bread!',                          '',      '');
 
 INSERT INTO "dish_ingredients"
 (id, position, dish_id, prepare, article_id, unit_id,  value, comment, item_id) VALUES

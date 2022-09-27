@@ -5,11 +5,14 @@ use MooseX::MarkAsMethods autoclean => 1;
 
 extends 'Coocook::Schema::Result';
 
+__PACKAGE__->load_components(qw< Ordered >);
+
 __PACKAGE__->table('meals');
 
 __PACKAGE__->add_columns(
     id         => { data_type => 'integer', is_auto_increment => 1 },
     project_id => { data_type => 'integer' },
+    position   => { data_type => 'integer', default_value => 1 },
     date       => { data_type => 'date' },
     name       => { data_type => 'text' },
     comment    => { data_type => 'text' },
@@ -18,6 +21,9 @@ __PACKAGE__->add_columns(
 __PACKAGE__->set_primary_key('id');
 
 __PACKAGE__->add_unique_constraints( [qw<project_id date name>] );
+
+__PACKAGE__->position_column('position');
+__PACKAGE__->grouping_column('project_id');
 
 __PACKAGE__->belongs_to( project => 'Coocook::Schema::Result::Project', 'project_id' );
 
