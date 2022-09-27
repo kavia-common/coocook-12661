@@ -1,6 +1,7 @@
 # Coocook
 
-[![build status](https://travis-ci.org/dboehmer/coocook.svg?branch=master)](https://travis-ci.org/dboehmer/coocook)
+[![build status](https://img.shields.io/gitlab/pipeline-status/coocook/coocook?branch=master)](https://gitlab.com/coocook/coocook/-/pipelines)
+[![test coverage](https://img.shields.io/gitlab/coverage/coocook/coocook/master)](https://gitlab.com/coocook/coocook/-/jobs)
 [![dishes served](https://coocook.org/badge/dishes_served.svg)](https://coocook.org/statistics)
 [![license](https://img.shields.io/gitlab/v/license/coocook/coocook)](LICENSE)
 
