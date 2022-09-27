@@ -1,3 +1,7 @@
+.pl-editor {
+    min-width: 1150px;
+}
+
 @media print {
     .shop-section {
         color: #000 !important;

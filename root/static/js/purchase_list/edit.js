@@ -28,10 +28,12 @@ window.addEventListener("beforeprint", () => {
             }
         });
     });
+    document.querySelector("h2").classList.remove("display-3");
 });
 
 window.addEventListener("afterprint", () => {
     document.querySelectorAll(".pl-editor").forEach((elem , idx) => {
         elem.innerHTML = tableData[idx];
     });
+    document.querySelector("h2").classList.add("display-3");
 });
