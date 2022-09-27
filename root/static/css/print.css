@@ -1,7 +1,3 @@
-.print {
-    display: none;
-}
-
 @media print {
     /* hide browser navigation elements */
     header, footer {

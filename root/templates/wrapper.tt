@@ -38,10 +38,7 @@
 </head>
 
 <body>
-<!--container div is necessary to keep the footer down, see https://matthewjamestaylor.com/bottom-footer -->
-<div id="container">
     <header class="sticky-top">
-
         <div class="w-100 p-0 m-0">
             <div class="row p-0 m-0">
                 <div class="col-12 p-0 m-0 ">
@@ -128,7 +125,7 @@ END %]
         </nav>
     </header>
 
-    <main class="container-md py-3">
+    <main class="container-md py-3 mb-auto">
         <div class="row my-3">
             <div id="messages" class="col-12">
             [% WHILE (message = messages.next) %]
@@ -142,7 +139,7 @@ END %]
             [% END %]
             </div>
             <div class="col-12">
-                <h1 id="print_h1" style="display: none">[% name | html; IF project %]: [% project.name | html; END %]</h1>
+                <h1 class="print">[% name | html; IF project %]: [% project.name | html; END %]</h1>
                 <h2 class="display-3">
                 [% IF html_title;
                     html_title; # may contain HTML
@@ -207,12 +204,12 @@ END %]
 
         </div>
     </footer>
+    <div class="no-print">
+        [% INCLUDE 'wrapper_footer.tt' %]
+    </div>
 
     [% FOR path IN js %]
     <script src="[% path %]"></script>
     [% END %]
-
-    [% INCLUDE 'wrapper_footer.tt' %]
-
 </body>
 </html>

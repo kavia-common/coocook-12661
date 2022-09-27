@@ -109,10 +109,6 @@ footer a:focus {
 /******** start header part ********/
 /*** general part ***/
 
-header {
-    margin: 0;
-}
-
 header nav ul {
     list-style-type: none;
     padding-left: 0;
@@ -293,10 +289,6 @@ ul {
                        * see https://stackoverflow.com/a/710264/498634 */
 }
 
-.pl-editor {
-    min-width: 1150px;
-}
-
 a.dark-link, button.dark-link {
     color: var(--bs-light) !important;
 }
@@ -366,21 +358,16 @@ cc-autocomplete {
     display: none;
 }
 
-/******** footer part ********/
-main {
-    margin-bottom: 12em !important; /*space overlapped by footer*/
+.print {
+    display: none;
 }
 
+/******** footer part ********/
 footer {
-    color: #f5f5ef;
-    position: absolute; /*necessary to position it at the bottom in all cases*/
-    bottom: 0;
     width: 100%;
     padding: 0.5em 1em 0.5em 1em;
     margin: 0 auto;
-    display: inline-block;
     line-height: 1.5;
-    height: 12em; /*adjust if there are additional links in the footer*/
 }
 
 footer nav ul {
