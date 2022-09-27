@@ -59,6 +59,7 @@ sub new {
     $config
       and $self->reload_config($config);
 
+    # for `findnodes` method, which can find HTML elements with XPath
     WWW::Mechanize::TreeBuilder->meta->apply( $self, tree_class => 'HTML::TreeBuilder::XPath' );
 
     return $self;
