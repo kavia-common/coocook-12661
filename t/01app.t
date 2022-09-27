@@ -116,9 +116,30 @@ subtest "static URIs" => sub {
     $t->get('/');
     $t->content_contains('https://localhost/static/css/style.css');
 
-    $t->reload_config( static_base_uri => 'https://coocook-cdn.example/' );
+    my $guard = $t->local_config_guard( static_base_uri => 'https://coocook-cdn.example/' );
     $t->get('/');
     $t->content_contains('https://coocook-cdn.example/css/style.css');
+};
+
+subtest content_security_policy => sub {
+    $t->get('/');
+    $t->content_contains(qq(<meta http-equiv="Content-Security-Policy" content="DEFAULT HERE">));
+
+    my $guard = $t->local_config_guard;
+
+    $t->reload_config( static_base_uri => 'https://coocook-cdn.example/' );
+    $t->get('/');
+    $t->content_contains(
+        qq(<meta http-equiv="Content-Security-Policy" content="WITH STATIC URL HERE">));
+
+    $t->reload_config( content_security_policy => '' );    # defined but false
+    $t->get('/');
+    $t->content_lacks('Content-Security-Policy');
+
+    my $csp = 'csp' . __FILE__ . __LINE__;
+    $t->reload_config( content_security_policy => $csp );
+    $t->get('/');
+    $t->content_contains(qq(<meta http-equiv="Content-Security-Policy" content="$csp">));
 };
 
 subtest "robots meta tag" => sub {
