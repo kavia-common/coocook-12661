@@ -71,9 +71,8 @@ if ( $ENV{CATALYST_DEBUG} ) {    # Coocook->debug() doesn't work here, always re
 # local deployment.
 
 ### DEFAULT/FACTORY SETTINGS ###
-__PACKAGE__->config( name => 'Coocook' );    # referenced in next block
-
 __PACKAGE__->config(
+    name => 'Coocook',
 
     # reasoning: if tab title bar in browser is short,
     #            display most important information first
@@ -135,8 +134,6 @@ __PACKAGE__->config(
 
         $username . '@' . $hostname;
     },
-
-    email_sender_name => __PACKAGE__->config->{name},
 
     email_signature => sub {
         my $c = shift;
@@ -210,6 +207,8 @@ __PACKAGE__->config(
 
 # Start the application
 __PACKAGE__->setup();
+
+__PACKAGE__->config->{email_sender_name} ||= __PACKAGE__->config->{name};
 
 =head1 SEE ALSO
 
