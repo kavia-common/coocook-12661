@@ -158,9 +158,12 @@ subtest "verify email address" => sub {
     # - maybe display a page with a POST button first?
     # - but every website I know does it with a simple GET
 
-    my $sign_in_value =
-      $t->findnodes('/html/body/div/div/div[3]/div[1]/div[1]/h2')->[0]->string_value();
-    like $sign_in_value, qr/sign in/i, "got redirected to login page";
+    # TODO find better solution than complex XPath expression and remove
+    #      dependency on HTML::TreeBuilder::XPath, WWW::Mechanize::TreeBuilder
+    my $node = $t->findnodes('/html/body/div/div[3]/div[1]/div[1]/h2')->[0]
+      or die "Can't find node in HTML tree";
+
+    like $node->string_value => qr/sign in/i, "got redirected to login page";
 
     $t->input_has_value( username => 'test', "username is prefilled in login form" );
 };
