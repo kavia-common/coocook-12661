@@ -74,6 +74,8 @@ if ( $ENV{CATALYST_DEBUG} ) {    # Coocook->debug() doesn't work here, always re
 __PACKAGE__->config(
     name => 'Coocook',
 
+    static_base_uri => "",
+
     # reasoning: if tab title bar in browser is short,
     #            display most important information first
     date_format_short => '%a, %{day} %b',    # Mon, 31 Dec
@@ -209,6 +211,23 @@ __PACKAGE__->config(
 __PACKAGE__->setup();
 
 __PACKAGE__->config->{email_sender_name} ||= __PACKAGE__->config->{name};
+
+__PACKAGE__->config->{content_security_policy} ||= sub {
+    if ( defined(__PACKAGE__->config->{content_security_policy}) ) {
+        return "";
+    }
+    
+    # TODO use this variant when trailing / not removed
+    # my $static_uri = __PACKAGE__->config->{static_base_uri} || "'self'";
+    # until that use this:
+    my $static_uri = __PACKAGE__->config->{static_base_uri};
+    if ( $static_uri ) {
+        $static_uri = $static_uri . '/';
+    }
+    else { $static_uri = "'self'" }
+        
+    return "default-src 'unsafe-inline' " . $static_uri . "; img-src data: " . $static_uri . "; font-src " . $static_uri . ";";
+}->();
 
 =head1 SEE ALSO
 

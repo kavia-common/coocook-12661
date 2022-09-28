@@ -3,7 +3,7 @@ use Test2::V0;
 use lib 't/lib';
 use Test::Coocook;
 
-plan(11);
+plan(12);
 
 my $t = Test::Coocook->new( config => { enable_user_registration => 1 }, max_redirect => 0 );
 
@@ -123,14 +123,14 @@ subtest "static URIs" => sub {
 
 subtest content_security_policy => sub {
     $t->get('/');
-    $t->content_contains(qq(<meta http-equiv="Content-Security-Policy" content="DEFAULT HERE">));
+    $t->content_contains(qq(<meta http-equiv="Content-Security-Policy" content="default-src 'unsafe-inline' 'self'; img-src data: 'self'; font-src 'self';">));
 
     my $guard = $t->local_config_guard;
 
     $t->reload_config( static_base_uri => 'https://coocook-cdn.example/' );
     $t->get('/');
     $t->content_contains(
-        qq(<meta http-equiv="Content-Security-Policy" content="WITH STATIC URL HERE">));
+        qq(<meta http-equiv="Content-Security-Policy" content="default-src 'unsafe-inline' https://coocook-cdn.example/; img-src data: https://coocook-cdn.example/; font-src https://coocook-cdn.example/;">));
 
     $t->reload_config( content_security_policy => '' );    # defined but false
     $t->get('/');

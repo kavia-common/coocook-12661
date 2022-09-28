@@ -74,6 +74,7 @@ sub auto : Private {
         }
     }
 
+    # TODO use hash slice
     $c->stash(
         map { $_ => $c->config->{$_} }
           qw<
@@ -85,6 +86,7 @@ sub auto : Private {
           icon_type
           icon_url
           icon_urls
+          content_security_policy
           >
     );
 
