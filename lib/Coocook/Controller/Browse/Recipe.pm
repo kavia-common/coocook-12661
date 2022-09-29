@@ -37,7 +37,13 @@ sub index : GET HEAD Chained('/base') PathPart('recipes') Args(0) Public {
         $recipes = $recipes->public;
 
         if ( my $user = $c->user ) {
-            $recipes = $recipes->union( $user->projects->search_related('recipes') );
+            $recipes = $recipes->union(
+                [
+                    $user->projects->search_related('recipes'),
+                    $user->organizations->search_related('organizations_projects')->search_related('project')
+                      ->search_related('recipes'),
+                ]
+            );
         }
     }
 
