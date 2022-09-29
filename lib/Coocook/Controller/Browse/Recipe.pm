@@ -51,7 +51,7 @@ sub index : GET HEAD Chained('/base') PathPart('recipes') Args(0) Public {
         undef,
         {
             columns  => [qw< id project_id name >],
-            order_by => 'name',
+            order_by => $recipes->me('name'),
         }
     )->hri->all;
 
