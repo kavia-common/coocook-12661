@@ -217,14 +217,7 @@ __PACKAGE__->config->{content_security_policy} ||= sub {
         return "";
     }
     
-    # TODO use this variant when trailing / not removed
-    # my $static_uri = __PACKAGE__->config->{static_base_uri} || "'self'";
-    # until that use this:
-    my $static_uri = __PACKAGE__->config->{static_base_uri};
-    if ( $static_uri ) {
-        $static_uri = $static_uri . '/';
-    }
-    else { $static_uri = "'self'" }
+    my $static_uri = __PACKAGE__->config->{static_base_uri} || "'self'";
         
     return "default-src 'unsafe-inline' " . $static_uri . "; img-src data: " . $static_uri . "; font-src " . $static_uri . ";";
 }->();

@@ -116,9 +116,16 @@ subtest "static URIs" => sub {
     $t->get('/');
     $t->content_contains('https://localhost/static/css/style.css');
 
+    is $t->catalyst_app->uri_for_static( '/foo', 42, { key => 'value' }, \'fragment' ) =>
+      '/static/foo/42?key=value#fragment';
+
     my $guard = $t->local_config_guard( static_base_uri => 'https://coocook-cdn.example/' );
     $t->get('/');
     $t->content_contains('https://coocook-cdn.example/css/style.css');
+
+    $t->reload_config( static_base_uri => 'scheme://user@host:1234/path/' );
+    $t->get('/');
+    $t->content_contains('scheme://user@host:1234/path/css/style.css');
 };
 
 subtest content_security_policy => sub {
