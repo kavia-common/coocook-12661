@@ -41,7 +41,13 @@ sub index : GET HEAD Chained('/base') PathPart('recipes') Args(0) Public {
         }
     }
 
-    my @recipes = $recipes->search( undef, { columns => [qw< id project_id name >] } )->hri->all;
+    my @recipes = $recipes->search(
+        undef,
+        {
+            columns  => [qw< id project_id name >],
+            order_by => 'name',
+        }
+    )->hri->all;
 
     {
         my $projects =
