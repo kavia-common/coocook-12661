@@ -20,7 +20,9 @@
     <meta name="description" content="[% meta_description %]">
     <meta name="keywords"    content="[% meta_keywords %]">
     <meta name="robots"      content="[% meta_robots %]">
-    [% IF content_security_policy %]<meta http-equiv="Content-Security-Policy" content="[% content_security_policy %]">[% END %]
+[% IF content_security_policy %]
+    <meta http-equiv="Content-Security-Policy" content="[% meta_content_security_policy %]">
+[% END %]
 
 [% IF canonical_url %]
     <link rel="canonical" href="[% canonical_url %]">

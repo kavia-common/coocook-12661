@@ -86,9 +86,10 @@ sub auto : Private {
           icon_type
           icon_url
           icon_urls
-          content_security_policy
           >
     );
+
+    $c->stash( meta_content_security_policy => $c->config->{content_security_policy} );
 
     $c->stash(
         css => [    # this comment makes perltidy not merge these lines
