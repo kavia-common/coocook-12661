@@ -11,8 +11,10 @@ after BUILD => sub {
 
     if ( my $capabilities = $args->{attributes}{RequiresCapability} ) {
         @$capabilities <= 1
-          or warn
-          "You should define a new capability instead of requiring multiple capabilities for action "
+          or join( '+', sort @$capabilities ) eq
+          'autocomplete_organizations+autocomplete_users'    # reasonable combination
+          or
+          warn "You should define a new capability instead of requiring multiple capabilities for action "
           . $args->{reverse};
 
         for my $capability (@$capabilities) {
