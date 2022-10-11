@@ -5,6 +5,7 @@ use Test2::Require::Module 'DateTime::Format::Pg';
 
 use Coocook::Script::Deploy;
 use Coocook::Schema;
+use DBI;
 use DBIx::Diff::Schema qw(diff_db_schema);
 
 use lib 't/lib';
@@ -15,20 +16,23 @@ my $FIRST_PGSQL_SCHEMA_VERSION = 21;
 
 plan tests => 2 + 3 * ( $Coocook::Schema::VERSION - $FIRST_PGSQL_SCHEMA_VERSION ) + 7;
 
-my $pg_dbic          = Test::PostgreSQL->new();
-my $schema_from_dbic = Coocook::Schema->connect( $pg_dbic->dsn );
+my $psql = Test::PostgreSQL->new();
+my $dbh  = DBI->connect( $psql->dsn );
+
+$dbh->do('CREATE DATABASE dbic');
+my $schema_from_dbic = Coocook::Schema->connect( $psql->dsn( dbname => 'dbic' ) );
 ok lives { $schema_from_dbic->deploy() }, "deploy with DBIx::Class";
 
-my $pg_deploy          = Test::PostgreSQL->new();
-my $schema_from_deploy = Coocook::Schema->connect( $pg_deploy->dsn );
+my $schema_from_deploy;    # initialized in loop
 
-my $pg_upgrades          = Test::PostgreSQL->new();
-my $schema_from_upgrades = Coocook::Schema->connect( $pg_upgrades->dsn );
+$dbh->do('CREATE DATABASE upgrades');
+my $schema_from_upgrades = Coocook::Schema->connect( $psql->dsn( dbname => 'upgrades' ) );
 install_ok( $schema_from_upgrades, $FIRST_PGSQL_SCHEMA_VERSION );
 
 for my $version ( $FIRST_PGSQL_SCHEMA_VERSION + 1 .. $Coocook::Schema::VERSION ) {
-    $pg_deploy          = Test::PostgreSQL->new();
-    $schema_from_deploy = Coocook::Schema->connect( $pg_deploy->dsn );
+    my $database = 'deploy' . $version;
+    $dbh->do("CREATE DATABASE $database");
+    $schema_from_deploy = Coocook::Schema->connect( $psql->dsn( dbname => $database ) );
     install_ok( $schema_from_deploy, $version );
 
     upgrade_ok( $schema_from_upgrades, $version );
