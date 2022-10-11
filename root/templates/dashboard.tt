@@ -28,7 +28,7 @@
 
     <ul class="list-unstyled d-flex flex-wrap gap-3">
     [% FOR proj IN my_projects; # don't overwrite $project! %]
-        <li><a class="item-box text-white" href="[% proj.url %]"><span>[% '🔒' UNLESS proj.is_public %] [% proj.name | html %]</span></a></li>
+        <li><a class="item-box text-white" href="[% proj.url %]">[% '🔒' UNLESS proj.is_public %] [% proj.name | html %]</a></li>
     [% END %]
     </ul>
 
@@ -43,7 +43,7 @@
     [% ELSE %]
     <ul class="list-unstyled d-flex flex-wrap gap-3">
     [% FOR proj IN other_projects; # don't overwrite $project! %]
-        <li><a class="item-box text-white" href="[% proj.url %]"><span>[% proj.name | html %]</span></a></li>
+        <li><a class="item-box text-white" href="[% proj.url %]">[% proj.name | html %]</a></li>
     [% END %]
     </ul>
     [% END %]

@@ -305,31 +305,17 @@ a.dark-link:hover, button.dark-link:hover {
 }
 
 .item-box {
-    background-color: var(--bs-primary);
-    width: 100px;
-    height: 100px;
-    padding: 0.5rem;
-    border-radius: 0.5rem;
     display: flex;
-    align-items: center;
+    background-color: var(--bs-primary);
+    height: 56px;
+    padding: 1rem;
+    border-radius: 1rem;
     overflow: hidden; 
     text-decoration: none;
 }
 
 .item-box:hover {
     background-color: var(--cc-green-dark);
-}
-
-.item-box span {
-    display: inline;
-    width: 100%;
-    word-wrap: break-word;
-    white-space: normal;
-    -moz-hyphens: auto;
-   -o-hyphens: auto;
-   -webkit-hyphens: auto;
-   -ms-hyphens: auto;
-   hyphens: auto;
 }
 
 .btn:focus,
