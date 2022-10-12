@@ -3,7 +3,7 @@ use Test2::V0;
 use lib 't/lib';
 use Test::Coocook;
 
-plan(11);
+plan(12);
 
 my $t = Test::Coocook->new( config => { enable_user_registration => 1 }, max_redirect => 0 );
 
@@ -116,9 +116,42 @@ subtest "static URIs" => sub {
     $t->get('/');
     $t->content_contains('https://localhost/static/css/style.css');
 
-    $t->reload_config( static_base_uri => 'https://coocook-cdn.example/' );
+    is $t->catalyst_app->uri_for_static( '/foo', 42, { key => 'value' }, \'fragment' ) =>
+      '/static/foo/42?key=value#fragment';
+
+    my $guard = $t->local_config_guard( static_base_uri => 'https://coocook-cdn.example/' );
     $t->get('/');
     $t->content_contains('https://coocook-cdn.example/css/style.css');
+
+    $t->reload_config( static_base_uri => 'scheme://user@host:1234/path/' );
+    $t->get('/');
+    $t->content_contains('scheme://user@host:1234/path/css/style.css');
+};
+
+subtest content_security_policy => sub {
+    $t->get('/');
+    $t->meta_http_equiv_is( 'Content-Security-Policy' =>
+          q(default-src 'unsafe-inline' 'self'; img-src data: 'self'; font-src 'self';) );
+
+    my $guard = $t->local_config_guard;    # undo changes at end of block
+
+    $t->reload_config(
+        static_base_uri         => 'https://coocook-cdn.example/',
+        content_security_policy => undef,                            # reset
+    );
+    $t->get('/');
+    $t->meta_http_equiv_is( 'Content-Security-Policy' =>
+q(default-src 'unsafe-inline' https://coocook-cdn.example/; img-src data: https://coocook-cdn.example/; font-src https://coocook-cdn.example/;)
+    );
+
+    $t->reload_config( content_security_policy => '' );    # defined but false
+    $t->get('/');
+    $t->content_lacks('Content-Security-Policy');
+
+    my $csp = 'csp' . __FILE__ . __LINE__;
+    $t->reload_config( content_security_policy => $csp );
+    $t->get('/');
+    $t->meta_http_equiv_is( 'Content-Security-Policy' => $csp );
 };
 
 subtest "robots meta tag" => sub {

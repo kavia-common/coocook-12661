@@ -83,7 +83,7 @@ has_admin = 0 %]
             </div>
             <div class="mb-2">
                 <label for="role" class="form-label">Role</label>
-                <select id="role" class="form-control" name="role">
+                <select id="role" class="form-select" name="role">
                 [% FOR role IN roles %]
                     <option value="[% role %]">[% role %]</option>
                 [% END %]

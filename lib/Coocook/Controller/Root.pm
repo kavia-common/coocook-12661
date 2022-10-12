@@ -74,6 +74,7 @@ sub auto : Private {
         }
     }
 
+    # TODO use hash slice
     $c->stash(
         map { $_ => $c->config->{$_} }
           qw<
@@ -87,6 +88,8 @@ sub auto : Private {
           icon_urls
           >
     );
+
+    $c->stash( meta_content_security_policy => $c->config->{content_security_policy} );
 
     $c->stash(
         css => [    # this comment makes perltidy not merge these lines
