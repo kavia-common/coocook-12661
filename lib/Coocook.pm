@@ -208,17 +208,27 @@ __PACKAGE__->config(
 # Start the application
 __PACKAGE__->setup();
 
-__PACKAGE__->config->{email_sender_name} ||= __PACKAGE__->config->{name};
+sub setup_finalize {
+    my $self = shift;
 
-__PACKAGE__->config->{content_security_policy} ||= sub {
-    if ( defined(__PACKAGE__->config->{content_security_policy}) ) {
-        return "";
-    }
-    
-    my $static_uri = __PACKAGE__->config->{static_base_uri} || qq('self');
-        
-    return qq(default-src 'unsafe-inline' $static_uri; img-src data: $static_uri; font-src $static_uri;);
-}->();
+    my $return = $self->next::method(@_);
+
+    $self->config->{email_sender_name} ||= $self->config->{name};
+
+    $self->config->{content_security_policy} ||= sub {
+        if ( defined( $self->config->{content_security_policy} ) ) {
+            return "";
+        }
+
+        my $static_uri = $self->config->{static_base_uri} || qq('self');
+
+        return
+          qq(default-src 'unsafe-inline' $static_uri; img-src data: $static_uri; font-src $static_uri;);
+      }
+      ->();
+
+    return $return;
+}
 
 =head1 SEE ALSO
 
