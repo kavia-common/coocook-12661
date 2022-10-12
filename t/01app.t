@@ -130,14 +130,16 @@ subtest "static URIs" => sub {
 
 subtest content_security_policy => sub {
     $t->get('/');
-    $t->content_contains(qq(<meta http-equiv="Content-Security-Policy" content="default-src 'unsafe-inline' 'self'; img-src data: 'self'; font-src 'self';">));
+    $t->meta_http_equiv_is( 'Content-Security-Policy' =>
+          q(default-src 'unsafe-inline' 'self'; img-src data: 'self'; font-src 'self';) );
 
     my $guard = $t->local_config_guard;
 
     $t->reload_config( static_base_uri => 'https://coocook-cdn.example/' );
     $t->get('/');
-    $t->content_contains(
-        qq(<meta http-equiv="Content-Security-Policy" content="default-src 'unsafe-inline' https://coocook-cdn.example/; img-src data: https://coocook-cdn.example/; font-src https://coocook-cdn.example/;">));
+    $t->meta_http_equiv_is( 'Content-Security-Policy' =>
+q(default-src 'unsafe-inline' https://coocook-cdn.example/; img-src data: https://coocook-cdn.example/; font-src https://coocook-cdn.example/;)
+    );
 
     $t->reload_config( content_security_policy => '' );    # defined but false
     $t->get('/');
@@ -146,7 +148,7 @@ subtest content_security_policy => sub {
     my $csp = 'csp' . __FILE__ . __LINE__;
     $t->reload_config( content_security_policy => $csp );
     $t->get('/');
-    $t->content_contains(qq(<meta http-equiv="Content-Security-Policy" content="$csp">));
+    $t->meta_http_equiv_is( 'Content-Security-Policy' => $csp );
 };
 
 subtest "robots meta tag" => sub {

@@ -491,6 +491,29 @@ sub json_is {
     Test2::V0::is $json => $expected, $name;
 }
 
+sub meta_http_equiv_is {
+    my ( $self, $header => $expected, $name ) = @_;
+
+    local $Test::Builder::Level = $Test::Builder::Level + 1;
+
+    $name ||= qq(Content of <meta http-equiv="$header">);
+
+    my @meta = $self->findnodes(qq(/html/head/meta[\@http-equiv="$header"]));
+
+    if ( @meta == 0 ) {
+        Test2::V0::fail $name;
+        Test2::V0::diag qq(No tag <meta http-equiv="$header"> found);
+        return;
+    }
+
+    if ( @meta > 1 ) {
+        my $n = @meta;
+        carp qq(Found $n <meta http-equiv="$header"> tags. Checking only first one);
+    }
+
+    Test2::V0::is $meta[0]->attr('content') => $expected, $name;
+}
+
 sub redirect_is {
     my ( $self, $url, $expected, $status, $name ) = @_;
 
