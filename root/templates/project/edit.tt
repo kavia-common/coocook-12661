@@ -3,10 +3,9 @@
 <script>
 const mealsDishesEditorData = {
     projectId: [% project.id %],
+    projectName: '[% project.name %]',
     projectPlan: JSON.parse('[% days_json %]'),
 };
-
-console.log(mealsDishesEditorData.days);
 </script>
 
 <div id="meals-dishes-editor" >
