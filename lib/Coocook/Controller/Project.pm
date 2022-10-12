@@ -3,6 +3,7 @@ package Coocook::Controller::Project;
 use DateTime;
 use Moose;
 use MooseX::MarkAsMethods autoclean => 1;
+use JSON::MaybeXS qw/to_json/;
 
 BEGIN { extends 'Coocook::Controller' }
 
@@ -174,12 +175,14 @@ sub edit : GET HEAD Chained('submenu') PathPart('edit') Args(0) RequiresCapabili
         default_date         => $default_date,
         recipes              => [ $c->project->recipes->sorted->all ],
         days                 => $days,
+        days_json            => to_json($c->model('Plan')->project_for_meals_dishes_editor( $c->project )),
         dish_create_url      => $c->project_uri('/dish/create'),
         dish_from_recipe_url => $c->project_uri('/dish/from_recipe'),
         meal_create_url      => $c->project_uri('/meal/create'),
     );
 
-    push @{ $c->stash->{js} },  '/js/project/edit.js';
+    push @{ $c->stash->{js} }, '/js/project/edit.js';
+    push @{ $c->stash->{js} }, '/lib/web-js-components/meals-dishes-editor/meals-dishes-editor.es.js';
     push @{ $c->stash->{css} }, '/css/project/edit.css';
 }
 

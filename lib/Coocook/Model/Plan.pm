@@ -6,6 +6,7 @@ use DateTime;
 use Moose;
 use MooseX::NonMoose;
 use Scalar::Util 'weaken';
+use JSON::MaybeXS;
 
 __PACKAGE__->meta->make_immutable;
 
@@ -158,8 +159,46 @@ sub project {
             push @{ $meals{$prepare_meal_id}{prepared_dishes} }, $dish;
         }
     }
-
     return [ @days{ sort keys %days } ];
+}
+
+sub project_for_meals_dishes_editor {
+    my ($self, $project) = @_;
+
+    my %days;
+    my %meals;
+
+    my $meals = $project->meals;
+    $meals = $meals->search( undef, { order_by => $meals->me('name') } );
+
+    my $dishes = $meals->search_related('dishes');
+
+    while ( my $meal = $meals->next ) {
+        my $day = $days{ $meal->date->ymd } ||= {
+            date  => $meal->date->ymd,
+            meals => {},
+        };
+
+        my $relevant_columns = ['meal_id', 'comment', 'id', 'name', 'prepare_at_meal_id', 'servings'];
+        my $related_dishes = $meal->search_related(dishes => (undef, {columns => $relevant_columns }));   
+        my $prepared_dishes = $meal->search_related(prepared_dishes =>(undef, { columns => $relevant_columns }));
+
+        $day->{meals}->{$meal->id} = $meal->as_hashref(
+            date            => $day->{date},
+            deletable       => !!$meal->deletable ? JSON::true : JSON::false,
+            dishes          => {map {$_->{id} => $_} $related_dishes->hri->all},
+            prepared_dishes => {map {$_->{id} => $_} $prepared_dishes->hri->all},
+          );
+    }
+
+    for my $dish ( $dishes->all ) {
+
+        if ( my $prepare_meal_id = $dish->{prepare_at_meal_id} ) {
+            push @{ $meals{$prepare_meal_id}{prepared_dishes} }, $dish;
+        }
+    }
+
+    return { %days{ sort keys %days } } ;
 }
 
 1;

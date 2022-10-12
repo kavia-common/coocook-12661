@@ -1,5 +1,17 @@
 [% title = project.name %]
 
+<script>
+const mealsDishesEditorData = {
+    projectId: [% project.id %],
+    days: JSON.parse('[% days_json %]'),
+};
+
+console.log(mealsDishesEditorData.days);
+</script>
+
+<div id="meals-dishes-editor" >
+</div>
+
 <div class="delete-by-project-edit-js">
     <table>
         <thead>
