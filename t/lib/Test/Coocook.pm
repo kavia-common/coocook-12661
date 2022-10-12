@@ -1,6 +1,9 @@
 package Test::Coocook;
 
-use Test2::V0 ();
+use strict;
+use warnings;
+
+use Test2::V0 ();    # with () this does NOT enable strict + warnings
 
 use Carp;
 use Email::Sender::Simple;
