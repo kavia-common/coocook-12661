@@ -3,7 +3,7 @@
 <script>
 const mealsDishesEditorData = {
     projectId: [% project.id %],
-    days: JSON.parse('[% days_json %]'),
+    projectPlan: JSON.parse('[% days_json %]'),
 };
 
 console.log(mealsDishesEditorData.days);
