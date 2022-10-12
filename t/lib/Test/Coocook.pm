@@ -125,7 +125,7 @@ sub local_config_guard {
 
     my $original_config = $self->catalyst_app->config;
 
-    $self->reload_config(@_);
+    @_ and $self->reload_config(@_);
 
     return guard { $self->reload_config($original_config) };
 }

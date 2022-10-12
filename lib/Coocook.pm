@@ -215,11 +215,7 @@ sub setup_finalize {
 
     $self->config->{email_sender_name} ||= $self->config->{name};
 
-    $self->config->{content_security_policy} ||= sub {
-        if ( defined( $self->config->{content_security_policy} ) ) {
-            return "";
-        }
-
+    $self->config->{content_security_policy} //= sub {
         my $static_uri = $self->config->{static_base_uri} || qq('self');
 
         return
