@@ -172,15 +172,15 @@ sub project_for_meals_dishes_editor {
     while ( my $meal = $meals->next ) {
         my $day = $days{ $meal->date->ymd } ||= {};
 
-        my $relevant_columns = ['meal_id', 'comment', 'id', 'name', 'prepare_at_meal_id', 'servings'];
+        my $relevant_columns = ['meal_id', 'comment', 'id', 'name', 'prepare_at_meal_id', 'servings', 'position'];
         my $related_dishes = $meal->search_related(dishes => (undef, {columns => $relevant_columns }));   
         my $prepared_dishes = $meal->search_related(prepared_dishes =>(undef, { columns => $relevant_columns }));
 
         $day->{$meal->id} = $meal->as_hashref(
-            date            => $day->{date},
-            deletable       => !!$meal->deletable ? JSON::true : JSON::false,
-            dishes          => {map {$_->{id} => $_} $related_dishes->hri->all},
-            prepared_dishes => {map {$_->{id} => $_} $prepared_dishes->hri->all},
+            date            => $meal->date->ymd,
+            deletable       => $meal->deletable ? JSON::true : JSON::false,
+            dishes          => {map {$_->{id} => {%$_, date => $meal->date->ymd}} $related_dishes->hri->all},
+            prepared_dishes => {map {$_->{id} => {%$_, date => $meal->date->ymd}} $prepared_dishes->hri->all},
           );
     }
 
