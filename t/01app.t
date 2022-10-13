@@ -141,7 +141,7 @@ subtest content_security_policy => sub {
     );
     $t->get('/');
     $t->meta_http_equiv_is( 'Content-Security-Policy' =>
-q(default-src 'unsafe-inline' https://coocook-cdn.example/; img-src data: https://coocook-cdn.example/; font-src https://coocook-cdn.example/;)
+q(default-src 'unsafe-inline' 'self' https://coocook-cdn.example/; img-src data: https://coocook-cdn.example/; font-src https://coocook-cdn.example/;)
     );
 
     $t->reload_config( content_security_policy => '' );    # defined but false

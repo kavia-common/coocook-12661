@@ -216,10 +216,12 @@ sub setup_finalize {
     $self->config->{email_sender_name} ||= $self->config->{name};
 
     $self->config->{content_security_policy} //= sub {
-        my $static_uri = $self->config->{static_base_uri} || qq('self');
+        if ( my $static_uri = $self->config->{static_base_uri} ) {
+            return
+qq(default-src 'unsafe-inline' 'self' $static_uri; img-src data: $static_uri; font-src $static_uri;);
+        }
 
-        return
-          qq(default-src 'unsafe-inline' $static_uri; img-src data: $static_uri; font-src $static_uri;);
+        return qq(default-src 'unsafe-inline' 'self'; img-src data: 'self'; font-src 'self';);
       }
       ->();
 
