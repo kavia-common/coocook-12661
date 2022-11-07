@@ -43,7 +43,8 @@ sub index : GET HEAD Chained('/purchase_list/submenu') PathPart('print') Args(0)
     {
         # can't use get_column(date) here because only $meal->date() inflates DateTime object
         my @dates =
-          map { $_->date } $project->meals->search( undef, { columns => 'date', distinct => 1 } )->all;
+          map { $_->date }
+          $project->meals->search( undef, { columns => 'date', distinct => 1, order_by => 'date' } )->all;
 
         for my $date (@dates) {
             push @days,
