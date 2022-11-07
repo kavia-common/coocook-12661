@@ -56,11 +56,6 @@ Primary key of `Unit` for database.
 
 Foreign key on `Project`. References the `Project` that this `Unit` was created or imported in.
 
-#### space'
-**type:** boolean
-
-Indicates if the `Unit`'s (short\_/long\_)name should be prepended with a space or not.
-
 #### short\_name
 **type:** text
 

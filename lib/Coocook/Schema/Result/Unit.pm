@@ -10,7 +10,6 @@ __PACKAGE__->table('units');
 __PACKAGE__->add_columns(
     id         => { data_type => 'integer', is_auto_increment => 1 },
     project_id => { data_type => 'integer' },
-    space      => { data_type => 'boolean' },
     short_name => { data_type => 'text' },
     long_name  => { data_type => 'text' },
 );

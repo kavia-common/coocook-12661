@@ -122,7 +122,6 @@ sub update_or_insert : Private {
         {
             short_name => $c->req->params->get('short_name'),
             long_name  => $c->req->params->get('long_name'),
-            space      => $unit->format_bool( !!$c->req->params->get('space') ),
         }
     );
 

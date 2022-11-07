@@ -264,7 +264,6 @@ CREATE INDEX "terms_users_idx_user_id" on "terms_users" ("user_id");
 CREATE TABLE "units" (
   "id" serial NOT NULL,
   "project_id" integer NOT NULL,
-  "space" boolean NOT NULL,
   "short_name" text NOT NULL,
   "long_name" text NOT NULL,
   PRIMARY KEY ("id"),

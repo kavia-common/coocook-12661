@@ -37,6 +37,9 @@ ALTER TABLE units DROP COLUMN quantity_id;
 ALTER TABLE units DROP COLUMN to_quantity_default;
 
 ;
+ALTER TABLE units DROP COLUMN space;
+
+;
 DROP TABLE quantities CASCADE;
 
 ;

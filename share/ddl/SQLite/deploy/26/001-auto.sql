@@ -234,7 +234,6 @@ CREATE INDEX terms_users_idx_user_id ON terms_users (user_id);
 CREATE TABLE units (
   id INTEGER PRIMARY KEY NOT NULL,
   project_id integer NOT NULL,
-  space boolean NOT NULL,
   short_name text NOT NULL,
   long_name text NOT NULL,
   FOREIGN KEY (project_id) REFERENCES projects(id) ON DELETE CASCADE

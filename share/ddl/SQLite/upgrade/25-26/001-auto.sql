@@ -25,14 +25,13 @@ CREATE INDEX unit_conversions_idx_unit2_id ON unit_conversions (unit2_id);
 CREATE TEMPORARY TABLE units_temp_alter (
   id INTEGER PRIMARY KEY NOT NULL,
   project_id integer NOT NULL,
-  space boolean NOT NULL,
   short_name text NOT NULL,
   long_name text NOT NULL,
   FOREIGN KEY (project_id) REFERENCES projects(id) ON DELETE CASCADE
 );
 
 ;
-INSERT INTO units_temp_alter( id, project_id, space, short_name, long_name) SELECT id, project_id, space, short_name, long_name FROM units;
+INSERT INTO units_temp_alter( id, project_id, short_name, long_name) SELECT id, project_id, short_name, long_name FROM units;
 
 ;
 DROP TABLE units;
@@ -41,7 +40,6 @@ DROP TABLE units;
 CREATE TABLE units (
   id INTEGER PRIMARY KEY NOT NULL,
   project_id integer NOT NULL,
-  space boolean NOT NULL,
   short_name text NOT NULL,
   long_name text NOT NULL,
   FOREIGN KEY (project_id) REFERENCES projects(id) ON DELETE CASCADE
@@ -54,7 +52,7 @@ CREATE INDEX units_idx_project_id ON units (project_id);
 CREATE UNIQUE INDEX units_project_id_long_name ON units (project_id, long_name);
 
 ;
-INSERT INTO units SELECT id, project_id, space, short_name, long_name FROM units_temp_alter;
+INSERT INTO units SELECT id, project_id, short_name, long_name FROM units_temp_alter;
 
 ;
 DROP TABLE units_temp_alter;

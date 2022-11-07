@@ -21,7 +21,6 @@ our $SQLITE_NOTORIOUS_EMPTY_STRING_COLUMNS = {
     DishIngredient   => [ 'prepare',   'value' ],
     RecipeIngredient => [ 'prepare',   'value' ],
     Item             => [ 'purchased', 'value' ],
-    Unit             => 'space',
 };
 our $SQLITE_NUMERIC_COLUMNS = {
     DishIngredient   => 'value',

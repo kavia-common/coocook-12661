@@ -3136,7 +3136,7 @@ schema:
           is_primary_key: 0
           is_unique: 1
           name: long_name
-          order: 5
+          order: 4
           size:
             - 0
         project_id:
@@ -3156,16 +3156,6 @@ schema:
           is_primary_key: 0
           is_unique: 0
           name: short_name
-          order: 4
-          size:
-            - 0
-        space:
-          data_type: boolean
-          default_value: ~
-          is_nullable: 0
-          is_primary_key: 0
-          is_unique: 0
-          name: space
           order: 3
           size:
             - 0

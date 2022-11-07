@@ -156,8 +156,7 @@ message_contains('fresh project');
 $project->create_related( tags => { name => 'foo' } );
 message_like(qr/ lacks .+ units /x);
 
-my $unit =
-  $project->create_related( units => { short_name => 'kg', long_name => 'kilograms', space => 0 } );
+my $unit = $project->create_related( units => { short_name => 'kg', long_name => 'kilograms' } );
 message_like(qr/ lacks .+ articles /x);
 
 my $article = $project->create_related(

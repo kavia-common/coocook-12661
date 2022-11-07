@@ -49,9 +49,8 @@ subtest articles_cached_units => sub {
     }
 
     # add new unit to new article to make sure that is cached, too
-    my $article = $project->create_related( articles => { name => "foo", comment => "" } );
-    my $unit =
-      $project->create_related( units => { short_name => "b", long_name => "bar", space => 0 } );
+    my $article = $project->create_related( articles => { name       => "foo", comment   => "" } );
+    my $unit    = $project->create_related( units    => { short_name => "b",   long_name => "bar" } );
     $article->add_to_units($unit);
 
     my ( $articles => $units ) = @result;
