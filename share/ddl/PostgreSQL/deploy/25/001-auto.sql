@@ -151,7 +151,7 @@ CREATE INDEX "roles_users_idx_user_id" on "roles_users" ("user_id");
 CREATE TABLE "meals" (
   "id" serial NOT NULL,
   "project_id" integer NOT NULL,
-  "position" integer DEFAULT 1 NOT NULL,
+  "position" integer NOT NULL,
   "date" date NOT NULL,
   "name" text NOT NULL,
   "comment" text NOT NULL,
@@ -358,7 +358,7 @@ CREATE INDEX "units_idx_quantity_id" on "units" ("quantity_id");
 CREATE TABLE "dishes" (
   "id" serial NOT NULL,
   "meal_id" integer NOT NULL,
-  "position" integer DEFAULT 1 NOT NULL,
+  "position" integer NOT NULL,
   "from_recipe_id" integer,
   "name" text NOT NULL,
   "servings" integer NOT NULL,

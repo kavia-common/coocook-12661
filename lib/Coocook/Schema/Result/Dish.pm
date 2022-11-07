@@ -12,8 +12,8 @@ __PACKAGE__->table('dishes');
 __PACKAGE__->add_columns(
     id                 => { data_type => 'integer', is_auto_increment => 1 },
     meal_id            => { data_type => 'integer' },
-    position           => { data_type => 'integer', default_value => 1, },
-    from_recipe_id     => { data_type => 'integer', is_nullable   => 1 },
+    position           => { data_type => 'integer' },
+    from_recipe_id     => { data_type => 'integer', is_nullable => 1 },
     name               => { data_type => 'text' },
     servings           => { data_type => 'integer' },
     prepare_at_meal_id => { data_type => 'integer', is_nullable => 1 },

@@ -4,10 +4,10 @@
 BEGIN;
 
 ;
-ALTER TABLE dishes ADD COLUMN position integer NOT NULL DEFAULT 1;
+ALTER TABLE dishes ADD COLUMN position integer NOT NULL;
 
 ;
-ALTER TABLE meals ADD COLUMN position integer NOT NULL DEFAULT 1;
+ALTER TABLE meals ADD COLUMN position integer NOT NULL;
 
 ;
 

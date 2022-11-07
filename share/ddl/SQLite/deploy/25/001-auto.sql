@@ -131,7 +131,7 @@ CREATE INDEX roles_users_idx_user_id ON roles_users (user_id);
 CREATE TABLE meals (
   id INTEGER PRIMARY KEY NOT NULL,
   project_id integer NOT NULL,
-  position integer NOT NULL DEFAULT 1,
+  position integer NOT NULL,
   date date NOT NULL,
   name text NOT NULL,
   comment text NOT NULL,
@@ -322,7 +322,7 @@ CREATE UNIQUE INDEX units_project_id_long_name ON units (project_id, long_name);
 CREATE TABLE dishes (
   id INTEGER PRIMARY KEY NOT NULL,
   meal_id integer NOT NULL,
-  position integer NOT NULL DEFAULT 1,
+  position integer NOT NULL,
   from_recipe_id integer,
   name text NOT NULL,
   servings integer NOT NULL,
