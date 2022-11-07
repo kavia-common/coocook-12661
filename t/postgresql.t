@@ -100,11 +100,10 @@ schema_diff_like(
             'main.dbix_class_deploymenthandler_versions',    # not created by DBIC
         ];
         field modified_tables => hash {
+            my $lc2uc_id = { id => { old_type => 'integer', new_type => 'INTEGER' } };
 
             # SQLite PKs are deployed with uppercase 'id INTEGER PRIMARY KEY'
-            field 'main.'
-              . $_ => { modified_columns => { id => { old_type => 'integer', new_type => 'INTEGER' } } }
-              for qw<
+            field 'main.' . $_ => { modified_columns => $lc2uc_id } for qw<
               articles
               blacklist_emails
               blacklist_usernames
@@ -122,15 +121,25 @@ schema_diff_like(
               terms
               units
               users
-              >;
+            >;
 
             # https://github.com/perlancar/perl-DBIx-Diff-Schema/issues/1
-            field 'main.' . $_ => E() for qw<
+            field 'main.items' => {
+                added_columns    => ['offset'],
+                deleted_columns  => ['"offset"'],
+                modified_columns => $lc2uc_id,
+            };
+            field 'main.'
+              . $_ => {
+                added_columns    => ['position'],
+                deleted_columns  => ['"position"'],
+                modified_columns => $lc2uc_id,
+              }
+              for qw<
               dish_ingredients
               faqs
-              items
               recipe_ingredients
-            >;
+              >;
         };
     }
 );
