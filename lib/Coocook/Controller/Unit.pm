@@ -141,16 +141,17 @@ sub update_or_insert : Private {
     }
 
     # TODO keep input values
-    @errors and $c->redirect_detach(
-        $c->project_uri(
-            (
+    if (@errors) {
+        $c->messages->error($_) for @errors;
+
+        $c->redirect_detach(
+            $c->project_uri(
                 $unit->in_storage
                 ? ( $self->action_for('edit'), $unit->id )
-                : $self->action_for('index')
-            ),
-            { error => "@errors" }
-        )
-    );
+                : $self->action_for('new_unit')
+            )
+        );
+    }
 
     $unit->update_or_insert();
 
