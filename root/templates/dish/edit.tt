@@ -77,11 +77,11 @@
     </div>
 </div>
 </form>
-			
+
 <script>
 const ingredientsEditorData = {
     project_id: [% dish.project.id %],
-    project_name: "[% dish.project.name %]",
+    project_name: "[% dish.project.url_name %]",
     dish_id: [% dish.id %],
 };
 </script>

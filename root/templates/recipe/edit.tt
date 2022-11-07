@@ -84,7 +84,7 @@
 <script>
 const ingredientsEditorData = {
     project_id: [% recipe.project.id %],
-    project_name: "[% recipe.project.name %]",
+    project_name: "[% recipe.project.url_name %]",
     recipe_id: [% recipe.id %],
 };
 </script>
