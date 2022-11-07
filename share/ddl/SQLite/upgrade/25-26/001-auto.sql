@@ -26,12 +26,13 @@ CREATE TEMPORARY TABLE units_temp_alter (
   id INTEGER PRIMARY KEY NOT NULL,
   project_id integer NOT NULL,
   short_name text NOT NULL,
-  long_name text NOT NULL,
-  FOREIGN KEY (project_id) REFERENCES projects(id) ON DELETE CASCADE
+  long_name text NOT NULL
 );
 
 ;
 INSERT INTO units_temp_alter( id, project_id, short_name, long_name) SELECT id, project_id, short_name, long_name FROM units;
+
+PRAGMA defer_foreign_keys = true;
 
 ;
 DROP TABLE units;
