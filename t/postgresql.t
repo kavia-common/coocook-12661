@@ -5,6 +5,7 @@ use Test2::Require::Module 'DateTime::Format::Pg';
 
 use Coocook::Script::Deploy;
 use Coocook::Schema;
+use Data::Dumper;
 use DBI;
 use DBIx::Diff::Schema qw(diff_db_schema);
 
@@ -199,5 +200,7 @@ sub schema_diff_like {
     # TODO doesn't detect constraint changes, e.g. missing UNIQUEs
     my $diff = diff_db_schema( map { $_->storage->dbh } $schema1, $schema2 );
 
-    is $diff => $expected_diff, $name // "database schemas equal";
+    is $diff => $expected_diff,
+      $name // "database schemas equal"
+      or diag Dumper($diff);
 }
