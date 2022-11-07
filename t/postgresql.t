@@ -5,6 +5,8 @@ use Test2::Require::Module 'DateTime::Format::Pg';
 
 use Coocook::Script::Deploy;
 use Coocook::Schema;
+use Data::Dumper;
+use DBI;
 use DBIx::Diff::Schema qw(diff_db_schema);
 
 use lib 't/lib';
@@ -15,20 +17,23 @@ my $FIRST_PGSQL_SCHEMA_VERSION = 21;
 
 plan tests => 2 + 3 * ( $Coocook::Schema::VERSION - $FIRST_PGSQL_SCHEMA_VERSION ) + 7;
 
-my $pg_dbic          = Test::PostgreSQL->new();
-my $schema_from_dbic = Coocook::Schema->connect( $pg_dbic->dsn );
+my $psql = Test::PostgreSQL->new();
+my $dbh  = DBI->connect( $psql->dsn );
+
+$dbh->do('CREATE DATABASE dbic');
+my $schema_from_dbic = Coocook::Schema->connect( $psql->dsn( dbname => 'dbic' ) );
 ok lives { $schema_from_dbic->deploy() }, "deploy with DBIx::Class";
 
-my $pg_deploy          = Test::PostgreSQL->new();
-my $schema_from_deploy = Coocook::Schema->connect( $pg_deploy->dsn );
+my $schema_from_deploy;    # initialized in loop
 
-my $pg_upgrades          = Test::PostgreSQL->new();
-my $schema_from_upgrades = Coocook::Schema->connect( $pg_upgrades->dsn );
+$dbh->do('CREATE DATABASE upgrades');
+my $schema_from_upgrades = Coocook::Schema->connect( $psql->dsn( dbname => 'upgrades' ) );
 install_ok( $schema_from_upgrades, $FIRST_PGSQL_SCHEMA_VERSION );
 
 for my $version ( $FIRST_PGSQL_SCHEMA_VERSION + 1 .. $Coocook::Schema::VERSION ) {
-    $pg_deploy          = Test::PostgreSQL->new();
-    $schema_from_deploy = Coocook::Schema->connect( $pg_deploy->dsn );
+    my $database = 'deploy' . $version;
+    $dbh->do("CREATE DATABASE $database");
+    $schema_from_deploy = Coocook::Schema->connect( $psql->dsn( dbname => $database ) );
     install_ok( $schema_from_deploy, $version );
 
     upgrade_ok( $schema_from_upgrades, $version );
@@ -95,11 +100,10 @@ schema_diff_like(
             'main.dbix_class_deploymenthandler_versions',    # not created by DBIC
         ];
         field modified_tables => hash {
+            my $lc2uc_id = { id => { old_type => 'integer', new_type => 'INTEGER' } };
 
             # SQLite PKs are deployed with uppercase 'id INTEGER PRIMARY KEY'
-            field 'main.'
-              . $_ => { modified_columns => { id => { old_type => 'integer', new_type => 'INTEGER' } } }
-              for qw<
+            field 'main.' . $_ => { modified_columns => $lc2uc_id } for qw<
               articles
               blacklist_emails
               blacklist_usernames
@@ -117,15 +121,25 @@ schema_diff_like(
               terms
               units
               users
-              >;
+            >;
 
             # https://github.com/perlancar/perl-DBIx-Diff-Schema/issues/1
-            field 'main.' . $_ => E() for qw<
+            field 'main.items' => {
+                added_columns    => ['offset'],
+                deleted_columns  => ['"offset"'],
+                modified_columns => $lc2uc_id,
+            };
+            field 'main.'
+              . $_ => {
+                added_columns    => ['position'],
+                deleted_columns  => ['"position"'],
+                modified_columns => $lc2uc_id,
+              }
+              for qw<
               dish_ingredients
               faqs
-              items
               recipe_ingredients
-            >;
+              >;
         };
     }
 );
@@ -195,5 +209,7 @@ sub schema_diff_like {
     # TODO doesn't detect constraint changes, e.g. missing UNIQUEs
     my $diff = diff_db_schema( map { $_->storage->dbh } $schema1, $schema2 );
 
-    is $diff => $expected_diff, $name // "database schemas equal";
+    is $diff => $expected_diff,
+      $name // "database schemas equal"
+      or diag Dumper($diff);
 }

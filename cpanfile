@@ -77,6 +77,8 @@ suggests "DateTime::Format::Pg" => "0";
 suggests "Sys::Hostname::FQDN" => "0";
 
 on 'test' => sub {
+  requires "DBD::SQLite" => '<= 1.70';  # manual hotfix for #215
+  requires "DBI" => "0";
   requires "DBICx::TestDatabase" => "0";
   requires "DBIx::Class::Schema" => "0";
   requires "DBIx::Class::Schema::Loader" => "0";
