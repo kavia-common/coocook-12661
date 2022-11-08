@@ -3,7 +3,7 @@ use Test2::V0;
 use lib 't/lib';
 use TestDB;
 
-plan(5);
+plan(4);
 
 subtest "ResultSet::Unit->in_use()" => sub {
     my $db = TestDB->new;
@@ -44,9 +44,6 @@ $db->resultset($_)->delete for qw<
   ArticleUnit
 >;
 
-like dies { $kg->delete }, qr/FOREIGN KEY constraint failed/, "fails when kg is default unit";
+$kg->conversions->count > 0 or die "no conversions";
 
-note "deleting other units that kg can be converted into ...";
-$kg->conversions->delete;
-
-ok $kg->delete, "default unit can be deleted if last remaining unit";
+ok $kg->delete, "delete unit that has conversions";

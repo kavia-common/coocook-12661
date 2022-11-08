@@ -9,11 +9,11 @@ plan(10);
 
 my $t = Test::Coocook->new;
 
-$t->schema->resultset($_)->search( { project_id => 2 } )->delete() for 'Article', 'Quantity';
+$t->schema->resultset('Article')->search( { project_id => 2 } )->delete();
 Coocook::Model::ProjectImporter->new->import_data(
     $t->schema->resultset('Project')->find(1),
     $t->schema->resultset('Project')->find(2),
-    [qw< articles quantities units >]
+    [qw< articles units >]
 );
 
 $t->schema->resultset('Recipe')->create(

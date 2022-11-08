@@ -102,7 +102,7 @@ subtest can_import_properties => sub {
     like $errors => [qr/ property .+ ( can't .+ import | unimportable ) .+ units/ix];
 
     $errors = [];
-    ok $importer->can_import_properties( $target, [ 'quantities', 'units' ], $errors );
+    ok $importer->can_import_properties( $target, [ 'articles', 'units' ], $errors );
     like $errors => [];
 };
 
@@ -112,29 +112,27 @@ subtest "[un]importable_properties" => sub {
       "importable(source project)";
 
     my @source_unimportable = map { $_->{key} } $importer->unimportable_properties($source);
-
-    is \@source_unimportable =>
-      bag { item $_ for qw< articles quantities recipes shop_sections tags units > },
+    is \@source_unimportable => bag { item $_ for qw< articles recipes shop_sections tags units > },
       "unimportable(source project)";
 
     @source_unimportable =
-      map { $_->{key} } $importer->unimportable_properties( $source, ['quantities'] );
-    is \@source_unimportable => ['quantities'],
-      "unimportable(source project, [quantities])";
+      map { $_->{key} } $importer->unimportable_properties( $source, ['articles'] );
+    is \@source_unimportable => ['articles'],
+      "unimportable(source project, [articles])";
 
     my @target_importable = map { $_->{key} } $importer->importable_properties($target);
-    is \@target_importable =>
-      bag { item $_ for qw< articles quantities recipes shop_sections tags units > },
+    is \@target_importable => bag { item $_ for qw< articles recipes shop_sections tags units > },
       "importable(target project)";
 
-    ok my $quantity = $target->quantities->create( { name => 'foo' } ), "create a quantity in target";
+    ok my $article = $target->articles->create( { name => 'foo', comment => '' } ),
+      "create an article in target";
 
     my @target_importable2 = map { $_->{key} } $importer->importable_properties($target);
 
-    is \@target_importable2 => bag { item $_ for qw< articles shop_sections tags > },
+    is \@target_importable2 => bag { item $_ for qw< shop_sections tags units > },
       "importable(target project)";
 
-    ok $quantity->delete(), "delete quantity";
+    ok $article->delete(), "delete article";
 };
 
 like dies { $importer->import_data() } => qr/argument/, "import_data() dies without arguments";
@@ -142,16 +140,15 @@ like dies { $importer->import_data() } => qr/argument/, "import_data() dies with
 like dies { $importer->import_data( $source => $source, [] ) } => qr/same/,
   "import_data() dies with source == target";
 
-like dies { $importer->import_data( $target => $source, ['quantities'] ) } =>
-  qr/ import .+ quantities /x,
+like dies { $importer->import_data( $target => $source, ['articles'] ) } =>
+  qr/ import .+ articles /x,
   "import_data() dies if target already has data";
 
 like dies { $importer->import_data( $source => $target, {} ) }          => qr/arrayref/i;
 like dies { $importer->import_data( $source => $target, ['foobar'] ) }  => qr/unknown/i;
 like dies { $importer->import_data( $source => $target, ['recipes'] ) } => qr/require|depend/i;
-like dies {
-    $importer->import_data( $source => $target, [qw< quantities units articles articles_units >] )
-} => qr/unknown/i,
+like dies { $importer->import_data( $source => $target, [qw< units articles articles_units >] ) } =>
+  qr/unknown/i,
   "private properties are rejected";
 
 subtest "empty import" => sub {
@@ -194,6 +191,6 @@ subtest "complete import" => sub {
     note sprintf "% 5i %s", $db->resultset($_)->count, $_ for sort $db->sources;
 };
 
-like dies { $importer->import_data( $source, $target, ['quantities'] ) } =>
-  qr/already .+ exist .+ quantities/x,
+like dies { $importer->import_data( $source, $target, ['articles'] ) } =>
+  qr/already .+ exist .+ articles/x,
   "repeated import is rejected";

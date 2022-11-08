@@ -8,7 +8,7 @@ use lib 't/lib/';
 use TestDB;
 use Test::Coocook;    # makes Coocook::Script::Dbck not read real config files
 
-plan(19);
+plan(18);
 
 my $db = TestDB->new();
 
@@ -39,15 +39,20 @@ ok no_warnings { $app->run }, "no warnings with test data";
 {
     $db->txn_begin;
 
-    $db->resultset('Quantity')->find(1)->update( { project_id => 2 } );
+    $db->resultset('Article')->find(1)->update( { project_id => 2 } );
 
-    is warnings { $app->run } => [
-        "Project IDs differ for Unit row (id = 1): me.project = 1, quantity.project = 2\n",
-        "Project IDs differ for Unit row (id = 2): me.project = 1, quantity.project = 2\n",
-        "Project IDs differ for Unit row (id = 4): me.project = 1, quantity.project = 2\n",
-        "Project IDs differ for Unit row (id = 5): me.project = 1, quantity.project = 2\n",
-      ],
-      "Inconsistent project_id";
+    is join( '', @{ warnings sub { $app->run } } ) => <<EOT, "Inconsistent project_id";
+Project IDs differ for Article row (id = 1): me.project = 2, shop_section.project = 1
+Project IDs differ for ArticleTag row (article_id = 1, tag_id = 1): article.project = 2, tag.project = 1
+Project IDs differ for ArticleUnit row (article_id = 1, unit_id = 1): article.project = 2, unit.project = 1
+Project IDs differ for ArticleUnit row (article_id = 1, unit_id = 2): article.project = 2, unit.project = 1
+Project IDs differ for DishIngredient row (id = 1): meal.project = 1, article.project = 2, unit.project = 1
+Project IDs differ for DishIngredient row (id = 4): meal.project = 1, article.project = 2, unit.project = 1
+Project IDs differ for DishIngredient row (id = 7): meal.project = 1, article.project = 2, unit.project = 1
+Project IDs differ for DishIngredient row (id = 11): meal.project = 1, article.project = 2, unit.project = 1
+Project IDs differ for Item row (id = 1): purchase_list.project = 1, unit.project = 1, article.project = 2
+Project IDs differ for RecipeIngredient row (id = 2): recipe.project = 1, article.project = 2, unit.project = 1
+EOT
 
     $db->txn_rollback;
 }

@@ -77,8 +77,6 @@ is $importer->source_units => array {
 is $importer->target_articles => [], "... target_articles";
 is $importer->target_units    => [], "... target_units";
 
-my $quantity = $target_project->quantities->create( { name => __FILE__ } );
-
 my @articles = $target_project->articles->populate(
     [    # NOT alphabetic order
         { name => 'lava',  comment => 'something unrelated' },
@@ -88,9 +86,9 @@ my @articles = $target_project->articles->populate(
 
 my @units = $target_project->units->populate(
     [
-        [ 'quantity_id', 'short_name', 'long_name' ],                      # NOT alphabetic order
-        [ $quantity->id, 'xxx',        'kilograms' ],                      # same long_name
-        [ $quantity->id, 'g',          'grams with a different name' ],    # same short_name
+        [ 'short_name', 'long_name' ],                      # NOT alphabetic order
+        [ 'xxx',        'kilograms' ],                      # same long_name
+        [ 'g',          'grams with a different name' ],    # same short_name
     ]
 );
 
@@ -165,10 +163,10 @@ is $target_project->units->count    => scalar(@units);
 $target_project->search_related($_)->delete for qw< articles units recipes >;
 
 note "Importing articles and units from source project ...";
-$target_project->search_related($_)->delete for 'articles', 'quantities';
+$target_project->search_related('articles')->delete;
 Coocook::Model::ProjectImporter->new->import_data(
     $source_project => $target_project,
-    [qw< articles quantities units >]
+    [qw< articles units >]
 );
 
 ok $importer = Coocook::Model::RecipeImporter->new(
