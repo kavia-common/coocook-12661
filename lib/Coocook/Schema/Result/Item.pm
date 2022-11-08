@@ -53,10 +53,27 @@ sub convert {
         sub {
             my $unit1 = $self->unit;
 
-            $unit1->quantity_id == $unit2->quantity_id
-              or die "Units not of same quantity";
+            my $conversion = $self->result_source->schema->resultset('UnitConversion')->search(
+                [    # OR
+                    {
+                        unit1_id => $unit1->id,
+                        unit2_id => $unit2->id,
+                    },
+                    {
+                        unit1_id => $unit2->id,
+                        unit2_id => $unit1->id,
+                    },
 
-            my $factor = $unit1->to_quantity_default / $unit2->to_quantity_default;
+                ]
+            )->single;
+
+            $conversion
+              or die "Conversion does not exist";
+
+            my $factor =
+                $conversion->unit1_id == $unit1->id ? $conversion->factor
+              : $conversion->unit2_id == $unit1->id ? $conversion->factor**-1
+              :                                       die "found conversion doesn't relate to unit1";
 
             my $unit2_item = $self->result_source->resultset->find(
                 {
@@ -108,10 +125,15 @@ sub update_from_ingredients {
             my $unit1 = $ingredient->unit;
             my $unit2 = $self->unit;
 
-            $unit1->quantity_id == $unit2->quantity_id
-              or die "Units not of same quantity";
-
-            $ingredient_value *= $unit1->to_quantity_default / $unit2->to_quantity_default;
+            if ( my $conversion = $unit1->conversions_from->find( { unit2_id => $unit2->id } ) ) {
+                $ingredient_value *= $conversion->factor;
+            }
+            elsif ( $conversion = $unit2->conversions_from->find( { unit2_id => $unit1->id } ) ) {
+                $ingredient_value *= $conversion->factor**-1;
+            }
+            else {
+                die "Can't convert between units";
+            }
         }
 
         $item_value += $ingredient_value;
