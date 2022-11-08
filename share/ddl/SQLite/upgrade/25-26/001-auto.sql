@@ -11,8 +11,8 @@ CREATE TABLE unit_conversions (
   unit2_id integer NOT NULL,
   transitive boolean NOT NULL DEFAULT 1,
   comment text NOT NULL DEFAULT '',
-  FOREIGN KEY (unit1_id) REFERENCES units(id),
-  FOREIGN KEY (unit2_id) REFERENCES units(id)
+  FOREIGN KEY (unit1_id) REFERENCES units(id) ON DELETE CASCADE,
+  FOREIGN KEY (unit2_id) REFERENCES units(id) ON DELETE CASCADE
 );
 
 ;

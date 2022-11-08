@@ -18,11 +18,11 @@ CREATE INDEX "unit_conversions_idx_unit2_id" on "unit_conversions" ("unit2_id");
 
 ;
 ALTER TABLE "unit_conversions" ADD CONSTRAINT "unit_conversions_fk_unit1_id" FOREIGN KEY ("unit1_id")
-  REFERENCES "units" ("id") DEFERRABLE;
+  REFERENCES "units" ("id") ON DELETE CASCADE DEFERRABLE;
 
 ;
 ALTER TABLE "unit_conversions" ADD CONSTRAINT "unit_conversions_fk_unit2_id" FOREIGN KEY ("unit2_id")
-  REFERENCES "units" ("id") DEFERRABLE;
+  REFERENCES "units" ("id") ON DELETE CASCADE DEFERRABLE;
 
 ;
 ALTER TABLE units DROP CONSTRAINT units_fk_quantity_id;

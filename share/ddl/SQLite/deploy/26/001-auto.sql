@@ -307,8 +307,8 @@ CREATE TABLE unit_conversions (
   unit2_id integer NOT NULL,
   transitive boolean NOT NULL DEFAULT 1,
   comment text NOT NULL DEFAULT '',
-  FOREIGN KEY (unit1_id) REFERENCES units(id),
-  FOREIGN KEY (unit2_id) REFERENCES units(id)
+  FOREIGN KEY (unit1_id) REFERENCES units(id) ON DELETE CASCADE,
+  FOREIGN KEY (unit2_id) REFERENCES units(id) ON DELETE CASCADE
 );
 CREATE INDEX unit_conversions_idx_unit1_id ON unit_conversions (unit1_id);
 CREATE INDEX unit_conversions_idx_unit2_id ON unit_conversions (unit2_id);

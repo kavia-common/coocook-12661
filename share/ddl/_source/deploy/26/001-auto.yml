@@ -2981,7 +2981,7 @@ schema:
             - unit1_id
           match_type: ''
           name: unit_conversions_fk_unit1_id
-          on_delete: ''
+          on_delete: CASCADE
           on_update: ''
           options: []
           reference_fields:
@@ -2994,7 +2994,7 @@ schema:
             - unit2_id
           match_type: ''
           name: unit_conversions_fk_unit2_id
-          on_delete: ''
+          on_delete: CASCADE
           on_update: ''
           options: []
           reference_fields:

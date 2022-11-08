@@ -575,11 +575,11 @@ ALTER TABLE "tags" ADD CONSTRAINT "tags_fk_tag_group_id" FOREIGN KEY ("tag_group
 
 ;
 ALTER TABLE "unit_conversions" ADD CONSTRAINT "unit_conversions_fk_unit1_id" FOREIGN KEY ("unit1_id")
-  REFERENCES "units" ("id") DEFERRABLE;
+  REFERENCES "units" ("id") ON DELETE CASCADE DEFERRABLE;
 
 ;
 ALTER TABLE "unit_conversions" ADD CONSTRAINT "unit_conversions_fk_unit2_id" FOREIGN KEY ("unit2_id")
-  REFERENCES "units" ("id") DEFERRABLE;
+  REFERENCES "units" ("id") ON DELETE CASCADE DEFERRABLE;
 
 ;
 ALTER TABLE "dishes" ADD CONSTRAINT "dishes_fk_meal_id" FOREIGN KEY ("meal_id")
