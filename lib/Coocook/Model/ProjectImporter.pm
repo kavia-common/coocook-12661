@@ -19,6 +19,12 @@ my @internal_properties = (    # array of hashrefs with key 'key' instead of has
         import => sub { shift->units, { project_id => 'projects' } },
     },
     {
+        key        => 'unit_conversions',
+        auto       => 1,
+        depends_on => ['units'],
+        import     => sub { shift->unit_conversions_rs, { unit1_id => 'units', unit2_id => 'units' } },
+    },
+    {
         key    => 'shop_sections',
         name   => "Shop Sections",
         import => sub { shift->shop_sections },
