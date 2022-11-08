@@ -1,9 +1,5 @@
-[% IF recipes_of_the_day.size == 1 %]
-<h2>Recipe of the day</h2>
-
-<a href="[% recipes_of_the_day.0.url %]">[% recipes_of_the_day.0.recipe.name | html %]</a>
-[% ELSIF recipes_of_the_day.size > 1 %]
-<h2>Recipes of the day</h2>
+[% IF recipes_of_the_day.size > 0 %]
+<h2>[% recipes_of_the_day.size == 1 ? 'Recipe' : 'Recipes' %] of the day</h2>
 
 <ul class="list-unstyled d-flex flex-wrap gap-3">
 [% FOR rotd IN recipes_of_the_day %]
