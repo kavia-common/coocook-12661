@@ -13,7 +13,7 @@
             </div>
             <input id="email" type="email" name="email" placeholder="email address" value="[% last_input.email | html %]" [% 'autofocus' IF last_input.username AND NOT last_input.email %] class="form-control" required>
 [%~ IF use_hidden_input %]
-            <input id="url" type="url" name="url" placeholder="address of your website" value="[%# THIS INPUT FIELD ONLY WORKS AS CAPTCHA! %]" class="form-control">
+            <input id="url" type="url" name="url" placeholder="address of your website" value="[%# THIS INPUT FIELD ONLY WORKS AS CAPTCHA! %]" class="form-control d-none">
 [%~ END %]
             <div>
                 <input id="password"  type="password" placeholder="password" name="password" [% 'autofocus' IF last_input.username AND last_input.email %] class="form-control" required>
