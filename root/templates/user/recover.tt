@@ -1,4 +1,4 @@
-<div class="mx-auto" style="width:500px;">
+<div class="mx-auto" style="max-width:500px;">
     <div class="content-box mb-3">
         <div class="text-center mb-3">
             <h2>Password recovery</h2>
@@ -8,7 +8,10 @@
         When you click it you can set a new password for your account.</p>
 
         <form method="post" action="[% recover_url %]" class="d-flex flex-column gap-3">
-            <input type="email" name="email" value="[% email | html %]" placeholder="email address" class="form-control">
+            <div class="form-floating">
+                <input type="email" name="email" id="email" value="[% email | html %]" placeholder="email address" class="form-control">
+                <label for="email">Email address</label>
+            </div>
             <input type="submit" value="Send recovery link" class="btn btn-primary">
         </form>
     </div>

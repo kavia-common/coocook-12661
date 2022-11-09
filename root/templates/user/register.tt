@@ -1,4 +1,4 @@
-<div class="mx-auto" style="width:500px;">
+<div class="mx-auto" style="max-width:500px;">
     <div class="content-box mb-3">
         <div class="text-center mb-3">
             <h2>Sign up</h2>
@@ -6,21 +6,33 @@
 
         <form method="post" action="[% post_register_url %]" class="d-flex flex-column gap-3">
             <div>
-                <input id="username" type="text" name="username" placeholder="username" pattern="[A-Za-z0-9_]+" value="[% last_input.username | html %]" [% 'autofocus' IF NOT last_input.username %] class="form-control" required>
-[% IF example_username %]
-                e.g. <i>[% example_username | html %]</i>
-[% END %]
+                <div class="form-floating">
+                    <input id="username" type="text" id="floatingUsername" name="username" placeholder="username" pattern="[A-Za-z0-9_]+" value="[% last_input.username | html %]" [% 'autofocus' IF NOT last_input.username %] class="form-control" required>
+                    <label for="username">Username</label>
+                </div>
+                [% IF example_username %]
+                    e.g. <i>[% example_username | html %]</i>
+                [% END %]
             </div>
-            <input id="email" type="email" name="email" placeholder="email address" value="[% last_input.email | html %]" [% 'autofocus' IF last_input.username AND NOT last_input.email %] class="form-control" required>
-[%~ IF use_hidden_input %]
-            <input id="url" type="url" name="url" placeholder="address of your website" value="[%# THIS INPUT FIELD ONLY WORKS AS CAPTCHA! %]" class="form-control d-none">
-[%~ END %]
+            <div class="form-floating">
+                <input id="email" type="email" id="floatingEmail" name="email" placeholder="email address" value="[% last_input.email | html %]" [% 'autofocus' IF last_input.username AND NOT last_input.email %] class="form-control" required>
+                <label for="email">Email address</label>
+            </div>
+            [%~ IF use_hidden_input %]
+                <input id="url" type="url" name="url" placeholder="address of your website" value="[%# THIS INPUT FIELD ONLY WORKS AS CAPTCHA! %]" class="form-control d-none">
+            [%~ END %]
             <div>
-                <input id="password"  type="password" placeholder="password" name="password" [% 'autofocus' IF last_input.username AND last_input.email %] class="form-control" required>
+                <div class="form-floating">
+                    <input id="password" type="password" id="floatingPassword" placeholder="password" name="password" [% 'autofocus' IF last_input.username AND last_input.email %] class="form-control" required>
+                    <label for="password">Password</label>
+                </div>
                 <span id="meter"></span>
             </div>
             <div>
-                <input id="password2" type="password" placeholder="confirm password" name="password2" class="form-control" required>
+                <div class="form-floating">
+                    <input id="password2" type="password" placeholder="confirm password" name="password2" class="form-control" required>
+                    <label for="password2">Confirm password</label>
+                </div>
                 <span id="comparator"></span>
             </div>
 [% label = "Sign up";
