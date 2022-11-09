@@ -46,7 +46,7 @@ subtest "create meal" => sub {
     $t->submit_form_ok(
         {
             form_name   => 'create_meal',
-            form_number => 5,
+            form_number => 6,
             with_fields => {
                 name    => $meal_name1,
                 comment => 'The bots are cooking!',
@@ -66,7 +66,7 @@ subtest "update meal" => sub {
     $t->submit_form_ok(
         {
             form_name   => 'update_meal',
-            form_number => 2,
+            form_number => 3,
             with_fields => {
                 name    => $meal_name2,
                 comment => 'Crunch! Crunch! Crunch!',
