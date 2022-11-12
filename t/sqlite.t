@@ -18,13 +18,16 @@ use TestDB qw(install_ok upgrade_ok);
 # older than version 13.
 my %SCHEMA_VERSIONS_WITH_DIFFERENCES = map { $_ => 1 } ( 3 .. 5, 7 .. 12 );
 
-plan tests => 1 + ( $Coocook::Schema::VERSION - 1 ) + 3;
+plan tests => 2 + ( $Coocook::Schema::VERSION - 1 ) + 3;
 
 my $schema_from_code = TestDB->new();
 my $schema_from_deploy;
 my $schema_from_upgrades = TestDB->new( deploy => 0 );
 
 install_ok( $schema_from_upgrades, 1 );
+
+ok( TestDB->execute_test_data( $schema_from_upgrades, 't/test_data_v1.sql' ),
+    "populate test data" );
 
 # generated upgrade scripts contain
 # CREATE TEMPORARY TABLE ... with FKs on main tables which is impossible
