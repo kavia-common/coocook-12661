@@ -95,52 +95,29 @@ sub schema_eq {
 
     local $Test::Builder::Level = $Test::Builder::Level + 1;
 
-    subtest $test_name => sub {
-        my @schemas = (
-            my $a = { id => 1, dbh => $schema1->storage->dbh },
-            my $b = { id => 2, dbh => $schema2->storage->dbh },
-        );
+    my $a = { id => 1, dbh => $schema1->storage->dbh };
+    my $b = { id => 2, dbh => $schema2->storage->dbh };
 
-        my %table_names;
+    my %table_names;    # union of table names in schema A and B
 
-        for my $schema (@schemas) {
-            my $sth = $schema->{dbh}->table_info( undef, undef, '%' );
+    for my $schema ( $a, $b ) {
+        my $sth = $schema->{dbh}->table_info( undef, undef, undef, 'TABLE' );
 
-            while ( my $table = $sth->fetchrow_hashref ) {
-                my $type = $table->{TABLE_TYPE};
-                my $name = $table->{TABLE_NAME};
-                my $sql  = $table->{sqlite_sql};
+        while ( my $table = $sth->fetchrow_hashref ) {
+            my $type = $table->{TABLE_TYPE};
+            my $name = $table->{TABLE_NAME};
+            my $sql  = $table->{sqlite_sql};
 
-                if ( $type eq 'SYSTEM TABLE' ) { next }
+            next if $name eq 'dbix_class_deploymenthandler_versions';
 
-                $schema->{tables}{$name} = $sql;
+            $sql =~ s/\s+/ /gs;    # ignore whitespace differences
+            $sql =~ s/['"]//g;     # ignore quote characters
 
-                $table_names{$name}++;
-            }
+            $schema->{tables}{$name} = $sql;
+
+            $table_names{$name}++;
         }
+    }
 
-      NAME: for my $name ( keys %table_names ) {
-            next if $name eq 'dbix_class_deploymenthandler_versions';    # ignore internal table
-
-            for my $schema (@schemas) {
-                if ( not exists $schema->{tables}{$name} ) {
-                    fail $name;
-                    diag "Table '$name' is missing in schema " . $schema->{id};
-                    next NAME;
-                }
-            }
-
-            my $sql1 = $a->{tables}{$name};
-            my $sql2 = $b->{tables}{$name};
-
-            for ( $sql1, $sql2 ) {
-                defined or next;
-
-                s/\s+/ /gs;    # ignore whitespace differences
-                s/['"]//g;     # ignore quote characters
-            }
-
-            is $sql1 => $sql2, $name;
-        }
-    };
+    is $a->{tables} => $b->{tables}, $test_name;
 }
