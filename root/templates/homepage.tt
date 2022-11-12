@@ -12,7 +12,7 @@
         </ul>
 
 [% IF public_recipes.size == 0 %]
-        <p><i>It looks like you don't have any recent public recipes yet.</i></p>
+        <p><i>It looks like [% name %] doesn’t have any recent public recipes yet.</i></p>
 [% END %]
 
 [% IF public_recipes.size == max_recipes %]
@@ -28,7 +28,7 @@
         </ul>
 
 [% IF active_public_projects.size == 0 %]
-        <p><i>It looks like you don't have any active public projects yet.</i></p>
+        <p><i>It looks like [% name %] doesn’t have any active public projects yet.</i></p>
 [% END %]
 
 </div>
