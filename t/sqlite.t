@@ -18,7 +18,7 @@ use TestDB qw(install_ok upgrade_ok);
 # older than version 13.
 my %SCHEMA_VERSIONS_WITH_DIFFERENCES = map { $_ => 1 } ( 3 .. 5, 7 .. 12 );
 
-plan tests => 1 + 3 * ( $Coocook::Schema::VERSION - 1 ) + 3;
+plan tests => 1 + ( $Coocook::Schema::VERSION - 1 ) + 3;
 
 my $schema_from_code = TestDB->new();
 my $schema_from_deploy;
@@ -33,20 +33,22 @@ diag "TODO disabling PRAGMA foreign_keys on DB from upgrade SQLs";
 $schema_from_upgrades->disable_fk_checks();
 
 for my $version ( 2 .. $Coocook::Schema::VERSION ) {
-    $schema_from_deploy = TestDB->new( deploy => 0 );
-    install_ok( $schema_from_deploy, $version );
+    subtest "schema version $version" => sub {
+        $schema_from_deploy = TestDB->new( deploy => 0 );
+        install_ok( $schema_from_deploy, $version );
 
-    upgrade_ok( $schema_from_upgrades, $version );
+        upgrade_ok( $schema_from_upgrades, $version );
 
-  SKIP: {
-        $SCHEMA_VERSIONS_WITH_DIFFERENCES{$version}
-          and skip "Upgrade SQL files are known to be broken", 1;
+      SKIP: {
+            $SCHEMA_VERSIONS_WITH_DIFFERENCES{$version}
+              and skip "Upgrade SQL files are known to be broken", 1;
 
-        schema_eq(
-            $schema_from_upgrades => $schema_from_deploy,
-            "schema version $version from upgrade SQLs and schema from deploy SQL are equal"
-        );
-    }
+            schema_eq(
+                $schema_from_upgrades => $schema_from_deploy,
+                "schema from upgrade SQLs equals schema from deploy SQL"
+            );
+        }
+    };
 }
 
 schema_eq(

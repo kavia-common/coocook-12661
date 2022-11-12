@@ -15,7 +15,7 @@ use Test::Coocook;
 
 my $FIRST_PGSQL_SCHEMA_VERSION = 21;
 
-plan tests => 2 + 3 * ( $Coocook::Schema::VERSION - $FIRST_PGSQL_SCHEMA_VERSION ) + 8;
+plan tests => 2 + ( $Coocook::Schema::VERSION - $FIRST_PGSQL_SCHEMA_VERSION ) + 8;
 
 my $psql = Test::PostgreSQL->new();
 my $dbh  = DBI->connect( $psql->dsn );
@@ -31,15 +31,17 @@ my $schema_from_upgrades = Coocook::Schema->connect( $psql->dsn( dbname => 'upgr
 install_ok( $schema_from_upgrades, $FIRST_PGSQL_SCHEMA_VERSION );
 
 for my $version ( $FIRST_PGSQL_SCHEMA_VERSION + 1 .. $Coocook::Schema::VERSION ) {
-    my $database = 'deploy' . $version;
-    $dbh->do("CREATE DATABASE $database");
-    $schema_from_deploy = Coocook::Schema->connect( $psql->dsn( dbname => $database ) );
-    install_ok( $schema_from_deploy, $version );
+    subtest "schema version $version" => sub {
+        my $database = 'deploy' . $version;
+        $dbh->do("CREATE DATABASE $database");
+        $schema_from_deploy = Coocook::Schema->connect( $psql->dsn( dbname => $database ) );
+        install_ok( $schema_from_deploy, $version );
 
-    upgrade_ok( $schema_from_upgrades, $version );
+        upgrade_ok( $schema_from_upgrades, $version );
 
-    schema_diff_like( $schema_from_upgrades, $schema_from_deploy, {},
-        "schema version $version from upgrade SQLs and schema from deploy SQL are equal" );
+        schema_diff_like( $schema_from_upgrades, $schema_from_deploy, {},
+            "schema from upgrade SQLs equals schema from deploy SQL" );
+    };
 }
 
 # share/test_data.sql matches only current schema -> can only after upgrades
@@ -75,8 +77,6 @@ subtest "boolean values" => sub {
     ok $row->update( { $col => '' } ), "SET $col = ''";
 };
 
-my $sqlite_schema = TestDB->new();
-
 subtest "deleting projects" => sub {
     my $t = Test::Coocook->new( schema => $schema_from_dbic );
     $t->get_ok('/');
@@ -91,6 +91,8 @@ subtest "deleting projects" => sub {
 
 # rename Pgsql schema to match SQLite schema name 'main'
 $schema_from_deploy->storage->dbh_do( sub { $_[1]->do('ALTER SCHEMA public RENAME TO main') } );
+
+my $sqlite_schema = TestDB->new();
 
 schema_diff_like(
     $schema_from_deploy,
