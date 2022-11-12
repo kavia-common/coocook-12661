@@ -1,8 +1,12 @@
 # default database file
 /coocook.sqlite
 
-# custom config file
-/coocook_local.*
+# config files, all formats supported by Catalyst::Plugin::ConfigLoader
+/coocook.conf
+/coocook.ini
+/coocook.json
+/coocook.xml
+/coocook.yaml
 /dbic.yaml
 
 # build files
