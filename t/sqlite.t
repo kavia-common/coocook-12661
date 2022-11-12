@@ -18,7 +18,7 @@ use TestDB qw(install_ok upgrade_ok);
 # older than version 13.
 my %SCHEMA_VERSIONS_WITH_DIFFERENCES = map { $_ => 1 } ( 3 .. 5, 7 .. 12 );
 
-plan tests => 2 + ( $Coocook::Schema::VERSION - 1 ) + 3;
+plan tests => 2 + ( $Coocook::Schema::VERSION - 1 ) + 4;
 
 my $schema_from_code = TestDB->new();
 my $schema_from_deploy;
@@ -94,6 +94,17 @@ subtest "issue #266 order of meals/dishes" => sub {
       => [qw( b c a )],
       "dishes in order of insertion into database";
 };
+
+{
+    my $unit_conversions = $schema_from_upgrades->resultset('UnitConversion')
+      ->search( undef, { columns => [qw( unit1_id factor unit2_id )] } );
+
+    is [ $unit_conversions->hri->all ] => [
+        { unit1_id => 1, factor => 0.001, unit2_id => 2 },    # g to kg
+        { unit1_id => 2, factor => 0.001, unit2_id => 4 },    # kg to t
+      ],
+      "unit_conversions created from old quantity data by migration";
+}
 
 sub schema_eq {
     my ( $schema1, $schema2, $test_name ) = @_;

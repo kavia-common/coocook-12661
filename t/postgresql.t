@@ -15,7 +15,7 @@ use Test::Coocook;
 
 my $FIRST_PGSQL_SCHEMA_VERSION = 21;
 
-plan tests => 3 + ( $Coocook::Schema::VERSION - $FIRST_PGSQL_SCHEMA_VERSION ) + 8;
+plan tests => 3 + ( $Coocook::Schema::VERSION - $FIRST_PGSQL_SCHEMA_VERSION ) + 9;
 
 my $psql = Test::PostgreSQL->new();
 my $dbh  = DBI->connect( $psql->dsn );
@@ -47,6 +47,17 @@ for my $version ( $FIRST_PGSQL_SCHEMA_VERSION + 1 .. $Coocook::Schema::VERSION )
         schema_diff_like( $schema_from_upgrades, $schema_from_deploy, {},
             "schema from upgrade SQLs equals schema from deploy SQL" );
     };
+}
+
+{
+    my $unit_conversions = $schema_from_upgrades->resultset('UnitConversion')
+      ->search( undef, { columns => [qw( unit1_id factor unit2_id )] } );
+
+    is [ $unit_conversions->hri->all ] => [
+        { unit1_id => 1, factor => 0.001, unit2_id => 2 },    # g to kg
+        { unit1_id => 2, factor => 0.001, unit2_id => 4 },    # kg to t
+      ],
+      "unit_conversions created from old quantity data by migration";
 }
 
 note "Deleting original test data ...";

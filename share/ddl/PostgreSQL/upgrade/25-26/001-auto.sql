@@ -24,6 +24,31 @@ ALTER TABLE "unit_conversions" ADD CONSTRAINT "unit_conversions_fk_unit1_id" FOR
 ALTER TABLE "unit_conversions" ADD CONSTRAINT "unit_conversions_fk_unit2_id" FOREIGN KEY ("unit2_id")
   REFERENCES "units" ("id") ON DELETE CASCADE DEFERRABLE;
 
+-- convert old "to_quantity_default" columns to "unit_conversions" rows
+INSERT INTO unit_conversions(
+    unit1_id,
+    factor,
+    unit2_id
+)
+SELECT
+    units.id,
+    units.to_quantity_default,
+    quantities.default_unit_id
+FROM units
+JOIN quantities ON units.quantity_id = quantities.id
+JOIN units default_unit ON default_unit_id = default_unit.id
+WHERE
+        units.to_quantity_default IS NOT NULL
+    AND units.id != default_unit.id
+;
+
+-- normalize to unit1_id < unit2_id
+UPDATE unit_conversions
+SET
+    (unit1_id, unit2_id) = (unit2_id, unit1_id),
+    factor = 1 / factor
+WHERE unit1_id > unit2_id
+
 ;
 ALTER TABLE units DROP CONSTRAINT units_fk_quantity_id;
 

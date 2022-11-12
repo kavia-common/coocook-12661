@@ -21,6 +21,31 @@ CREATE INDEX unit_conversions_idx_unit1_id ON unit_conversions (unit1_id);
 ;
 CREATE INDEX unit_conversions_idx_unit2_id ON unit_conversions (unit2_id);
 
+-- convert old "to_quantity_default" columns to "unit_conversions" rows
+INSERT INTO unit_conversions(
+    unit1_id,
+    factor,
+    unit2_id
+)
+SELECT
+    units.id,
+    units.to_quantity_default,
+    quantities.default_unit_id
+FROM units
+JOIN quantities ON units.quantity_id = quantities.id
+JOIN units default_unit ON default_unit_id = default_unit.id
+WHERE
+        units.to_quantity_default IS NOT NULL
+    AND units.id != default_unit.id
+;
+
+-- normalize to unit1_id < unit2_id
+UPDATE unit_conversions
+SET
+    (unit1_id, unit2_id) = (unit2_id, unit1_id),
+    factor = 1 / factor
+WHERE unit1_id > unit2_id;
+
 ;
 CREATE TEMPORARY TABLE units_temp_alter (
   id INTEGER PRIMARY KEY NOT NULL,
