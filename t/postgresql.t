@@ -15,7 +15,7 @@ use Test::Coocook;
 
 my $FIRST_PGSQL_SCHEMA_VERSION = 21;
 
-plan tests => 2 + ( $Coocook::Schema::VERSION - $FIRST_PGSQL_SCHEMA_VERSION ) + 8;
+plan tests => 3 + ( $Coocook::Schema::VERSION - $FIRST_PGSQL_SCHEMA_VERSION ) + 8;
 
 my $psql = Test::PostgreSQL->new();
 my $dbh  = DBI->connect( $psql->dsn );
@@ -30,6 +30,11 @@ $dbh->do('CREATE DATABASE upgrades');
 my $schema_from_upgrades = Coocook::Schema->connect( $psql->dsn( dbname => 'upgrades' ) );
 install_ok( $schema_from_upgrades, $FIRST_PGSQL_SCHEMA_VERSION );
 
+ok(
+    TestDB->execute_test_data( $schema_from_upgrades, "t/test_data_v$FIRST_PGSQL_SCHEMA_VERSION.sql" ),
+    "populate test data"
+);
+
 for my $version ( $FIRST_PGSQL_SCHEMA_VERSION + 1 .. $Coocook::Schema::VERSION ) {
     subtest "schema version $version" => sub {
         my $database = 'deploy' . $version;
@@ -43,6 +48,23 @@ for my $version ( $FIRST_PGSQL_SCHEMA_VERSION + 1 .. $Coocook::Schema::VERSION )
             "schema from upgrade SQLs equals schema from deploy SQL" );
     };
 }
+
+note "Deleting original test data ...";
+$schema_from_upgrades->resultset($_)->delete() for qw(
+  DishIngredient
+  RecipeIngredient
+  Item
+  ArticleUnit
+  Dish
+  Meal
+  Project
+  Organization
+  User
+  BlacklistEmail
+  BlacklistUsername
+  FAQ
+  Terms
+);
 
 # share/test_data.sql matches only current schema -> can only after upgrades
 ok( TestDB->execute_test_data($schema_from_dbic),     "Execute test data in DB from DBIx::Class" );
