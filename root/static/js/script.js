@@ -33,6 +33,15 @@
     });
 
     // show Markdown preview right of <textarea> inputs with class .with-markdown-preview
+    const syncScrolling = (e, linkedElem) => {
+        let height = e.currentTarget.clientHeight;
+        let elemHeight = e.currentTarget.scrollHeight - height;
+        let linkHeight = linkedElem.scrollHeight - height;
+        let linkTop = Math.round(e.currentTarget.scrollTop * linkHeight / elemHeight);
+
+        linkedElem.scroll({top: linkTop, behaviour: "smooth"});
+    }
+
     document.querySelectorAll("textarea.with-markdown-preview, input[type=text].with-markdown-preview").forEach( elem => {
         let row = elem.parentNode.parentNode;
         let col = document.createElement("div");
@@ -57,10 +66,6 @@
             });
 
             obs.observe(elem);
-
-            const syncScrolling = (e, linkedElem) => {
-                linkedElem.scrollTop = e.currentTarget.scrollTop;
-            }
 
             elem.addEventListener("scroll", e => syncScrolling(e, preview));
             preview.addEventListener("scroll", e => syncScrolling(e, elem));
