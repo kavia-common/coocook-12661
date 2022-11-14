@@ -26,7 +26,7 @@ sub project_base : Chained('/project/base') PathPart('') CaptureArgs(2)
       unless ( $dish_or_recipe eq 'dish' or $dish_or_recipe eq 'recipe' );
 
     my $plural = $dish_or_recipe eq 'dish' ? 'dishes' : 'recipes';
-    $c->stash( dish_or_recipe => $c->project->recipes->find($dish_or_recipe_id)
+    $c->stash( dish_or_recipe => $c->project->$plural->find($dish_or_recipe_id)
           || $c->detach('/error/not_found'), );
 }
 
@@ -39,7 +39,8 @@ sub get_all_ingredients : GET PathPart('ingredients') HEAD Chained('project_base
         ingredients => $c->stash->{dish_or_recipe}->ingredients,
     );
 
-    $c->stash->{json_data} = $ingredients->for_ingredients_editor;
+    
+    $c->stash->{json_data} = $ingredients->for_ingredients_editor or die 'Error when converting ingredients to IngredientsEditor format.';
 }
 
 sub update_ingredient : POST PathPart('ingredients/update') Chained('project_base')
@@ -177,8 +178,7 @@ sub add_ingredient : POST PathPart('ingredients/create') Chained('project_base')
     my $ingredient = $c->req->body_data->{ingredient};
     my $existing_article;
     if ( defined $ingredient->{article}->{name} ) {
-        $existing_article = $project->articles->find( { name => $ingredient->{article}->{name} },
-            { key => 'articles_project_id_name' } );
+        $existing_article = $project->articles->find( { name => $ingredient->{article}->{name} } );
     }
     elsif ( defined $ingredient->{article}->{id} ) {
 
@@ -186,8 +186,9 @@ sub add_ingredient : POST PathPart('ingredients/create') Chained('project_base')
     }
     my $existing_unit;
     if ( defined $ingredient->{unit}->{name} ) {
-        $existing_unit = $project->units->find( { name => $ingredient->{unit}->{name} },
-            { key => 'units_project_id_name' } );
+        $existing_unit = $project->units->search(
+            [ { short_name => $ingredient->{unit}->{name} }, { long_name => $ingredient->{unit}->{name} } ] )
+          ->one_row;
     }
     elsif ( defined $ingredient->{unit}->{id} ) {
 
@@ -195,8 +196,8 @@ sub add_ingredient : POST PathPart('ingredients/create') Chained('project_base')
     }
 
     my %new_ingredient = (
-        article_id => $existing_article->id,
-        unit_id    => $existing_unit->id,
+        article_id => $existing_article && $existing_article->id,
+        unit_id    => $existing_unit    && $existing_unit->id,
         comment    => $ingredient->{comment},
         value      => $ingredient->{amount},
         prepare    => $ingredient->{prepare},
@@ -239,6 +240,13 @@ sub add_ingredient : POST PathPart('ingredients/create') Chained('project_base')
                 comment => '',
             },
         )->id;
+        $existing_unit->create_related(
+            {
+                'articles_units' => {
+                    article_id => $new_ingredient{article_id},
+                }
+            }
+        );
     }
     elsif ( defined $existing_article and !$existing_unit ) {
 

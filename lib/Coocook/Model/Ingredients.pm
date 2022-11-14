@@ -112,12 +112,13 @@ sub for_ingredients_editor {
         }
 
         {
-            id           => $_->{id},
-            prepare      => $_->{prepare},
-            position     => $_->{position},
-            value        => $_->{value},
-            comment      => $_->{comment},
-            article      => { name => $_->{article}->name, comment => $_->{article}->comment },
+            id       => $_->{id},
+            prepare  => $_->{prepare},
+            position => $_->{position},
+            value    => $_->{value},
+            comment  => $_->{comment},
+            article  =>
+              { name => $_->{article}->name, comment => $_->{article}->comment, id => $_->{article}->id },
             current_unit => $unit,
             units        => \@units,
         }
