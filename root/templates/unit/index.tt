@@ -10,40 +10,48 @@ new_unit %]
 <table>
 <tr>
 <th>Unit</th>
-<th colspan="2">Conversion</th>
-<th colspan="2">Actions</th>
+<th colspan="2">Conversions</th>
+<th>Actions</th>
 </tr>
 [% FOR unit IN units;
-    quantity = unit.quantity;
-    default_unit = quantity.default_unit %]
+    conversions = unit.conversions || [undef];
+
+    FOR conversion IN conversions;
+        IF loop.first %]
 <tr>
-<td>
-    <a href="[% unit.url %]">
-    [%~ '<strong>'  IF unit.is_quantity_default ~%]
-    [% unit.short_name | html %] ([% unit.long_name | html %])
-    [%~ '</strong>' IF unit.is_quantity_default ~%]
-    </a>
-</td>
-[% IF unit.to_quantity_default AND NOT unit.is_quantity_default %]
-    <td>[% display_value_unit(1, unit, {html=>1}) %] = [% display_value_unit(unit.to_quantity_default, default_unit, {html=>1}) %]</td>
-    <td style="text-align:right">[% display_value_unit(unit.from_quantity_default, unit, {html=>1}) %] = [% display_value_unit(1, default_unit, {html=>1}) %]</td>
-[% ELSE; '<td></td><td></td>'; END %]
+    <td rowspan="[% unit.conversions.size %]">
+        <a href="[% unit.url %]">[% unit.short_name | html %] ([% unit.long_name | html %])</a>
+    </td>
+        [% END;
+
+        IF conversion %]
     <td>
-[% IF unit.make_quantity_default_url %]
-        <form action="[% unit.make_quantity_default_url %]" method="post" class="inline">
-            <input type="submit" value="Make quantity’s default">
-        </form>
-[% END %]
+        1&thinsp;[% unit.short_name %]
+        =
+        [% conversion.factor %]&thinsp;[% conversion.unit.short_name %]
     </td>
     <td>
-[% IF unit.delete_url %]
+        [% 1 / conversion.factor %]&thinsp;[% unit.short_name %]
+        =
+        1&thinsp;[% conversion.unit.short_name %]
+    </td>
+        [% ELSE %]
+    <td></td>
+    <td></td>
+        [% END;
+
+        IF loop.first %]
+    <td rowspan="[% unit.conversions.size %]">
+            [% IF unit.delete_url %]
         <form action="[% unit.delete_url %]" method="post" class="inline">
             <input type="submit" value="Delete">
         </form>
-[% END %]
+            [% END %]
     </td>
+        [% END %]
 </tr>
-[% END %]
+    [% END;
+END %]
 </table>
 
 [% new_unit %]

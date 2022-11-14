@@ -4,7 +4,7 @@ use utf8;
 
 use Moose;
 use MooseX::MarkAsMethods autoclean => 1;
-use Scalar::Util qw(looks_like_number);
+use Scalar::Util qw( looks_like_number weaken );
 
 BEGIN { extends 'Coocook::Controller' }
 
@@ -57,6 +57,34 @@ sub index : GET HEAD Chained('/project/base') PathPart('units') Args(0)
             # add delete_url to deletable units
             exists $units_in_use{ $unit->id }                                 # in use, for ingredient
               or $u->{delete_url} = $c->project_uri( $action, $unit->id );    # can be deleted
+        }
+    }
+
+    {
+        my %units            = map { $_->{id} => $_ } @units;
+        my $unit_conversions = $c->project->unit_conversions->hri;
+
+        while ( my $conversion = $unit_conversions->next ) {
+            $conversion->{transitive} or die "non-transitive not implemented";
+            length $conversion->{comment} and warn "comments not displayed yet";
+
+            my $factor = $conversion->{factor};
+            my $unit1  = $units{ $conversion->{unit1_id} };
+            my $unit2  = $units{ $conversion->{unit2_id} };
+
+            push @{ $unit1->{conversions} },
+              {
+                factor => $factor,
+                unit   => $unit2,
+              };
+
+            push @{ $unit2->{conversions} }, {
+                factor => 1 / $factor,    # inverse
+                unit   => $unit1,
+            };
+
+            weaken $unit1->{conversions}[-1]{unit};
+            weaken $unit2->{conversions}[-1]{unit};
         }
     }
 
