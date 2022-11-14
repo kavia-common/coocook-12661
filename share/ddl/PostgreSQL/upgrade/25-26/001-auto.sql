@@ -50,6 +50,18 @@ SET
 WHERE unit1_id > unit2_id
 
 ;
+ALTER TABLE dish_ingredients DROP CONSTRAINT dish_ingredients_fk_article_id_unit_id;
+
+;
+DROP INDEX dish_ingredients_idx_article_id_unit_id;
+
+;
+ALTER TABLE recipe_ingredients DROP CONSTRAINT recipe_ingredients_fk_article_id_unit_id;
+
+;
+DROP INDEX recipe_ingredients_idx_article_id_unit_id;
+
+;
 ALTER TABLE units DROP CONSTRAINT units_fk_quantity_id;
 
 ;
@@ -70,4 +82,3 @@ DROP TABLE quantities CASCADE;
 ;
 
 COMMIT;
-

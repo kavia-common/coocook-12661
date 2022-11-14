@@ -30,11 +30,14 @@ __PACKAGE__->grouping_column('recipe_id');
 __PACKAGE__->belongs_to( article => 'Coocook::Schema::Result::Article', 'article_id' );
 __PACKAGE__->belongs_to( recipe  => 'Coocook::Schema::Result::Recipe',  'recipe_id' );
 __PACKAGE__->belongs_to( unit    => 'Coocook::Schema::Result::Unit',    'unit_id' );
-__PACKAGE__->belongs_to(
+__PACKAGE__->might_have(
     article_unit => 'Coocook::Schema::Result::ArticleUnit',
     {
         'foreign.article_id' => 'self.article_id',
         'foreign.unit_id'    => 'self.unit_id',
+    },
+    {
+        is_foreign_key_constraint => 0,
     }
 );
 

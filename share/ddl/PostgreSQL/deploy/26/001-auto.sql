@@ -407,6 +407,25 @@ CREATE INDEX "articles_tags_idx_tag_id" on "articles_tags" ("tag_id");
 
 ;
 --
+-- Table: recipe_ingredients
+--
+CREATE TABLE "recipe_ingredients" (
+  "id" serial NOT NULL,
+  "position" integer DEFAULT 1 NOT NULL,
+  "recipe_id" integer NOT NULL,
+  "prepare" boolean NOT NULL,
+  "article_id" integer NOT NULL,
+  "unit_id" integer NOT NULL,
+  "value" real NOT NULL,
+  "comment" text NOT NULL,
+  PRIMARY KEY ("id")
+);
+CREATE INDEX "recipe_ingredients_idx_article_id" on "recipe_ingredients" ("article_id");
+CREATE INDEX "recipe_ingredients_idx_recipe_id" on "recipe_ingredients" ("recipe_id");
+CREATE INDEX "recipe_ingredients_idx_unit_id" on "recipe_ingredients" ("unit_id");
+
+;
+--
 -- Table: dishes_tags
 --
 CREATE TABLE "dishes_tags" (
@@ -440,26 +459,6 @@ CREATE INDEX "items_idx_unit_id" on "items" ("unit_id");
 
 ;
 --
--- Table: recipe_ingredients
---
-CREATE TABLE "recipe_ingredients" (
-  "id" serial NOT NULL,
-  "position" integer DEFAULT 1 NOT NULL,
-  "recipe_id" integer NOT NULL,
-  "prepare" boolean NOT NULL,
-  "article_id" integer NOT NULL,
-  "unit_id" integer NOT NULL,
-  "value" real NOT NULL,
-  "comment" text NOT NULL,
-  PRIMARY KEY ("id")
-);
-CREATE INDEX "recipe_ingredients_idx_article_id" on "recipe_ingredients" ("article_id");
-CREATE INDEX "recipe_ingredients_idx_article_id_unit_id" on "recipe_ingredients" ("article_id", "unit_id");
-CREATE INDEX "recipe_ingredients_idx_recipe_id" on "recipe_ingredients" ("recipe_id");
-CREATE INDEX "recipe_ingredients_idx_unit_id" on "recipe_ingredients" ("unit_id");
-
-;
---
 -- Table: dish_ingredients
 --
 CREATE TABLE "dish_ingredients" (
@@ -475,7 +474,6 @@ CREATE TABLE "dish_ingredients" (
   PRIMARY KEY ("id")
 );
 CREATE INDEX "dish_ingredients_idx_article_id" on "dish_ingredients" ("article_id");
-CREATE INDEX "dish_ingredients_idx_article_id_unit_id" on "dish_ingredients" ("article_id", "unit_id");
 CREATE INDEX "dish_ingredients_idx_dish_id" on "dish_ingredients" ("dish_id");
 CREATE INDEX "dish_ingredients_idx_item_id" on "dish_ingredients" ("item_id");
 CREATE INDEX "dish_ingredients_idx_unit_id" on "dish_ingredients" ("unit_id");
@@ -618,6 +616,18 @@ ALTER TABLE "articles_tags" ADD CONSTRAINT "articles_tags_fk_tag_id" FOREIGN KEY
   REFERENCES "tags" ("id") ON DELETE CASCADE DEFERRABLE;
 
 ;
+ALTER TABLE "recipe_ingredients" ADD CONSTRAINT "recipe_ingredients_fk_article_id" FOREIGN KEY ("article_id")
+  REFERENCES "articles" ("id") DEFERRABLE;
+
+;
+ALTER TABLE "recipe_ingredients" ADD CONSTRAINT "recipe_ingredients_fk_recipe_id" FOREIGN KEY ("recipe_id")
+  REFERENCES "recipes" ("id") ON DELETE CASCADE ON UPDATE CASCADE DEFERRABLE;
+
+;
+ALTER TABLE "recipe_ingredients" ADD CONSTRAINT "recipe_ingredients_fk_unit_id" FOREIGN KEY ("unit_id")
+  REFERENCES "units" ("id") DEFERRABLE;
+
+;
 ALTER TABLE "dishes_tags" ADD CONSTRAINT "dishes_tags_fk_dish_id" FOREIGN KEY ("dish_id")
   REFERENCES "dishes" ("id") ON DELETE CASCADE DEFERRABLE;
 
@@ -642,28 +652,8 @@ ALTER TABLE "items" ADD CONSTRAINT "items_fk_unit_id" FOREIGN KEY ("unit_id")
   REFERENCES "units" ("id") DEFERRABLE;
 
 ;
-ALTER TABLE "recipe_ingredients" ADD CONSTRAINT "recipe_ingredients_fk_article_id" FOREIGN KEY ("article_id")
-  REFERENCES "articles" ("id") DEFERRABLE;
-
-;
-ALTER TABLE "recipe_ingredients" ADD CONSTRAINT "recipe_ingredients_fk_article_id_unit_id" FOREIGN KEY ("article_id", "unit_id")
-  REFERENCES "articles_units" ("article_id", "unit_id") DEFERRABLE;
-
-;
-ALTER TABLE "recipe_ingredients" ADD CONSTRAINT "recipe_ingredients_fk_recipe_id" FOREIGN KEY ("recipe_id")
-  REFERENCES "recipes" ("id") ON DELETE CASCADE ON UPDATE CASCADE DEFERRABLE;
-
-;
-ALTER TABLE "recipe_ingredients" ADD CONSTRAINT "recipe_ingredients_fk_unit_id" FOREIGN KEY ("unit_id")
-  REFERENCES "units" ("id") DEFERRABLE;
-
-;
 ALTER TABLE "dish_ingredients" ADD CONSTRAINT "dish_ingredients_fk_article_id" FOREIGN KEY ("article_id")
   REFERENCES "articles" ("id") DEFERRABLE;
-
-;
-ALTER TABLE "dish_ingredients" ADD CONSTRAINT "dish_ingredients_fk_article_id_unit_id" FOREIGN KEY ("article_id", "unit_id")
-  REFERENCES "articles_units" ("article_id", "unit_id") DEFERRABLE;
 
 ;
 ALTER TABLE "dish_ingredients" ADD CONSTRAINT "dish_ingredients_fk_dish_id" FOREIGN KEY ("dish_id")

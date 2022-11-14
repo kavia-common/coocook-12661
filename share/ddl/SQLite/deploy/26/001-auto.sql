@@ -370,6 +370,25 @@ CREATE TABLE articles_tags (
 CREATE INDEX articles_tags_idx_article_id ON articles_tags (article_id);
 CREATE INDEX articles_tags_idx_tag_id ON articles_tags (tag_id);
 --
+-- Table: recipe_ingredients
+--
+CREATE TABLE recipe_ingredients (
+  id INTEGER PRIMARY KEY NOT NULL,
+  position integer NOT NULL DEFAULT 1,
+  recipe_id integer NOT NULL,
+  prepare boolean NOT NULL,
+  article_id integer NOT NULL,
+  unit_id integer NOT NULL,
+  value real NOT NULL,
+  comment text NOT NULL,
+  FOREIGN KEY (article_id) REFERENCES articles(id),
+  FOREIGN KEY (recipe_id) REFERENCES recipes(id) ON DELETE CASCADE ON UPDATE CASCADE,
+  FOREIGN KEY (unit_id) REFERENCES units(id)
+);
+CREATE INDEX recipe_ingredients_idx_article_id ON recipe_ingredients (article_id);
+CREATE INDEX recipe_ingredients_idx_recipe_id ON recipe_ingredients (recipe_id);
+CREATE INDEX recipe_ingredients_idx_unit_id ON recipe_ingredients (unit_id);
+--
 -- Table: dishes_tags
 --
 CREATE TABLE dishes_tags (
@@ -404,27 +423,6 @@ CREATE INDEX items_idx_purchase_list_id ON items (purchase_list_id);
 CREATE INDEX items_idx_unit_id ON items (unit_id);
 CREATE UNIQUE INDEX items_purchase_list_id_article_id_unit_id ON items (purchase_list_id, article_id, unit_id);
 --
--- Table: recipe_ingredients
---
-CREATE TABLE recipe_ingredients (
-  id INTEGER PRIMARY KEY NOT NULL,
-  position integer NOT NULL DEFAULT 1,
-  recipe_id integer NOT NULL,
-  prepare boolean NOT NULL,
-  article_id integer NOT NULL,
-  unit_id integer NOT NULL,
-  value real NOT NULL,
-  comment text NOT NULL,
-  FOREIGN KEY (article_id) REFERENCES articles(id),
-  FOREIGN KEY (article_id, unit_id) REFERENCES articles_units(article_id, unit_id),
-  FOREIGN KEY (recipe_id) REFERENCES recipes(id) ON DELETE CASCADE ON UPDATE CASCADE,
-  FOREIGN KEY (unit_id) REFERENCES units(id)
-);
-CREATE INDEX recipe_ingredients_idx_article_id ON recipe_ingredients (article_id);
-CREATE INDEX recipe_ingredients_idx_article_id_unit_id ON recipe_ingredients (article_id, unit_id);
-CREATE INDEX recipe_ingredients_idx_recipe_id ON recipe_ingredients (recipe_id);
-CREATE INDEX recipe_ingredients_idx_unit_id ON recipe_ingredients (unit_id);
---
 -- Table: dish_ingredients
 --
 CREATE TABLE dish_ingredients (
@@ -438,13 +436,11 @@ CREATE TABLE dish_ingredients (
   comment text NOT NULL,
   item_id integer,
   FOREIGN KEY (article_id) REFERENCES articles(id),
-  FOREIGN KEY (article_id, unit_id) REFERENCES articles_units(article_id, unit_id),
   FOREIGN KEY (dish_id) REFERENCES dishes(id) ON DELETE CASCADE,
   FOREIGN KEY (item_id) REFERENCES items(id) ON DELETE SET NULL,
   FOREIGN KEY (unit_id) REFERENCES units(id)
 );
 CREATE INDEX dish_ingredients_idx_article_id ON dish_ingredients (article_id);
-CREATE INDEX dish_ingredients_idx_article_id_unit_id ON dish_ingredients (article_id, unit_id);
 CREATE INDEX dish_ingredients_idx_dish_id ON dish_ingredients (dish_id);
 CREATE INDEX dish_ingredients_idx_item_id ON dish_ingredients (item_id);
 CREATE INDEX dish_ingredients_idx_unit_id ON dish_ingredients (unit_id);

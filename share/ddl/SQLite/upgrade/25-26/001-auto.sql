@@ -47,6 +47,18 @@ SET
 WHERE unit1_id > unit2_id;
 
 ;
+DROP INDEX dish_ingredients_fk_article_id_unit_id;
+
+;
+DROP INDEX dish_ingredients_idx_article_id_unit_id;
+
+;
+DROP INDEX recipe_ingredients_fk_article_id_unit_id;
+
+;
+DROP INDEX recipe_ingredients_idx_article_id_unit_id;
+
+;
 CREATE TEMPORARY TABLE units_temp_alter (
   id INTEGER PRIMARY KEY NOT NULL,
   project_id integer NOT NULL,
