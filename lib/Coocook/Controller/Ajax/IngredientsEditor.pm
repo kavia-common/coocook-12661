@@ -4,11 +4,11 @@ use Moose;
 use MooseX::MarkAsMethods autoclean => 1;
 use JSON::MaybeXS;
 
-BEGIN { extends 'Coocook::Controller' }
+BEGIN { extends 'Coocook::Controller::Ajax' }
 
 =head1 NAME
 
-Coocook::Controller::AJAX::IngredientsEditor - Catalyst Controller
+Coocook::Controller::Ajax::IngredientsEditor - Catalyst Controller
 
 =head1 DESCRIPTION
 
@@ -19,7 +19,7 @@ Catalyst Controller.
 =cut
 
 sub project_base : Chained('/project/base') PathPart('') CaptureArgs(2)
-  RequiresCapability('view_project') Does(~Ajax) {
+  RequiresCapability('view_project') {
     my ( $self, $c, $dish_or_recipe, $dish_or_recipe_id ) = @_;
 
     use feature 'say';
@@ -38,7 +38,7 @@ sub project_base : Chained('/project/base') PathPart('') CaptureArgs(2)
 }
 
 sub get_all_ingredients : GET PathPart('ingredients') HEAD Chained('project_base')
-  RequiresCapability('view_project') Does(~Ajax) {
+  RequiresCapability('view_project') {
     my ( $self, $c ) = @_;
 
     my $ingredients = $c->model('Ingredients')->new(
@@ -50,7 +50,7 @@ sub get_all_ingredients : GET PathPart('ingredients') HEAD Chained('project_base
 }
 
 sub update_ingredient : POST PathPart('ingredients/update') Chained('project_base')
-  RequiresCapability('edit_project') Does(~Ajax) {
+  RequiresCapability('edit_project') {
     my ( $self, $c ) = @_;
     my $json       = $c->req->body_data;
     my $ingredient = $json->{ingredient};
@@ -69,8 +69,8 @@ sub update_ingredient : POST PathPart('ingredients/update') Chained('project_bas
     $c->stash->{json_data} = { id => $ingrDB->id };
 }
 
-sub prepend_ingredient : POST PathPart('ingredients/prepend') Does('~Ajax') Chained('project_base')
-  RequiresCapability('edit_project') Does(~Ajax) {
+sub prepend_ingredient : POST PathPart('ingredients/prepend') Chained('project_base')
+  RequiresCapability('edit_project') {
     my ( $self, $c ) = @_;
 
     my $dish_or_recipe = $c->stash->{dish_or_recipe};
@@ -86,8 +86,8 @@ sub prepend_ingredient : POST PathPart('ingredients/prepend') Does('~Ajax') Chai
     $c->stash->{json_data} = { success => 1 };
 }
 
-sub append_ingredient : POST PathPart('ingredients/append') Does('~Ajax') Chained('project_base')
-  RequiresCapability('edit_project') Does(~Ajax) {
+sub append_ingredient : POST PathPart('ingredients/append') Chained('project_base')
+  RequiresCapability('edit_project') {
     my ( $self, $c ) = @_;
 
     my $dish_or_recipe = $c->stash->{dish_or_recipe};
@@ -103,8 +103,8 @@ sub append_ingredient : POST PathPart('ingredients/append') Does('~Ajax') Chaine
     $c->stash->{json_data} = { success => 1 };
 }
 
-sub move_ingredient : POST PathPart('ingredients/move') Does('~Ajax') Chained('project_base')
-  RequiresCapability('edit_project') Does(~Ajax) {
+sub move_ingredient : POST PathPart('ingredients/move') Chained('project_base')
+  RequiresCapability('edit_project') {
     my ( $self, $c ) = @_;
 
     my $dish_or_recipe = $c->stash->{dish_or_recipe};
@@ -132,8 +132,8 @@ sub move_ingredient : POST PathPart('ingredients/move') Does('~Ajax') Chained('p
     $c->stash->{json_data} = { success => 1 };
 }
 
-sub delete_ingredient : POST PathPart('ingredients/delete') Does('~Ajax') Chained('project_base')
-  RequiresCapability('edit_project') Does(~Ajax) {
+sub delete_ingredient : POST PathPart('ingredients/delete') Chained('project_base')
+  RequiresCapability('edit_project') {
     my ( $self, $c ) = @_;
     my $json = $c->req->body_data;
 
@@ -143,6 +143,127 @@ sub delete_ingredient : POST PathPart('ingredients/delete') Does('~Ajax') Chaine
     $ingrDB->delete();
 
     $c->stash->{json_data} = { id => $ingrDB->id };
+}
+
+sub all_articles : GET HEAD PathPart('articles') Chained('project_base')
+  RequiresCapability('view_project') {
+    my ( $self, $c ) = @_;
+    my $project = $c->stash->{project};
+    $c->stash->{json_data} =
+      [ $project->articles->search( undef, { columns => [ 'id', 'name', 'comment' ] } )->hri->all ];
+}
+
+sub all_units : GET HEAD PathPart('units') Chained('project_base')
+  RequiresCapability('view_project') {
+    my ( $self, $c ) = @_;
+    my $project = $c->stash->{project};
+    $c->stash->{json_data} = [
+        map {
+            my $u = $_;
+            $u->{articles} = [ map { $_->{article_id} } $u->{articles_units}->@* ];
+            delete $u->{articles_units};
+            $u
+        } $project->units->search(
+            undef,
+            {
+                columns  => [ 'id', 'short_name', 'long_name' ],
+                prefetch => 'articles_units',
+            }
+        )->hri->all
+    ];
+}
+
+sub add_ingredient : POST PathPart('ingredients/create') Chained('project_base')
+  RequiresCapability('edit_project') {
+    my ( $self, $c ) = @_;
+
+    my $dish_or_recipe = $c->stash->{dish_or_recipe};
+
+    my $project = $c->stash->{project};
+
+    my $ingredient = $c->req->body_data->{ingredient};
+    my $existing_article;
+    if ( defined $ingredient->{article}->{name} ) {
+        $existing_article = $project->articles->find( { name => $ingredient->{article}->{name} },
+            { key => 'articles_project_id_name' } );
+    }
+    elsif ( defined $ingredient->{article}->{id} ) {
+
+        $existing_article = $project->articles->find( { id => $ingredient->{article}->{id} } );
+    }
+    my $existing_unit;
+    if ( defined $ingredient->{unit}->{name} ) {
+        $existing_unit = $project->units->find( { name => $ingredient->{unit}->{name} },
+            { key => 'units_project_id_name' } );
+    }
+    elsif ( defined $ingredient->{unit}->{id} ) {
+
+        $existing_unit = $project->units->find( { id => $ingredient->{unit}->{id} } );
+    }
+
+    my %new_ingredient = (
+        article_id => $existing_article->id,
+        unit_id    => $existing_unit->id,
+        comment    => $ingredient->{comment},
+        value      => $ingredient->{amount},
+        prepare    => $ingredient->{prepare},
+    );
+
+    # 4 general cases
+    # unit and article don't exist
+    if (    !$existing_article
+        and !$existing_unit
+        and defined $ingredient->{article}->{name}
+        and defined $ingredient->{unit}->{name} )
+    {
+
+        # create both and connect them
+        $new_ingredient{article_id} = $project->articles->create(
+            {
+                name    => $ingredient->{article}->{name},
+                comment => '',
+            },
+        )->id;
+        my $unit = $project->units->create(
+            {
+                short_name => $ingredient->{unit}->{name},
+                long_name  => $ingredient->{unit}->{name},
+            }
+        );
+        $unit->create_related(
+            'articles_units' => {
+                article_id => $new_ingredient{article_id},
+            }
+        );
+        $new_ingredient{unit_id} = $unit->id;
+    }
+    elsif ( !$existing_article and defined $existing_unit ) {
+
+        # create article and connect unit to it
+        $new_ingredient{article_id} = $existing_unit->create_related(
+            articles => {
+                name    => $ingredient->{article}->{name},
+                comment => '',
+            },
+        )->id;
+    }
+    elsif ( defined $existing_article and !$existing_unit ) {
+
+        # create unit and connect it to the ingredient, but not the article
+        $new_ingredient{unit_id} = $project->units->create(
+            {
+                short_name => $ingredient->{unit}->{name},
+                long_name  => $ingredient->{unit}->{name},
+            }
+        )->id;
+    }
+
+    # last case: both exist and just a ingredient must be created with the ids of the articles
+    # => we don't need to anything because $article_id and $unit_id have already the right values
+
+    $dish_or_recipe->create_related( ingredients => \%new_ingredient );
+
+    $c->stash->{json_data} = { success => 1 };
 }
 
 1;
