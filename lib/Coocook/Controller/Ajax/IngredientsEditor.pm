@@ -22,19 +22,12 @@ sub project_base : Chained('/project/base') PathPart('') CaptureArgs(2)
   RequiresCapability('view_project') {
     my ( $self, $c, $dish_or_recipe, $dish_or_recipe_id ) = @_;
 
-    use feature 'say';
-    use Data::Dumper;
-    say Dumper( $c->{user} );
-
     return $c->detach('/error/not_found')
       unless ( $dish_or_recipe eq 'dish' or $dish_or_recipe eq 'recipe' );
 
-    use feature 'say';
-    use Data::Dumper;
     my $plural = $dish_or_recipe eq 'dish' ? 'dishes' : 'recipes';
-    my $result = $c->project->recipes->find($dish_or_recipe_id)
-      || $c->detach('/error/not_found');
-    $c->stash( dish_or_recipe => $result );
+    $c->stash( dish_or_recipe => $c->project->recipes->find($dish_or_recipe_id)
+          || $c->detach('/error/not_found'), );
 }
 
 sub get_all_ingredients : GET PathPart('ingredients') HEAD Chained('project_base')
