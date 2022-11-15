@@ -6,11 +6,7 @@ END %]
 
 <div class="alert alert-success">
     <p class="m-0">
-    [% IF show_all_url %]
-        As a site admin you can <a class="alert-link" href="[% show_all_url %]">view all recipes</a>.
-    [% ELSIF show_less_url %]
-        These are all recipes. You can also <a class="alert-link hov-under" href="[% show_less_url %]">view only yours</a>.
-    [% ELSIF user %]
+    [% IF user %]
         This list also includes private recipes which you are allowed to view.
     [% ELSE %]
         These are <em>only</em> public recipes.

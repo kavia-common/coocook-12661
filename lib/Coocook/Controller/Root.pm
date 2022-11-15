@@ -158,6 +158,7 @@ sub auto : Private {
             faq           => $c->uri_for_action_if_permitted('/admin/faq/index'),
             organizations => $c->uri_for_action_if_permitted('/admin/organizations'),
             projects      => $c->uri_for_action_if_permitted('/admin/projects'),
+            recipes       => $c->uri_for_action_if_permitted('/admin/recipes'),
             terms         => $c->uri_for_action_if_permitted('/admin/terms/index'),
             users         => $c->uri_for_action_if_permitted('/admin/user/index'),
         },

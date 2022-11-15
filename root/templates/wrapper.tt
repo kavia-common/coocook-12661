@@ -186,6 +186,7 @@ END %]
                         <li><a class="dark-link" href="[% admin_urls.faq %]">FAQ</a></li>
                         <li><a class="dark-link" href="[% admin_urls.organizations %]">Organizations</a></li>
                         <li><a class="dark-link" href="[% admin_urls.projects %]">Projects</a></li>
+                        <li><a class="dark-link" href="[% admin_urls.recipes %]">Recipes</a></li>
                         <li><a class="dark-link" href="[% admin_urls.terms %]">Terms</a></li>
                         <li><a class="dark-link" href="[% admin_urls.users %]">Users</a></li>
                     </ul>

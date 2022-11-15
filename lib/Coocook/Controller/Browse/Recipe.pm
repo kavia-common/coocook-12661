@@ -21,20 +21,10 @@ Catalyst Controller.
 =cut
 
 sub index : GET HEAD Chained('/base') PathPart('recipes') Args(0) Public {
-    my ( $self, $c ) = @_;
+    my ( $self, $c, $recipes ) = @_;
 
-    my $recipes = $c->model('DB::Recipe');
-
-    if ( $c->req->params->get('show_all') ) {
-        $c->require_capability('view_all_recipes');
-
-        $c->stash( show_less_url => $c->uri_for( $c->action ) );
-    }
-    else {
-        $c->has_capability('view_all_recipes')
-          and $c->stash( show_all_url => $c->uri_for( $c->action, { show_all => 1 } ) );
-
-        $recipes = $recipes->public;
+    if ( not $recipes ) {    # allows reusing this controller for /admin/recipes
+        $recipes = $c->model('DB::Recipe')->public;
 
         if ( my $user = $c->user ) {
             $recipes = $recipes->union(
@@ -45,15 +35,11 @@ sub index : GET HEAD Chained('/base') PathPart('recipes') Args(0) Public {
                 ]
             );
         }
+
+        $recipes = $recipes->search( undef, { order_by => $recipes->me('name') } );
     }
 
-    my @recipes = $recipes->search(
-        undef,
-        {
-            columns  => [qw< id project_id name >],
-            order_by => $recipes->me('name'),
-        }
-    )->hri->all;
+    my @recipes = $recipes->search( undef, { columns => [qw< id project_id name >] } )->hri->all;
 
     {
         my $projects =

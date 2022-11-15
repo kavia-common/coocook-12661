@@ -9,6 +9,7 @@ my @admin_pages = (
       faq
       organizations
       projects
+      recipes
       terms
       users
     )

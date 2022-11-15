@@ -15,6 +15,7 @@ sub base : Chained('/base') PathPart('admin') CaptureArgs(0) {
         { url => $admin_urls->{faq},           text => "FAQ" },
         { url => $admin_urls->{organizations}, text => "Organizations" },
         { url => $admin_urls->{projects},      text => "Projects" },
+        { url => $admin_urls->{recipes},       text => "Recipes" },
         { url => $admin_urls->{terms},         text => "Terms" },
         { url => $admin_urls->{users},         text => "Users" },
     );
@@ -29,6 +30,7 @@ sub index : GET HEAD Chained('base') PathPart('') Args(0) RequiresCapability('ad
 
     my $max_organizations = 5;
     my $max_projects      = 10;
+    my $max_recipes       = 10;
     my $max_users         = 10;
 
     my @organizations = $c->model('DB::Organization')
@@ -40,6 +42,20 @@ sub index : GET HEAD Chained('base') PathPart('') Args(0) RequiresCapability('ad
       ->search( undef, { order_by => { -desc => 'created' }, rows => $max_projects } )->hri->all;
 
     $_->{url} = $c->uri_for_action( '/project/show', [ $_->{id}, $_->{url_name} ] ) for @projects;
+
+    $c->forward(
+        '/browse/recipe/index',
+        [
+            $c->model('DB::Recipe')->search(
+                undef,
+                {    # TODO recipes have no 'created' column, sorted by project instead
+                    join     => 'project',
+                    order_by => { -desc => 'project.created' },
+                    rows     => $max_recipes,
+                }
+            )
+        ]
+    );
 
     my @users = $c->model('DB::User')
       ->search( undef, { order_by => { -desc => 'created' }, rows => $max_users } )->hri->all;
@@ -85,6 +101,16 @@ sub projects : GET HEAD Chained('base') Args(0) RequiresCapability('admin_view')
     }
 
     $c->stash( projects => \@projects );
+}
+
+sub recipes : GET HEAD Chained('base') Args(0) RequiresCapability('admin_view') {
+    my ( $self, $c ) = @_;
+
+    my $recipes = $c->model('DB::Recipe');
+
+    $c->forward( '/browse/recipe/index',
+        [ $recipes->search( undef, { order_by => $recipes->me('name') } ) ] );
+
 }
 
 __PACKAGE__->meta->make_immutable;
