@@ -5,17 +5,12 @@ use namespace::autoclean;
 
 extends 'Coocook::Schema::ResultSet';
 
-sub sorted_by_columns { 'position' }
-
-__PACKAGE__->load_components('+Coocook::Schema::Component::ResultSet::SortByName');
+__PACKAGE__->load_components(
+    '+Coocook::Schema::Component::ResultSet::Ingredient',
+    '+Coocook::Schema::Component::ResultSet::SortByName',
+);
 
 __PACKAGE__->meta->make_immutable;
-
-sub prepared {
-    my $self = shift;
-
-    return $self->search( { -bool => $self->me('prepare') } );
-}
 
 sub unassigned {
     my $self = shift;
