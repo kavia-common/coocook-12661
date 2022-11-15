@@ -8,15 +8,20 @@ BEGIN { extends 'Coocook::Controller' }
 sub base : Chained('/base') PathPart('admin') CaptureArgs(0) {
     my ( $self, $c ) = @_;
 
-    $c->stash(
-        submenu_items => [
-            { action => 'admin/faq/index',     text => "FAQ" },
-            { action => 'admin/organizations', text => "Organizations" },
-            { action => 'admin/projects',      text => "Projects" },
-            { action => 'admin/terms/index',   text => "Terms" },
-            { action => 'admin/user/index',    text => "Users" },
-        ]
+    my $admin_urls = $c->stash->{admin_urls};
+
+    my @items = (
+        { url => $c->stash->{admin_url},       text => "Admin" },
+        { url => $admin_urls->{faq},           text => "FAQ" },
+        { url => $admin_urls->{organizations}, text => "Organizations" },
+        { url => $admin_urls->{projects},      text => "Projects" },
+        { url => $admin_urls->{terms},         text => "Terms" },
+        { url => $admin_urls->{users},         text => "Users" },
     );
+
+    $_->{url} or $_->{forbidden} = 1 for @items;
+
+    $c->stash( submenu_items => \@items );
 }
 
 sub index : GET HEAD Chained('base') PathPart('') Args(0) RequiresCapability('admin_view') {
@@ -45,10 +50,6 @@ sub index : GET HEAD Chained('base') PathPart('') Args(0) RequiresCapability('ad
         organizations => \@organizations,
         projects      => \@projects,
         users         => \@users,
-
-        organizations_url => $c->uri_for( $self->action_for('organizations') ),
-        projects_url      => $c->uri_for( $self->action_for('projects') ),
-        users_url         => $c->uri_for_action('/admin/user/index'),
     );
 
 }

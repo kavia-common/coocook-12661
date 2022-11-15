@@ -154,7 +154,7 @@ sub auto : Private {
 
     $c->stash(
         admin_url  => $c->uri_for_action_if_permitted('/admin/index'),
-        admin_urls => {    # TODO list duplicates code in Controller::Admin
+        admin_urls => {
             faq           => $c->uri_for_action_if_permitted('/admin/faq/index'),
             organizations => $c->uri_for_action_if_permitted('/admin/organizations'),
             projects      => $c->uri_for_action_if_permitted('/admin/projects'),
@@ -281,6 +281,9 @@ sub end : ActionClass('RenderView') {
     my ( $self, $c ) = @_;
 
     for my $item ( @{ $c->stash->{submenu_items} } ) {
+        next if $item->{forbidden};
+        next if $item->{url};
+
         my $action = $item->{action};
 
         my $capabilities = $self->action_for($action)->attributes->{RequiresCapability};
