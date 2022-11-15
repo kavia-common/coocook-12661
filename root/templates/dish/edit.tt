@@ -12,15 +12,20 @@ js.push('/lib/coocook-web-components/dist/ingredients-editor/ingredients-editor.
         [% END %]
     </div>
 
-    <div class="offset-sm-1 col-sm-5 text-left">
-        <div class="d-flex justify-content-end">
-            <form method="post" action="[% delete_url %]">
-                <button type="button" class="btn btn-danger" title="Delete dish" aria-expanded="false">
-                    <i class="material-icons">delete_forever</i> Delete
-                </button>
-            </form>
-        </div>
-
+	<div class="offset-sm-1 col-sm-5 text-left">
+		<div class="d-flex justify-content-end">
+			<form method="post" action="[% create_recipe_url %]">
+				<button type="submit" class="btn btn-primary" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Create a recipe based on this dish" aria-expanded="false">
+					<i class="material-icons">file_copy</i> Create as recipe
+				</button>
+			</form>
+            
+			<form method="post" action="[% delete_url %]">
+				<button type="button" class="btn btn-danger" title="Delete dish" aria-expanded="false">
+					<i class="material-icons">delete_forever</i> Delete
+				</button>
+			</form>
+		</div>
     </div>
 </div>
 

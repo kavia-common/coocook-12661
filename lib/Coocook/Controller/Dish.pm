@@ -88,8 +88,9 @@ sub edit : GET HEAD Chained('base') PathPart('') Args(0) RequiresCapability('vie
         articles           => $ingredients->all_articles,
         units              => $ingredients->all_units,
         prepare_meals      => [ $prepare_meals->all ],
-        add_ingredient_url => $c->project_uri( '/dish/add',    $dish->id ),
-        delete_url         => $c->project_uri( '/dish/delete', $dish->id ),
+        add_ingredient_url => $c->project_uri( '/dish/add',         $dish->id ),
+        delete_url         => $c->project_uri( '/dish/delete',      $dish->id ),
+        create_recipe_url  => $c->project_uri( '/recipe/from_dish', $dish->id ),
     );
 
     for my $ingredient ( @{ $c->stash->{ingredients} } ) {

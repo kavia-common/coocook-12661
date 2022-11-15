@@ -170,6 +170,22 @@ sub create : POST Chained('submenu') Args(0) RequiresCapability('edit_project') 
 
 }
 
+sub from_dish : POST Chained('/project/base') PathPart('recipes/from_dish') Args(1)
+  RequiresCapability('edit_project') {
+    my ( $self, $c, $dish_id ) = @_;
+
+    my $dish = $c->project->dishes->find($dish_id);
+
+    if ( $c->project->find_related( recipes => { name => $dish->name } ) ) {
+        $c->messages->error("Recipe with that name does already exist");
+        $c->detach( '/dish/redirect' => [ $dish->id ] );
+    }
+
+    my $recipe = $c->model('DB::Recipe')->from_dish($dish);
+
+    $c->response->redirect( $c->project_uri( '/recipe/edit', $recipe->id ) );
+}
+
 sub duplicate : POST Chained('base') Args(0) RequiresCapability('edit_project') {
     my ( $self, $c ) = @_;
 

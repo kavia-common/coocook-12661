@@ -20,19 +20,17 @@ sub from_recipe {
                     meal_id => $args{meal},
                     comment => $args{comment},
 
-                    name        => $args{name}        || $recipe->name,
-                    description => $args{description} || $recipe->description,
-                    preparation => $args{preparation} || $recipe->preparation,
+                    map { $_ => $args{comment} || $recipe->get_column($_) } qw(
+                      name
+                      description
+                      preparation
+                    )
                 }
             );
 
             $dish->set_tags( [ $recipe->tags->all ] );
 
-            # copy ingredients
-            for my $ingredient ( $recipe->ingredients->all ) {
-                $dish->create_related(
-                    ingredients => { map { $_ => $ingredient->$_ } qw<position prepare article unit value comment> } );
-            }
+            $dish->ingredients->copy_from_rs( $recipe->ingredients );
 
             # adjust values of dish ingredients to new servings
             if ( my $servings = $args{servings} ) {

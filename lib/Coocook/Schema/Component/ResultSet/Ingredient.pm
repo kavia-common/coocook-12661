@@ -9,7 +9,23 @@ use feature 'fc';    # Perl v5.16
 
 =head1 METHODS
 
+=head2 copy_from_rs($resultset)
+
+Copy ingredients from another dish or recipe.
+Can copy from dish to recipe or vice versa.
+
 =cut
+
+sub copy_from_rs {
+    my ( $self, $rs ) = @_;
+
+    my @columns = qw( position prepare article_id unit_id value comment );
+
+    # TODO could even use arrayref inflator for more speed
+    $self->populate( [ $rs->search( undef, { columns => \@columns } )->hri->all ] );
+
+    return $self;
+}
 
 sub sorted_by_columns { 'position' }
 
