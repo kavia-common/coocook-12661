@@ -14,7 +14,9 @@ IF import_url %]<form id="import"method="get" action="[% import_url %]"></form>[
         </div>
         [% IF public_url %]
         <a class="btn-group text-decoration-none col-xxl-3 col-md-4 col-sm-6" href="[% public_url %]">
-            <button class="btn btn-secondary">Share link</button>
+            <button class="btn btn-secondary">
+                <i class="material-icons">share</i> Share link
+            </button>
         </a>
         [% END;
         IF import_url %]
