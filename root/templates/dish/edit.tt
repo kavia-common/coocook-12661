@@ -13,7 +13,7 @@ js.push('/lib/coocook-web-components/dist/ingredients-editor/ingredients-editor.
     </div>
 
 	<div class="offset-sm-1 col-sm-5 text-left">
-		<div class="d-flex justify-content-end">
+		<div class="d-flex gap-2 justify-content-end">
 			<form method="post" action="[% create_recipe_url %]">
 				<button type="submit" class="btn btn-primary" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Create a recipe based on this dish" aria-expanded="false">
 					<i class="material-icons">file_copy</i> Create as recipe
