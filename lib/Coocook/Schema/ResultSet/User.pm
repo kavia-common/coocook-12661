@@ -53,15 +53,6 @@ sub name_available {
           and $blacklist->is_username_ok($name) );
 }
 
-sub name_valid {
-    my ( $self, $name ) = @_;
-
-    defined($name)
-      or return;
-
-    return $name =~ m/ \A [0-9a-zA-Z_]+ \z /x;
-}
-
 =head1 SUBSET METHODS
 
 =cut

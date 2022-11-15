@@ -62,23 +62,7 @@ is not used for users/organizations and not blacklisted.
 
 =cut
 
-sub name_available {
-    my ( $self, $name ) = @_;
-
-    my $name_fc = fc($name);
-
-    return (  !$self->schema->resultset('Organization')->results_exist( { name_fc => $name_fc } )
-          and !$self->schema->resultset('User')->results_exist( { name_fc => $name_fc } )
-          and $self->schema->resultset('BlacklistUsername')->is_username_ok($name) );
-}
-
-sub name_valid {
-    my ( $self, $name ) = @_;
-
-    defined($name)
-      or return;
-
-    return $name =~ m/ \A [0-9a-zA-Z_]+ \z /x;
-}
+# proxied to Result::User because of shared namespace
+sub name_available { shift->schema->resultset('User')->name_available(@_) }
 
 1;

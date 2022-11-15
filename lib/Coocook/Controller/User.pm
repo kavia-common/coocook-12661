@@ -3,6 +3,7 @@ package Coocook::Controller::User;
 use feature 'fc';
 use utf8;
 
+use Coocook::Util;
 use Data::Validate::Email 'is_email';
 use DateTime;
 use Moose;
@@ -118,7 +119,7 @@ sub post_register : POST Chained('/base') PathPart('register') Args(0) Public {
     if ( length $username == 0 ) {
         push @errors, "username must not be empty";
     }
-    elsif ( not $users->name_valid($username) ) {
+    elsif ( not Coocook::Util::username_valid($username) ) {
         push @errors, "username must not contain other characters than 0-9, a-z, A-Z or _.";
     }
     elsif ( not $users->name_available($username) ) {

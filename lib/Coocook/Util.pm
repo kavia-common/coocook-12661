@@ -7,6 +7,8 @@ use warnings;
 
 use feature 'fc';    # Perl v5.16
 
+use Carp;
+
 =head1 FUNCTIONS
 
 =head2 url_name($name)
@@ -40,6 +42,22 @@ sub url_names_hashref {
         url_name    => $url_name,
         url_name_fc => fc($url_name),
     };
+}
+
+=head2 username_valid($username)
+
+Returns a boolean value indicating whether string C<$username>
+is a valid username or organization name.
+
+=cut
+
+sub username_valid {
+    my $username = shift;
+
+    defined $username
+      or croak "username not defined";
+
+    return $username =~ m/ \A [0-9a-zA-Z_]+ \z /x;
 }
 
 1;

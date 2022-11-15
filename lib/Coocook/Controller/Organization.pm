@@ -2,6 +2,7 @@ package Coocook::Controller::Organization;
 
 use utf8;
 
+use Coocook::Util;
 use Moose;
 use MooseX::MarkAsMethods autoclean => 1;
 use PerlX::Maybe;
@@ -30,7 +31,7 @@ sub create : POST Chained('/base') PathPart('organization/create') Args(0)
     {
         my @errors;
 
-        if ( not $organizations->name_valid($name) ) {
+        if ( not Coocook::Util::username_valid($name) ) {
             push @errors, "The organization’s name must not contain other characters than 0-9, a-z, A-Z or _.";
         }
         elsif ( not $organizations->name_available($name) ) {
