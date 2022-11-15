@@ -90,8 +90,9 @@
                                                 <li class="nav-item"><a class="nav-link" href="[% settings_url %]">Settings</a></li>
                                             [% END %]
                                             [% IF logout_url %]
-                                                <li class="nav-item"><form class="px-3 py-2" method="post" action="[% logout_url %]">
-                                                    <button class="nav-link btn text-danger p-0" name="logout">Sign out</button>
+                                                <hr class="border border-secondary">
+                                                <li class="nav-item"><form method="post" action="[% logout_url %]">
+                                                    <button class="nav-link btn text-danger" name="logout">Sign out</button>
                                                 </form></li>
                                             [% END %]
                                         </ul>
@@ -118,8 +119,9 @@
                                             <li><a class="dropdown-item" href="[% settings_url %]">Settings</a></li>
                                         [% END %]
                                         [% IF logout_url %]
-                                            <li><form class="px-3 py-2" method="post" action="[% logout_url %]">
-                                                <button class="btn btn-sm btn-outline-danger w-100" name="logout">Sign out</button>
+                                            <hr class="my-1">
+                                            <li><form method="post" action="[% logout_url %]">
+                                                <button class="dropdown-item" name="logout">Sign out</button>
                                             </form></li>
                                         [% END %]
                                     </ul>
