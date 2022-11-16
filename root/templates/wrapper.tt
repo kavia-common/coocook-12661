@@ -58,19 +58,18 @@
                         <div class="offcanvas-body justify-content-end">
                             <ul class="d-flex flex-column flex-xl-row gap-2 p-0 m-0" id="project_nav">
                                 <li class="nav-item d-block d-xl-none"><a class="nav-link" href="[% homepage_url %]">Home</a></li>
-                                [% IF user %]
-                                    [% IF project_urls %]
-                                        <li class="nav-item"><a class="nav-link" href="[% project_urls.project %]">Project</a></li>
-                                        <li class="nav-item"><a class="nav-link" href="[% project_urls.recipes %]">Recipes</a><span class="badge rounded-pill bg-primary text-light">[% inventory.recipes %]</span></li>
-                                        <li class="nav-item"><a class="nav-link" href="[% project_urls.articles %]">Articles</a><span class="badge rounded-pill bg-primary text-light">[% inventory.articles %]</span></li>
-                                        <li class="nav-item"><a class="nav-link" href="[% project_urls.tags %]">Tags</a><span class="badge rounded-pill bg-primary text-light">[% inventory.tags %]</span></li>
-                                        <li class="nav-item"><a class="nav-link" href="[% project_urls.purchase_lists %]">Purchase Lists</a><span class="badge rounded-pill bg-primary text-light">[% inventory.purchase_lists %]</span></li>
-                                        <li class="nav-item"><a class="nav-link" href="[% project_urls.units %]">Units</a><span class="badge rounded-pill bg-primary text-light">[% inventory.units %]</span></li>
-                                        <li class="nav-item"><a class="nav-link" href="[% project_urls.import %]">Import</a></li>
-                                    [% END %]
+                                [% IF project_urls %]
+                                    <li class="nav-item"><a class="nav-link" href="[% project_urls.project %]">Project</a></li>
+                                    <li class="nav-item"><a class="nav-link" href="[% project_urls.recipes %]">Recipes</a><span class="badge rounded-pill bg-primary text-light">[% inventory.recipes %]</span></li>
+                                    <li class="nav-item"><a class="nav-link" href="[% project_urls.articles %]">Articles</a><span class="badge rounded-pill bg-primary text-light">[% inventory.articles %]</span></li>
+                                    <li class="nav-item"><a class="nav-link" href="[% project_urls.tags %]">Tags</a><span class="badge rounded-pill bg-primary text-light">[% inventory.tags %]</span></li>
+                                    <li class="nav-item"><a class="nav-link" href="[% project_urls.purchase_lists %]">Purchase Lists</a><span class="badge rounded-pill bg-primary text-light">[% inventory.purchase_lists %]</span></li>
+                                    <li class="nav-item"><a class="nav-link" href="[% project_urls.units %]">Units</a><span class="badge rounded-pill bg-primary text-light">[% inventory.units %]</span></li>
+                                    [% IF user %]<li class="nav-item"><a class="nav-link" href="[% project_urls.import %]">Import</a></li>[% END %]
                                     [% IF submenu_items.size > 0 %]
                                         <div class="d-block d-md-none">
                                             <hr class="border border-secondary">
+                                            <h3 class="text-light">Project [% project.name %]</h3>
                                             <ul class="d-flex flex-column gap-2 p-0 m-0">
                                                 [% FOR item IN submenu_items;
                                                     IF item.url %]
@@ -99,7 +98,7 @@
                                     </div>
                                 [% END %]
                                 [% IF login_url %]
-                                    <hr class="border border-secondary">
+                                    <hr class="d-xl-none border border-secondary">
                                     <li class="nav-item d-none d-xl-flex"><a class="btn btn-sm nav-link dark-link" href="[% login_url %]">Sign in</a></li>
                                     <li class="nav-item d-block d-xl-none"><a class="nav-link" href="[% login_url %]">Sign in</a></li>
                                 [% END %]
@@ -143,12 +142,10 @@
                         END %]
                     </ul>
                     <div>
-                        [% IF logout_url %]
-                            [% IF project %]
-                            <a class="text-dark nav-link px-2" href="[% project_urls.project %]">project <b>[% project.name | html%]</b></a>
-                            [% ELSE %]
-                            <p class="text-dark my-2">Please create or choose a project now.</p>
-                            [% END %]
+                        [% IF project %]
+                        <a class="text-dark nav-link px-2" href="[% project_urls.project %]">project <b>[% project.name | html%]</b></a>
+                        [% ELSIF logout_url %]
+                        <p class="text-dark my-2">Please create or choose a project now.</p>
                         [% END %]
                     </div>
                 </div>
