@@ -133,7 +133,7 @@ sub articles_cached_units {
 
         # this is probably (?) faster than additionally querying the relationship in SQL
         # TODO speed up
-        return \@articles, [ grep { exists $units_with_articles{ $_->id } } @units ];
+        return \@articles, \@units;
     }
     else {
         return \@articles;
