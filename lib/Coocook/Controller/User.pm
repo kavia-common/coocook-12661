@@ -111,6 +111,7 @@ sub post_register : POST Chained('/base') PathPart('register') Args(0) Public {
     my $username = $c->req->params->get('username');    # use key 'username' just like login form
     my $password = $c->req->params->get('password');
     my $email_fc = fc $c->req->params->get('email');
+    my $url      = $c->req->params->get('url');
 
     my @errors;
 
@@ -162,9 +163,11 @@ sub post_register : POST Chained('/base') PathPart('register') Args(0) Public {
             $robot++;
         }
 
-        if ( $c->config->{captcha}{use_hidden_input} ) {
-            length $c->req->params->get('url') > 0
-              and $robot++;
+        if ( defined $url ) {    # no matter if field is presented, inspect POST param
+            $robot++ if length $url > 0;
+        }
+        elsif ( $c->config->{captcha}{use_hidden_input} ) {
+            $robot++;            # field is presented but client didn't send--custom script?
         }
 
         $robot
@@ -179,6 +182,7 @@ sub post_register : POST Chained('/base') PathPart('register') Args(0) Public {
             last_input => {
                 username => $username,
                 email    => $email_fc,
+                url      => $url,
             },
         );
 

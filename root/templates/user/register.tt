@@ -18,9 +18,9 @@
                 <input id="email" type="email" id="floatingEmail" name="email" placeholder="email address" value="[% last_input.email | html %]" [% 'autofocus' IF last_input.username AND NOT last_input.email %] class="form-control" required>
                 <label for="email">Email address</label>
             </div>
-            [%~ IF use_hidden_input %]
+            [%~ IF use_hidden_input    # THIS INPUT FIELD ONLY WORKS AS CAPTCHA! %]
             <div class="form-floating d-none">
-                <input id="url" type="url" name="url" placeholder="address of your website" value="[%# THIS INPUT FIELD ONLY WORKS AS CAPTCHA! %]" class="form-control">
+                <input id="url" type="url" name="url" placeholder="address of your website" value="[% last_input.url %]" class="form-control">
                 <label for="url">Address of your website</label>
             </div>
             [%~ END %]
