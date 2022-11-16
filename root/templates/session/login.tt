@@ -9,20 +9,24 @@
                 <input type="text" id="floatingUsername" name="username" placeholder="username" [% 'autofocus' IF NOT username %] value="[% username | html %]" class="form-control">
                 <label for="floatingUsername">Username</label>
             </div>
-            <div class="form-floating">
-                <input type="password" id="floatingPassword"  name="password" placeholder="password" [% 'autofocus' IF     username %] value="" class="form-control">
-                <label for="floatingPassword">Password</label>
+            <div class="d-flex flex-column">
+                <div class="form-floating">
+                    <input type="password" id="floatingPassword"  name="password" placeholder="password" [% 'autofocus' IF username %] value="" class="form-control">
+                    <label for="floatingPassword">Password</label>
+                </div>
+                <a class="text-end" href="[% recover_url %]">Lost your password?</a>
             </div>
-            <div>
+            <div class="form-check m-0">
                 <input id="store_username" class="form-check-input" type="checkbox" name="store_username" [% 'checked' IF store_username %]>
                 <label for="store_username">Remember username for next login</label>
             </div>
-            <a href="[% recover_url %]">Lost your password?</a>
             <input type="submit" value="Sign in" class="btn btn-primary">
         </form>
     </div>
 
     [% IF register_url %]
-        <p>You don’t have an account yet? <a href="[% register_url %]">Sign up now!</a></p>
+        <div class="content-box mb-3">
+            <p class="m-0 text-center">You don’t have an account yet? <a href="[% register_url %]">Sign up now!</a></p>
+        </div>
     [% END %]
 </div>
