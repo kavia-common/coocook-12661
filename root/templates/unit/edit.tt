@@ -20,6 +20,40 @@ END %]
     </p>
 </form>
 
+<h2>Conversions</h2>
+
+<ul>
+    <li>group:
+        <ul>
+[% FOR conversion IN conversions %]
+            <li>
+        [% conversion.long_name %]
+        [% IF conversion.factor %]
+                <input type="number" value="[% conversion.factor %]">
+                <input type="submit" value="Update">
+        [% END %]
+            </li>
+[% END %]
+        </ul>
+    </li>
+
+[% FOR group IN grouped_units %]
+    <li>
+        group:
+        <ul>
+    [% FOR u IN group %]
+            <li>
+                <input type="text">[% unit.long_name %]<input type="submit" value="Add">
+                = 1 [% u.long_name %].
+                1 [% unit.long_name %] =
+                <input type="text">[% u.long_name %]<input type="submit" value="Add">
+            </li>
+    [% END %]
+        </ul>
+    </li>
+[% END %]
+</ul>
+
 [% IF articles.exists %]
 <h2>Where Unit <em>[% unit.long_name | html %]</em> is used ([% articles.size %] articles)</h2>
 

@@ -121,9 +121,70 @@ sub edit : GET HEAD Chained('base') PathPart('') Args(0) RequiresCapability('edi
         $article->{url} = $c->project_uri( '/article/edit', $article->{id} );
     }
 
+    my @units = $c->project->units->hri->all;
+    my %units = map { $_->{id} => $_ } @units;
+
+    my $primary_group = [];    # the group with $unit
+    my @groups;                # except primary group
+    my %groups_per_unit = ( $unit->id => $primary_group );
+
+    my $conversions = $c->project->unit_conversions->hri;
+
+    while ( my $conversion = $conversions->next ) {
+        my $unit1_id = $conversion->{unit1_id};
+        my $unit2_id = $conversion->{unit2_id};
+
+        if ( $unit1_id == $unit->id ) {
+            $units{$unit2_id}{factor} = $conversion->{factor};
+        }
+        elsif ( $unit2_id == $unit->id ) {
+            $units{$unit1_id}{factor} = $conversion->{factor}**-1;
+        }
+
+        my $group1 = $groups_per_unit{$unit1_id};
+        my $group2 = $groups_per_unit{$unit2_id};
+
+        if ($group1) {
+            if ($group2) {    # both -> groups must be merged
+                if ( $group2 == $primary_group ) {    # primary group must not be removed by merge
+                    ( $group1, $group2 ) = ( $group2, $group1 );
+                }
+
+                push @$group1, @$group2;
+
+                for my $group2_unit (@$group2) {
+                    $groups_per_unit{ $group2_unit->{id} } = $group1;
+                }
+
+                @groups = grep { $_ ne $group2 } @groups;
+
+            }
+            else {    # only group1
+                push @$group1, $units{$unit2_id};
+                $groups_per_unit{$unit2_id} = $group1;
+            }
+        }
+        elsif ($group2) {
+            push @$group2, $units{$unit1_id};
+            $groups_per_unit{$unit1_id} = $group2;
+        }
+        else {    # neither group
+            my $group = [ map { $units{$_} || die $_ } $unit1_id, $unit2_id ];
+            push @groups, $group;
+            $groups_per_unit{$unit1_id} = $group;
+            $groups_per_unit{$unit2_id} = $group;
+        }
+    }
+
+    if ( keys %groups_per_unit < @units ) {    # units not related to any conversion
+        push @groups, [ grep { not exists $groups_per_unit{ $_->{id} } } @units ];
+    }
+
     $c->stash(
-        articles   => \@articles,
-        update_url => $c->project_uri( $self->action_for('update'), $unit->id ),
+        articles      => \@articles,
+        conversions   => $primary_group,
+        grouped_units => \@groups,
+        update_url    => $c->project_uri( $self->action_for('update'), $unit->id ),
     );
 }
 
