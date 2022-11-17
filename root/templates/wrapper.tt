@@ -16,7 +16,8 @@
     </title>
 
     <meta charset="UTF-8">
-
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
     <meta name="description" content="[% meta_description %]">
     <meta name="keywords"    content="[% meta_keywords %]">
     <meta name="robots"      content="[% meta_robots %]">
@@ -42,87 +43,112 @@
 
 <body>
     <header class="sticky-top">
-        <div class="w-100 p-0 m-0">
-            <div class="row p-0 m-0">
-                <div class="col-12 p-0 m-0 ">
-                    <nav class="navbar p-0 m-0 navbar-expand-md navbar-dark bg-dark">
-                        <div class="navbar-toggler-right">
-                            <button class="navbar-toggler px-1 ml-4" type="button" data-toggle="collapse" data-target="#navbar" aria-controls="navbarTogglerDemo02" aria-expanded="false" aria-label="Toggle navigation">
-                                <span class="navbar-toggler-icon"></span>
-                            </button>
+        <nav>
+            <div class="navbar navbar-expand-xl navbar-dark bg-dark py-2">
+                <div class="container-md">
+                    <a class="navbar-brand fw-bolder" href="[% homepage_url %]">[% name | html %]</a>
+                    <button class="navbar-toggler border-0" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasNavbar" aria-controls="offcanvasNavbar">
+                        <span class="navbar-toggler-icon"></span>
+                    </button>
+                    <div class="offcanvas offcanvas-end bg-dark" tabindex="-1" id="offcanvasNavbar" aria-labelledby="offcanvasNavbarLabel">
+                        <div class="offcanvas-header p-3">
+                            <h5 class="offcanvas-title text-light" id="offcanvasNavbarLabel">Menu</h5>
+                            <button type="button" class="btn-close btn-close-white" data-bs-dismiss="offcanvas" aria-label="Close"></button>
                         </div>
+                        <div class="offcanvas-body justify-content-end">
+                            <ul class="d-flex flex-column flex-xl-row gap-2 p-0 m-0" id="project_nav">
+                                <li class="nav-item d-block d-xl-none"><a class="nav-link" href="[% homepage_url %]">Home</a></li>
+                                [% IF project_urls %]
+                                    <li class="nav-item"><a class="nav-link" href="[% project_urls.project %]">Project</a></li>
+                                    <li class="nav-item"><a class="nav-link" href="[% project_urls.recipes %]">Recipes</a><span class="badge rounded-pill bg-primary text-light">[% inventory.recipes %]</span></li>
+                                    <li class="nav-item"><a class="nav-link" href="[% project_urls.articles %]">Articles</a><span class="badge rounded-pill bg-primary text-light">[% inventory.articles %]</span></li>
+                                    <li class="nav-item"><a class="nav-link" href="[% project_urls.tags %]">Tags</a><span class="badge rounded-pill bg-primary text-light">[% inventory.tags %]</span></li>
+                                    <li class="nav-item"><a class="nav-link" href="[% project_urls.purchase_lists %]">Purchase Lists</a><span class="badge rounded-pill bg-primary text-light">[% inventory.purchase_lists %]</span></li>
+                                    <li class="nav-item"><a class="nav-link" href="[% project_urls.units %]">Units</a><span class="badge rounded-pill bg-primary text-light">[% inventory.units %]</span></li>
+                                    [% IF user # TODO should check existence of import URL %]
+                                    <li class="nav-item"><a class="nav-link" href="[% project_urls.import %]">Import</a></li>
+                                    [% END %]
+                                [% END %]
 
-                        <div class="collapse navbar-collapse flex-column" id="navbar">
-                            <div class="navbar-nav container-md d-flex justify-content-between align-items-center w-100 p-2">
-                                <div class="d-flex gap-2 mx-2">
-                                    <a class="navbar-brand d-flex align-items-center text-white fs-4 fw-bold" href="[% homepage_url %]">[% name | html %]</a>
-                                    <ul class="d-flex gap-2 p-0 m-0" id="project_nav">
-[% IF project_urls %]
-                                        <li class="nav-item"><a class="nav-link" href="[% project_urls.project %]">Project</a></li>
-                                        <li class="nav-item"><a class="nav-link" href="[% project_urls.recipes %]">Recipes</a><span class="badge rounded-pill bg-primary text-light">[% inventory.recipes %]</span></li>
-                                        <li class="nav-item"><a class="nav-link" href="[% project_urls.articles %]">Articles</a><span class="badge rounded-pill bg-primary text-light">[% inventory.articles %]</span></li>
-                                        <li class="nav-item"><a class="nav-link" href="[% project_urls.tags %]">Tags</a><span class="badge rounded-pill bg-primary text-light">[% inventory.tags %]</span></li>
-                                        <li class="nav-item"><a class="nav-link" href="[% project_urls.purchase_lists %]">Purchase Lists</a><span class="badge rounded-pill bg-primary text-light">[% inventory.purchase_lists %]</span></li>
-                                        <li class="nav-item"><a class="nav-link" href="[% project_urls.units %]">Units</a><span class="badge rounded-pill bg-primary text-light">[% inventory.units %]</span></li>
-                                        <li class="nav-item"><a class="nav-link" href="[% project_urls.import %]">Import</a></li>
-[% END %]
-                                    </ul>
-                                </div>
-                                <div class="d-flex gap-2 mx-2">
-[% IF login_url %]
-                                    <a class="btn btn-sm dark-link" href="[% login_url %]">Sign in</a>
-[% END %]
-[% IF register_url %]
-                                    <a class="btn btn-outline-light btn-sm" href="[% register_url %]">Sign up</a>
-[% END %]
-
-[% IF user %]
-                                    <div class="dropdown">
-                                        <a class="nav-link dropdown-toggle text-white" href="#" id="navbarDarkDropdownMenuLink" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                                            <i class="material-icons">person</i> [% user.display_name | html %]
-                                        </a>
-                                        <ul class="dropdown-menu dropdown-menu-end dropdown-menu-dark" aria-labelledby="navbarDarkDropdownMenuLink">
-                                            <li><a class="dropdown-item" href="[% user_url %]">Profile</a></li>
-    [% IF settings_url %]
-                                            <li><a class="dropdown-item" href="[% settings_url %]">Settings</a></li>
-    [% END %]
-    [% IF logout_url %]
-                                            <li><form class="px-3 py-2" method="post" action="[% logout_url %]">
-                                                <button class="btn btn-sm btn-outline-light dark-link w-100" name="logout">Sign out</button>
-                                            </form></li>
-    [% END %]
+                                [% IF submenu_items.size > 0 %]
+                                    <div class="d-block d-md-none">
+                                        <hr class="border border-secondary">
+                                    [% IF project %]
+                                        <h3 class="text-light">Project [% project.name %]</h3>
+                                    [% END %]
+                                        <ul class="d-flex flex-column gap-2 p-0 m-0">
+                                            [% FOR item IN submenu_items;
+                                                IF item.url %]
+                                                    <li class="nav-item"><a class="nav-link" href="[% item.url %]">[% item.text %]</a></li>
+                                                [% ELSE; # TODO setting href="" doesn’t work if page is response to POST request and URL isn’t available via GET %]
+                                                    <li class="nav-item"><a class="nav-link text-primary" aria-current="page" href="">[% item.text %]</a></li>
+                                                [% END;
+                                            END %]
                                         </ul>
                                     </div>
-[% END %]
-
-                                </div>
-                            </div>
-
-                            <div class="w-100 bg-primary" id="submenu_nav">
-                                <div class="navbar-nav d-flex justify-content-between align-items-center container-md px-2">
-                                    <ul class="d-flex p-0 m-0">
-[% FOR item IN submenu_items;
-    IF item.url %]
-                                        <li class="nav-item"><a class="nav-link text-dark" href="[% item.url %]">[% item.text %]</a></li>
-    [% ELSE; # TODO setting href="" doesn’t work if page is response to POST request and URL isn’t available via GET %]
-                                        <li class="nav-item"><a class="nav-link text-dark active" aria-current="page" href="">[% item.text %]</a></li>
-    [% END;
-END %]
-                                    </ul>
-                                    <div>
-[% IF logout_url %]
-    [% IF project %]
-                                        <li class="nav-item"><a class="text-dark nav-link" href="[% project_urls.project %]">project <b>[% project.name | html%]</b></a></li>
-    [% ELSE %]
-                                        <p class="text-dark my-2">Please create or choose a project now.</p>
-    [% END %]
-[% END %]
+                                [% END %]
+                                [% IF user %]
+                                    <div class="d-block d-xl-none">
+                                        <hr class="border border-secondary">
+                                        <ul class="d-flex flex-column gap-2 p-0 m-0">
+                                            <li class="nav-item"><a class="nav-link" href="[% user_url %]">Profile</a></li>
+                                            <li class="nav-item"><a class="nav-link" href="[% settings_url %]">Settings</a></li>
+                                            <hr class="border border-secondary">
+                                            <li class="nav-item"><form method="post" action="[% logout_url %]">
+                                                <button class="nav-link btn text-danger" name="logout">Sign out</button>
+                                            </form></li>
+                                        </ul>
                                     </div>
+                                [% END %]
+                                [% IF login_url %]
+                                    <hr class="d-xl-none border border-secondary">
+                                    <li class="nav-item d-none d-xl-flex"><a class="btn btn-sm nav-link dark-link" href="[% login_url %]">Sign in</a></li>
+                                    <li class="nav-item d-block d-xl-none"><a class="nav-link" href="[% login_url %]">Sign in</a></li>
+                                [% END %]
+                                [% IF register_url %]
+                                    <li class="nav-item d-none d-xl-flex"><a class="btn btn-outline-light btn-sm" href="[% register_url %]">Sign up</a></li>
+                                    <li class="nav-item d-block d-xl-none"><a class="nav-link" href="[% register_url %]">Sign up</a></li>
+                                [% END %]
+                            </ul>
+                            [% IF user %]
+                                <div class="dropdown d-none d-xl-block">
+                                    <a class="nav-link dropdown-toggle text-white" href="#" id="navbarDarkDropdownMenuLink" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                        <i class="material-icons">person</i> [% user.display_name | html %]
+                                    </a>
+                                    <ul class="dropdown-menu dropdown-menu-end dropdown-menu-dark" aria-labelledby="navbarDarkDropdownMenuLink">
+                                        <li><a class="dropdown-item" href="[% user_url %]">Profile</a></li>
+                                        <li><a class="dropdown-item" href="[% settings_url %]">Settings</a></li>
+                                        [% IF logout_url %]
+                                            <hr class="my-1">
+                                            <li><form method="post" action="[% logout_url %]">
+                                                <button class="dropdown-item" name="logout">Sign out</button>
+                                            </form></li>
+                                        [% END %]
+                                    </ul>
                                 </div>
-                            </div>
+                            [% END %]
                         </div>
-
-                    </nav>
+                    </div>
+                </div>
+            </div>
+            <div class="bg-primary d-none d-md-block" id="submenu_nav">
+                <div class="navbar-nav d-flex flex-row justify-content-between align-items-center container-md px-2">
+                    <ul class="d-flex p-0 m-0">
+                        [% FOR item IN submenu_items;
+                            IF item.url %]
+                            <li class="nav-item"><a class="nav-link text-dark px-2" href="[% item.url %]">[% item.text %]</a></li>
+                            [% ELSE; # TODO setting href="" doesn’t work if page is response to POST request and URL isn’t available via GET %]
+                            <li class="nav-item"><a class="nav-link text-dark px-2 active" aria-current="page" href="">[% item.text %]</a></li>
+                            [% END;
+                        END %]
+                    </ul>
+                    <div>
+                        [% IF project %]
+                        <a class="text-dark nav-link px-2" href="[% project_urls.project %]">project <b>[% project.name | html%]</b></a>
+                        [% ELSIF user AND NOT submenu_items.size %]
+                        <p class="text-dark my-2">Please create or choose a project now.</p>
+                        [% END %]
+                    </div>
                 </div>
             </div>
         </nav>
@@ -143,13 +169,15 @@ END %]
             </div>
             <div class="col-12">
                 <h1 class="print">[% name | html; IF project %]: [% project.name | html; END %]</h1>
+                [% IF html_title OR title %]
                 <h2 class="display-3">
-                [% IF html_title;
-                    html_title; # may contain HTML
-                ELSIF title;
-                    title | html;
-                END %]
+                    [% IF html_title;
+                        html_title; # may contain HTML
+                    ELSIF title;
+                        title | html;
+                    END %]
                 </h2>
+                [% END %]
             </div>
         </div>
         [% content %]
@@ -157,7 +185,7 @@ END %]
 
     <footer class="bg-dark text-white">
         <div class="container-md">
-            <div class="row">
+            <div class="row text-center text-md-start">
                 <div class="col-md">
                     <h3><span class="tiny">Browse</span></h3>
                     <ul class="list-unstyled small">

@@ -49,7 +49,7 @@ subtest "deselect units that are in use" => sub {
 };
 
 # select unit 3 (liters), I couldn't get this working by passing units=>[...] to submit_form()
-$t->form_number(2);
+$t->form_number(3);
 $t->tick( units => 3 );
 
 $t->submit_form_ok( { with_fields => { name => 'cheddar' } }, "update article" );

@@ -2,22 +2,25 @@
     <p>Coocook is a web application for collecting recipes and making food plans. You can ...</p>
 </div>
 <div class="content-box mb-5">
-    <div class="d-flex justify-content-around align-items-center w-100">
+    <div class="d-flex justify-content-around flex-column flex-sm-row align-items-center gap-3">
         <div class="d-flex flex-column gap-3 text-center">
             <i class="material-icons fs-1">menu_book</i>
             <span>collect recipes</span>
         </div>
-        <i class="material-icons">east</i>
+        <i class="material-icons d-none d-sm-block">east</i>
+        <i class="material-icons d-block d-sm-none">south</i>
         <div class="d-flex flex-column gap-3 text-center">
             <i class="material-icons fs-1">restaurant_menu</i>
             <span>create a food plan</span>
         </div>
-        <i class="material-icons">east</i>
+        <i class="material-icons d-none d-sm-block">east</i>
+        <i class="material-icons d-block d-sm-none">south</i>
         <div class="d-flex flex-column gap-3 text-center">
             <i class="material-icons fs-1">fact_check</i>
             <span>gather purchase lists</span>
         </div>
-        <i class="material-icons">east</i>
+        <i class="material-icons d-none d-sm-block">east</i>
+        <i class="material-icons d-block d-sm-none">south</i>
         <div class="d-flex flex-column gap-3 text-center">
             <i class="material-icons fs-1">print</i>
             <span>print a project overview</span>

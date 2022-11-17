@@ -160,7 +160,7 @@ subtest "verify email address" => sub {
 
     # TODO find better solution than complex XPath expression and remove
     #      dependency on HTML::TreeBuilder::XPath, WWW::Mechanize::TreeBuilder
-    my $node = $t->findnodes('/html/body/div/div[3]/div[1]/div[1]/h2')->[0]
+    my $node = $t->findnodes('//h2')->[0]
       or die "Can't find node in HTML tree";
 
     like $node->string_value => qr/sign in/i, "got redirected to login page";
@@ -280,7 +280,7 @@ $t->input_has_value( username => 'test', "username is prefilled from persistent 
 $t->robots_flags_ok( { index => 0, archive => 0 },
     "/login with username from cookie may NOT be indexed" );
 
-$t->form_number(2);
+$t->form_number(3);
 $t->checkbox_is_on('store_username');
 
 $t->login_ok( 'test', 'P@ssw0rd', store_username => '' );

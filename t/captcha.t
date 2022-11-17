@@ -3,7 +3,7 @@ use Test2::V0;
 use lib 't/lib';
 use Test::Coocook;
 
-plan(6);
+plan(7);
 
 my $t = Test::Coocook->new( test_data => 0 );
 
@@ -23,8 +23,10 @@ subtest "POST /register without session" => sub {
 
 {
     my $guard = $t->local_config_guard( captcha => { use_hidden_input => 1 } );
-    $t->register_fails_like( { %ok_input, url => 'https://www.spam.example/' },
+    $t->register_fails_like( { %ok_input, url => my $url = 'https://www.spam.example/' },
         qr/robot/, "use_hidden_input" );
+
+    $t->content_contains( qq(value="$url"), "... form input is preserved" );
 }
 
 {
