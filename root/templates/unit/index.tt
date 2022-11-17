@@ -1,57 +1,63 @@
 [% title = "Units" %]
 
-[% new_unit = BLOCK %]
-<p>
-    <a href="[% new_url %]">New unit</a>
-</p>
-[% END;
-new_unit %]
+<table class="table">
+    <tr>
+        <th>Unit</th>
+        <th colspan="2">Conversions</th>
+        <th>Actions</th>
+    </tr>
+    [% FOR unit IN units;
+        conversions = unit.conversions || [undef];
 
-<table>
-<tr>
-<th>Unit</th>
-<th colspan="2">Conversions</th>
-<th>Actions</th>
-</tr>
-[% FOR unit IN units;
-    conversions = unit.conversions || [undef];
+        FOR conversion IN conversions;
+            IF loop.first %]
+            <tr>
+                <td rowspan="[% unit.conversions.size %]" style="vertical-align: middle;">
+                    <a href="[% unit.url %]">[% unit.short_name | html %] ([% unit.long_name | html %])</a>
+                </td>
+            [% END;
 
-    FOR conversion IN conversions;
-        IF loop.first %]
-<tr>
-    <td rowspan="[% unit.conversions.size %]">
-        <a href="[% unit.url %]">[% unit.short_name | html %] ([% unit.long_name | html %])</a>
-    </td>
-        [% END;
+            IF conversion %]
+                <td style="vertical-align: middle;">
+                    1&thinsp;[% unit.short_name %]
+                    =
+                    [% conversion.factor %]&thinsp;[% conversion.unit.short_name %]
+                </td>
+                <td style="vertical-align: middle;">
+                    1&thinsp;[% conversion.unit.short_name %]
+                    =
+                    [% 1 / conversion.factor %]&thinsp;[% unit.short_name %]
+                </td>
+            [% ELSE %]
+                <td></td>
+                <td></td>
+            [% END;
 
-        IF conversion %]
-    <td>
-        1&thinsp;[% unit.short_name %]
-        =
-        [% conversion.factor %]&thinsp;[% conversion.unit.short_name %]
-    </td>
-    <td>
-        [% 1 / conversion.factor %]&thinsp;[% unit.short_name %]
-        =
-        1&thinsp;[% conversion.unit.short_name %]
-    </td>
-        [% ELSE %]
-    <td></td>
-    <td></td>
-        [% END;
-
-        IF loop.first %]
-    <td rowspan="[% unit.conversions.size %]">
-            [% IF unit.delete_url %]
-        <form action="[% unit.delete_url %]" method="post" class="inline">
-            <input type="submit" value="Delete">
-        </form>
+            IF loop.first %]
+                <td rowspan="[% unit.conversions.size %]" style="vertical-align: middle;">
+                    [% IF unit.delete_url %]
+                    <form action="[% unit.delete_url %]" method="post" class="d-inline">
+                        <button class="btn btn-outline-danger btn-sm" type="submit" value="Delete">
+                            <i class="material-icons">delete_forever</i>
+                        </button>
+                    </form>
+                    [% END %]
+                </td>
             [% END %]
-    </td>
-        [% END %]
-</tr>
-    [% END;
-END %]
+            </tr>
+        [% END;
+    END %]
 </table>
 
-[% new_unit %]
+<div class="card">
+    <div class="card-header">
+        <h3 class="m-0">Add Unit</h3>
+    </div>
+    <div class="card-body">
+        <form method="post" action="[% create_url %]" class="d-flex gap-2">
+            <input id="short_name" type="text" name="short_name" placeholder="Short name" class="form-control" required>
+            <input id="long_name" type="text" name="long_name" class="form-control" placeholder="Long name" required>
+            <input class="btn btn-primary" type="submit" value="Save">
+        </form>
+    </div>
+</div>

@@ -89,8 +89,8 @@ sub index : GET HEAD Chained('/project/base') PathPart('units') Args(0)
     }
 
     $c->stash(
-        new_url => $c->project_uri( $self->action_for('new_unit') ),
-        units   => \@units,
+        create_url => $c->project_uri( $self->action_for('create') ),
+        units      => \@units,
     );
 }
 
@@ -98,10 +98,7 @@ sub new_unit : GET HEAD Chained('/project/base') PathPart('units/new')
   RequiresCapability('edit_project') {
     my ( $self, $c ) = @_;
 
-    $c->stash(
-        template   => 'unit/edit.tt',
-        create_url => $c->project_uri( $self->action_for('create') ),
-    );
+    $c->stash( template => 'unit/edit.tt' );
 }
 
 sub base : Chained('/project/base') PathPart('unit') CaptureArgs(1) {

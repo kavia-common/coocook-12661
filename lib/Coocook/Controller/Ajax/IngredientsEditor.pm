@@ -39,8 +39,8 @@ sub get_all_ingredients : GET PathPart('ingredients') HEAD Chained('project_base
         ingredients => $c->stash->{dish_or_recipe}->ingredients,
     );
 
-    
-    $c->stash->{json_data} = $ingredients->for_ingredients_editor or die 'Error when converting ingredients to IngredientsEditor format.';
+    $c->stash->{json_data} = $ingredients->for_ingredients_editor
+      or die 'Error when converting ingredients to IngredientsEditor format.';
 }
 
 sub update_ingredient : POST PathPart('ingredients/update') Chained('project_base')
