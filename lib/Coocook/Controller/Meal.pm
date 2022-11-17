@@ -17,18 +17,19 @@ Catalyst Controller.
 
 =cut
 
-sub create : POST Chained('/project/base') PathPart('meals/create') Args(0)
+sub create : POST Chained('/project/base') PathPart('meals/create') Args(0) Does(~Ajax)
   RequiresCapability('edit_project') {
     my ( $self, $c ) = @_;
 
     my $meal = $c->project->create_related(
         meals => {
-            date    => $c->req->params->get('date'),
-            name    => $c->req->params->get('name'),
-            comment => $c->req->params->get('comment'),
+            date    => $c->req->body_data->{date},
+            name    => $c->req->body_data->{name},
+            comment => $c->req->body_data->{comment},
         }
     );
-    $c->detach('redirect');
+
+    $c->stash->{json_data} = { meal => $meal->for_meals_dishes_editor };
 }
 
 sub base : Chained('/project/base') PathPart('meals') CaptureArgs(1) {
@@ -37,20 +38,20 @@ sub base : Chained('/project/base') PathPart('meals') CaptureArgs(1) {
     $c->stash( meal => $c->project->meals->find($id) || $c->detach('/error/not_found') );
 }
 
-sub update : POST Chained('base') Args(0) RequiresCapability('edit_project') {
+sub update : POST Chained('base') Does(~Ajax) Args(0) RequiresCapability('edit_project') {
     my ( $self, $c, $id ) = @_;
 
     $c->stash->{meal}->update(
         {
-            name    => $c->req->params->get('name'),
-            comment => $c->req->params->get('comment'),
+            name    => $c->req->body_data->{name},
+            comment => $c->req->body_data->{comment},
         }
     );
+    $c->stash->{json_data} = $c->stash->{meal};
 
-    $c->detach('redirect');
 }
 
-sub delete : POST Chained('base') Args(0) RequiresCapability('edit_project') {
+sub delete : POST Chained('base') Does(~Ajax) Args(0) RequiresCapability('edit_project') {
     my ( $self, $c ) = @_;
 
     if ( $c->stash->{meal}->deletable ) {
@@ -59,17 +60,23 @@ sub delete : POST Chained('base') Args(0) RequiresCapability('edit_project') {
     else {
         my $name = $c->stash->{meal}->name;
         $c->messages->error("$name cannot be deleted, because it contains dishes!");
+        $c->stash->{json_data} = {
+            error => {
+                message => "$name cannot be deleted, because it contains dishes!"
+            }
+        };
+        return;
     }
 
-    $c->detach('redirect');
+    $c->stash->{json_data} = { success => 1 };
 }
 
-sub delete_dishes : POST Chained('base') Args(0) RequiresCapability('edit_project') {
+sub delete_dishes : POST Chained('base') Does(~Ajax) Args(0) RequiresCapability('edit_project') {
     my ( $self, $c ) = @_;
 
     $c->stash->{meal}->dishes->update_items_and_delete;
 
-    $c->detach('redirect');
+    $c->stash->{json_data} = { success => 1 };
 }
 
 sub redirect : Private {

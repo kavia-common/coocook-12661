@@ -171,17 +171,33 @@ sub edit : GET HEAD Chained('submenu') PathPart('edit') Args(0) RequiresCapabili
         }
     }
 
+    my $days2 = $c->model('Plan')->project_for_meals_dishes_editor( $c->project );
+
+    for my $day ( keys %$days2 ) {
+        for my $meal_key ( keys $days2->{$day}->%* ) {
+            my $meal = $days2->{$day}->{$meal_key};
+            $meal->{delete_dishes_url} = $c->project_uri( '/meal/delete_dishes', $meal->{id} )->as_string;
+            $meal->{delete_url}        = $c->project_uri( '/meal/delete',        $meal->{id} )->as_string;
+            $meal->{update_url}        = $c->project_uri( '/meal/update',        $meal->{id} )->as_string;
+            for my $dish_key ( keys $meal->{dishes}->%* ) {
+                my $dish = $meal->{dishes}->{$dish_key};
+                $dish->{delete_url} = $c->project_uri( '/dish/delete_ajax', $dish->{id} )->as_string;
+                $dish->{update_url} = $c->project_uri( '/dish/update_ajax', $dish->{id} )->as_string;
+            }
+        }
+    }
+
     $c->stash(
         default_date         => $default_date,
         recipes              => [ $c->project->recipes->sorted->all ],
         days                 => $days,
-        days_json            => to_json($c->model('Plan')->project_for_meals_dishes_editor( $c->project )),
+        days_json            => to_json($days2),
         dish_create_url      => $c->project_uri('/dish/create'),
         dish_from_recipe_url => $c->project_uri('/dish/from_recipe'),
         meal_create_url      => $c->project_uri('/meal/create'),
     );
 
-    push @{ $c->stash->{js} }, '/lib/web-js-components/meals-dishes-editor/meals-dishes-editor.es.js';
+    push @{ $c->stash->{js} },  '/lib/web-js-components/meals-dishes-editor/meals-dishes-editor.es.js';
     push @{ $c->stash->{css} }, '/css/project/edit.css';
 }
 

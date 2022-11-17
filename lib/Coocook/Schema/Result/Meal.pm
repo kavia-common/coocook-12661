@@ -2,6 +2,7 @@ package Coocook::Schema::Result::Meal;
 
 use Moose;
 use MooseX::MarkAsMethods autoclean => 1;
+use JSON::MaybeXS;
 
 extends 'Coocook::Schema::Result';
 
@@ -62,6 +63,22 @@ sub delete_dishes {
     my $self = shift;
 
     $self->dishes->update_items_and_delete;
+}
+
+sub for_meals_dishes_editor {
+    my $self = shift;
+    my $relevant_columns =
+      [ 'meal_id', 'comment', 'id', 'name', 'prepare_at_meal_id', 'servings', 'position' ];
+    my $related_dishes = $self->search_related( dishes => ( undef, { columns => $relevant_columns } ) );
+    my $prepared_dishes =
+      $self->search_related( prepared_dishes => ( undef, { columns => $relevant_columns } ) );
+    return $self->as_hashref(
+        date            => $self->date->ymd,
+        deletable       => $self->deletable ? JSON()->true : JSON()->false,
+        dishes          => { map { $_->id => $_->for_meals_dishes_editor } $related_dishes->all },
+        prepared_dishes => { map { $_->id => $_->for_meals_dishes_editor } $prepared_dishes->all },
+    );
+
 }
 
 1;

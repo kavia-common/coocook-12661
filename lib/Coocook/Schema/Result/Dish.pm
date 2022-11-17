@@ -90,4 +90,9 @@ sub update_items_and_delete {
     );
 }
 
+sub for_meals_dishes_editor {
+    my $self = shift;
+    return { $self->as_hashref->%*, date => $self->meal->date->ymd };
+}
+
 1;
