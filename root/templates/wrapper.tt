@@ -65,35 +65,38 @@
                                     <li class="nav-item"><a class="nav-link" href="[% project_urls.tags %]">Tags</a><span class="badge rounded-pill bg-primary text-light">[% inventory.tags %]</span></li>
                                     <li class="nav-item"><a class="nav-link" href="[% project_urls.purchase_lists %]">Purchase Lists</a><span class="badge rounded-pill bg-primary text-light">[% inventory.purchase_lists %]</span></li>
                                     <li class="nav-item"><a class="nav-link" href="[% project_urls.units %]">Units</a><span class="badge rounded-pill bg-primary text-light">[% inventory.units %]</span></li>
-                                    [% IF user %]<li class="nav-item"><a class="nav-link" href="[% project_urls.import %]">Import</a></li>[% END %]
-                                    [% IF submenu_items.size > 0 %]
-                                        <div class="d-block d-md-none">
-                                            <hr class="border border-secondary">
-                                            <h3 class="text-light">Project [% project.name %]</h3>
-                                            <ul class="d-flex flex-column gap-2 p-0 m-0">
-                                                [% FOR item IN submenu_items;
-                                                    IF item.url %]
-                                                        <li class="nav-item"><a class="nav-link" href="[% item.url %]">[% item.text %]</a></li>
-                                                    [% ELSE; # TODO setting href="" doesn’t work if page is response to POST request and URL isn’t available via GET %]
-                                                        <li class="nav-item"><a class="nav-link text-primary" aria-current="page" href="">[% item.text %]</a></li>
-                                                    [% END;
-                                                END %]
-                                            </ul>
-                                        </div>
+                                    [% IF user # TODO should check existence of import URL %]
+                                    <li class="nav-item"><a class="nav-link" href="[% project_urls.import %]">Import</a></li>
                                     [% END %]
+                                [% END %]
+
+                                [% IF submenu_items.size > 0 %]
+                                    <div class="d-block d-md-none">
+                                        <hr class="border border-secondary">
+                                    [% IF project %]
+                                        <h3 class="text-light">Project [% project.name %]</h3>
+                                    [% END %]
+                                        <ul class="d-flex flex-column gap-2 p-0 m-0">
+                                            [% FOR item IN submenu_items;
+                                                IF item.url %]
+                                                    <li class="nav-item"><a class="nav-link" href="[% item.url %]">[% item.text %]</a></li>
+                                                [% ELSE; # TODO setting href="" doesn’t work if page is response to POST request and URL isn’t available via GET %]
+                                                    <li class="nav-item"><a class="nav-link text-primary" aria-current="page" href="">[% item.text %]</a></li>
+                                                [% END;
+                                            END %]
+                                        </ul>
+                                    </div>
+                                [% END %]
+                                [% IF user %]
                                     <div class="d-block d-xl-none">
                                         <hr class="border border-secondary">
                                         <ul class="d-flex flex-column gap-2 p-0 m-0">
                                             <li class="nav-item"><a class="nav-link" href="[% user_url %]">Profile</a></li>
-                                            [% IF settings_url %]
-                                                <li class="nav-item"><a class="nav-link" href="[% settings_url %]">Settings</a></li>
-                                            [% END %]
-                                            [% IF logout_url %]
-                                                <hr class="border border-secondary">
-                                                <li class="nav-item"><form method="post" action="[% logout_url %]">
-                                                    <button class="nav-link btn text-danger" name="logout">Sign out</button>
-                                                </form></li>
-                                            [% END %]
+                                            <li class="nav-item"><a class="nav-link" href="[% settings_url %]">Settings</a></li>
+                                            <hr class="border border-secondary">
+                                            <li class="nav-item"><form method="post" action="[% logout_url %]">
+                                                <button class="nav-link btn text-danger" name="logout">Sign out</button>
+                                            </form></li>
                                         </ul>
                                     </div>
                                 [% END %]
@@ -114,9 +117,7 @@
                                     </a>
                                     <ul class="dropdown-menu dropdown-menu-end dropdown-menu-dark" aria-labelledby="navbarDarkDropdownMenuLink">
                                         <li><a class="dropdown-item" href="[% user_url %]">Profile</a></li>
-                                        [% IF settings_url %]
-                                            <li><a class="dropdown-item" href="[% settings_url %]">Settings</a></li>
-                                        [% END %]
+                                        <li><a class="dropdown-item" href="[% settings_url %]">Settings</a></li>
                                         [% IF logout_url %]
                                             <hr class="my-1">
                                             <li><form method="post" action="[% logout_url %]">
@@ -144,7 +145,7 @@
                     <div>
                         [% IF project %]
                         <a class="text-dark nav-link px-2" href="[% project_urls.project %]">project <b>[% project.name | html%]</b></a>
-                        [% ELSIF logout_url %]
+                        [% ELSIF user AND NOT submenu_items.size %]
                         <p class="text-dark my-2">Please create or choose a project now.</p>
                         [% END %]
                     </div>
