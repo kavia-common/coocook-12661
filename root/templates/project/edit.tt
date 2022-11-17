@@ -6,6 +6,8 @@ const mealsDishesEditorData = {
     projectName: '[% project.name %]',
     projectPlan: JSON.parse('[% days_json %]'),
     recipes: '[% recipes %]',
+    getProjectPlanURL: '[% get_project_plan_url %]',
+    moveMealDishURL: '[% move_meal_dish_url %]',
     createMealURL: '[% meal_create_url %]',
     createDishURL: '[% dish_create_url %]',
     updateMealURL: '[% meal.update_url %]',

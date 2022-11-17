@@ -141,41 +141,11 @@ sub edit : GET HEAD Chained('submenu') PathPart('edit') Args(0) RequiresCapabili
 
     my $default_date = DateTime->today;
 
-    my $days = $c->model('Plan')->project( $c->project );
+    my $days = $c->model('Plan')->project_for_meals_dishes_editor( $c->project );
 
-    # calculate dishes per day for table's row-span
-    for my $day (@$days) {
-        $day->{dishes} = 0;
-
-        for my $meal ( @{ $day->{meals} } ) {
-            my $dishes = $meal->{dishes};
-
-            for my $dish (@$dishes) {
-                $dish->{url} = $c->project_uri( '/dish/edit', $dish->{id} );
-            }
-
-            $day->{dishes} += @$dishes;
-
-            $meal->{update_url} = $c->project_uri( '/meal/update', $meal->{id} );
-
-            if ( $meal->{deletable} ) {
-                $meal->{delete_url} = $c->project_uri( '/meal/delete', $meal->{id} );
-            }
-            elsif ( @{ $meal->{dishes} } > 0 ) {
-                $meal->{delete_dishes_url} = $c->project_uri( '/meal/delete_dishes', $meal->{id} );
-            }
-            elsif ( @{ $meal->{prepared_dishes} } > 0 ) {
-                $meal->{prepared_dishes_exist} = 1;
-            }
-
-        }
-    }
-
-    my $days2 = $c->model('Plan')->project_for_meals_dishes_editor( $c->project );
-
-    for my $day ( keys %$days2 ) {
-        for my $meal_key ( keys $days2->{$day}->%* ) {
-            my $meal = $days2->{$day}->{$meal_key};
+    for my $day ( keys %$days ) {
+        for my $meal_key ( keys $days->{$day}->%* ) {
+            my $meal = $days->{$day}->{$meal_key};
             $meal->{delete_dishes_url} = $c->project_uri( '/meal/delete_dishes', $meal->{id} )->as_string;
             $meal->{delete_url}        = $c->project_uri( '/meal/delete',        $meal->{id} )->as_string;
             $meal->{update_url}        = $c->project_uri( '/meal/update',        $meal->{id} )->as_string;
@@ -190,8 +160,9 @@ sub edit : GET HEAD Chained('submenu') PathPart('edit') Args(0) RequiresCapabili
     $c->stash(
         default_date         => $default_date,
         recipes              => [ $c->project->recipes->sorted->all ],
-        days                 => $days,
-        days_json            => to_json($days2),
+        days_json            => to_json($days),
+        get_project_plan_url => $c->project_uri('/project/get_project_plan_ajax'),
+        move_meal_dish_url   => $c->project_uri('/project/move_meal_or_dish_ajax'),
         dish_create_url      => $c->project_uri('/dish/create'),
         dish_from_recipe_url => $c->project_uri('/dish/from_recipe'),
         meal_create_url      => $c->project_uri('/meal/create'),
