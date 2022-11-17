@@ -1,58 +1,67 @@
 [% IF unit.id;
     escape_title( 'Unit', unit.long_name );
-ELSE;
-    title = "New unit";
 END %]
 
-<form method="post" action="[% create_url || update_url %]">
-    <p>
-        <label for="short_name">Short name:</label>
-        <input  id="short_name" type="text" name="short_name" value="[% unit.short_name | html %]">
-    </p>
+<form method="post" action="[% update_url %]" class="mb-3">
+    <div class="d-flex gap-2 mb-3">
+        <div class="form-floating flex-grow-1">
+            <input id="short_name" type="text" name="short_name" value="[% unit.short_name | html %]" placeholder="short name" class="form-control">
+            <label for="short_name">Short name</label>
+        </div>
+        <div class="form-floating flex-grow-1">
+            <input id="long_name" type="text" name="long_name" value="[% unit.long_name | html %]" class="form-control" placeholder="long name">
+            <label for="long_name">Long name</label>
+        </div>
+    </div>
 
-    <p>
-        <label for="long_name">Long name:</label>
-        <input  id="long_name" type="text" name="long_name" value="[% unit.long_name | html %]">
-    </p>
-
-    <p>
-        <input type="submit" value="Save">
-    </p>
+    <input class="btn btn-primary" type="submit" value="Update">
 </form>
 
 <h2>Conversions</h2>
 
-<ul>
-    <li>group:
-        <ul>
-[% FOR conversion IN conversions %]
-            <li>
-        [% conversion.long_name %]
-        [% IF conversion.factor %]
-                <input type="number" value="[% conversion.factor %]">
-                <input type="submit" value="Update">
-        [% END %]
-            </li>
-[% END %]
-        </ul>
-    </li>
+<p>Here are your already added conversions listed.</p>
 
-[% FOR group IN grouped_units %]
-    <li>
-        group:
-        <ul>
-    [% FOR u IN group %]
-            <li>
-                <input type="text">[% unit.long_name %]<input type="submit" value="Add">
-                = 1 [% u.long_name %].
-                1 [% unit.long_name %] =
-                <input type="text">[% u.long_name %]<input type="submit" value="Add">
-            </li>
+<div class="container">
+    [% FOR conversion IN conversions %]
+    <div class="row border-top d-flex justify-content-between p-3">
+        <div class="d-flex gap-2 align-items-center" style="width: fit-content;">
+            <div class="text-nowrap">1 <i>[% unit.long_name %]</i> is equal to</div>
+            [% IF conversion.factor %]
+                <input type="number" value="[% conversion.factor %]" class="form-control form-control-sm" style="width: 150px;">
+            [% ELSE %]
+                ?
+            [% END %]
+            <i><b>[% conversion.long_name %]</b></i>
+        </div>
+        <div class="d-flex align-items-center" style="width: fit-content;">
+            [% IF conversion.factor %]
+                <button type="submit" class="btn btn-primary btn-sm">Update</button>
+            [% END %]
+        </div>
+    </div>
     [% END %]
-        </ul>
-    </li>
-[% END %]
-</ul>
+    <div class="row border-top border-bottom p-3 bg-light">
+        <div class="d-flex justify-content-between">
+            <div class="d-flex gap-2 align-items-center" style="width: fit-content;">
+                <input type="number" value="1" class="form-control form-control-sm" style="width: 150px;">
+                <select class="form-select form-select-sm" style="width: 200px;">
+                    <option selected>Select unit</option>
+                    [% FOR group IN grouped_units %]
+                        [% FOR u IN group %]
+                            <option value="[% u.long_name %]">[% u.long_name %]</option>
+                        [% END %]
+                    [% END %]
+                </select>
+                <span class="text-nowrap">is equal to</span>
+                <input type="number" value="1" class="form-control form-control-sm" style="width: 150px;">
+                <span>[% unit.long_name %]</span>
+            </div>
+            <div class="d-flex align-items-center" style="width: fit-content;">
+                <input type="submit" value="Add" class="btn btn-primary btn-sm">
+            </div>
+        </div>
+    </div>
+</div>
 
 [% IF articles.exists %]
 <h2>Where Unit <em>[% unit.long_name | html %]</em> is used ([% articles.size %] articles)</h2>
