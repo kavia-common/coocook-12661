@@ -178,4 +178,14 @@ sub project_for_meals_dishes_editor {
     return \%days;
 }
 
+sub resolve_meal_dish_path {
+    my ( $self, $project, $path ) = @_;
+    if ( $path->{item_type} eq 'dish' ) {
+        return $project->dishes->find( $path->{dish_id} );
+    }
+    elsif ( $path->{item_type} eq 'meal' ) {
+        return $project->meals->find( $path->{meal_id} );
+    }
+}
+
 1;
