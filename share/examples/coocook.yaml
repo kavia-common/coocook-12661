@@ -1,9 +1,16 @@
 ---
-# copy this file to the project root as coocook_local.yaml
+# copy this file to the project root as coocook.yaml
 # to set your custom settings
 
 # custom application title
 name: My Coocook
+
+# configure the database connection
+# - either a key from dbic.yaml file
+# - or a DSN string for Perl's DBI
+Model::DB:
+  connect_info:
+    dsn: development
 
 # by default only 1 user might register and becomes site admin
 enable_user_registration: true

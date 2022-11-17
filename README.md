@@ -28,7 +28,7 @@ Copy the config template [`share/examples/dbic.yaml`](share/examples/dbic.yaml) 
 
     $ cp share/examples/dbic.yaml dbic.yaml
 
-A database from the YAML file other than `development` or a literal DSN can be configured in `coocook_local.yaml`.
+A database from the YAML file other than `development` or a literal DSN can be configured in [`coocook.yaml`](share/examples/coocook.yaml).
 For other possible settings see the default values defined in [`lib/Coocook.pm`](lib/Coocook.pm).
 
 ### Run with native Perl (works best on Unix-like Operating Systems)
