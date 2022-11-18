@@ -23,9 +23,7 @@ __PACKAGE__->add_columns(
 __PACKAGE__->set_primary_key('id');
 
 __PACKAGE__->position_column('position');
-__PACKAGE__->grouping_column('prepare');
-
-__PACKAGE__->grouping_column('recipe_id');
+__PACKAGE__->grouping_column( [ 'recipe_id', 'prepare' ] );
 
 __PACKAGE__->belongs_to( article => 'Coocook::Schema::Result::Article', 'article_id' );
 __PACKAGE__->belongs_to( recipe  => 'Coocook::Schema::Result::Recipe',  'recipe_id' );

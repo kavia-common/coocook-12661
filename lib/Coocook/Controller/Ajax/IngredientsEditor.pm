@@ -74,8 +74,14 @@ sub prepend_ingredient : POST PathPart('ingredients/prepend') Chained('project_b
     my $prepare       = $json->{prepare};
 
     my $ingredient = $dish_or_recipe->search_related('ingredients')->find($ingredient_id);
-    $ingredient->set_column( prepare => $prepare );
-    $ingredient->move_first();
+    my %id_hash;
+    if ( $ingredient->can('recipe_id') ) {
+        $id_hash{recipe_id} = $ingredient->recipe_id;
+    }
+    elsif ( $ingredient->can('dish_id') ) {
+        $id_hash{dish_id} = $ingredient->dish_id;
+    }
+    $ingredient->move_to_group( { %id_hash, prepare => $prepare }, 1 );
 
     $c->stash->{json_data} = { success => 1 };
 }
@@ -91,8 +97,14 @@ sub append_ingredient : POST PathPart('ingredients/append') Chained('project_bas
     my $prepare       = $json->{prepare};
 
     my $ingredient = $dish_or_recipe->search_related('ingredients')->find($ingredient_id);
-    $ingredient->set_column( prepare => $prepare );
-    $ingredient->move_last();
+    my %id_hash;
+    if ( $ingredient->can('recipe_id') ) {
+        $id_hash{recipe_id} = $ingredient->recipe_id;
+    }
+    elsif ( $ingredient->can('dish_id') ) {
+        $id_hash{dish_id} = $ingredient->dish_id;
+    }
+    $ingredient->move_to_group( { %id_hash, prepare => $prepare }, undef );
 
     $c->stash->{json_data} = { success => 1 };
 }
@@ -112,17 +124,30 @@ sub move_ingredient : POST PathPart('ingredients/move') Chained('project_base')
     my $target_db = $dish_or_recipe->search_related('ingredients')->find($target_id);
 
     my $new_position;
-    if ( $direction == 'upwards' ) {
+    if ( $direction eq 'upwards' ) {
         $new_position = $target_db->position;
     }
-    elsif ( $direction == 'downwards' ) {
+    elsif ( $direction eq 'downwards' ) {
         $new_position = $target_db->position + 1;
     }
     else {
         die "Invalid move direction `$direction`";
     }
 
-    $source_db->move_to_group( { prepare => $target_db->prepare }, $new_position );
+    my %id_hash;
+    if ( $target_db->can('recipe_id') ) {
+        $id_hash{recipe_id} = $target_db->recipe_id;
+    }
+    elsif ( $target_db->can('dish_id') ) {
+        $id_hash{dish_id} = $target_db->dish_id;
+    }
+
+    $source_db->move_to_group(
+        {
+            %id_hash, prepare => $target_db->prepare,
+        },
+        $new_position
+    );
     $c->stash->{json_data} = { success => 1 };
 }
 
