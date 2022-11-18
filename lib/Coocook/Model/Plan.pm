@@ -6,7 +6,6 @@ use DateTime;
 use Moose;
 use MooseX::NonMoose;
 use Scalar::Util 'weaken';
-use JSON::MaybeXS;
 
 __PACKAGE__->meta->make_immutable;
 
