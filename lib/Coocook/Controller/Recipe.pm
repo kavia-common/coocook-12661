@@ -33,7 +33,7 @@ sub submenu : Chained('/project/base') PathPart('') CaptureArgs(0) {
     );
 }
 
-sub recipes : GET HEAD Chained('submenu') PathPart('recipes') RequiresCapability('view_project')
+sub recipes : Chained('submenu') PathPart('recipes') RequiresCapability('view_project')
   CaptureArgs(0) {
     my ( $self, $c ) = @_;
 

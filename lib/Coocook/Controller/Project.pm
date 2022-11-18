@@ -174,7 +174,7 @@ sub edit : GET HEAD Chained('submenu') PathPart('edit') Args(0) RequiresCapabili
 }
 
 sub get_project_plan_ajax : GET HEAD Chained('submenu') PathPart('project_plan') Args(0)
-  Does(~Ajax) {
+  RequiresCapability('view_project') Does(~Ajax) {
     my ( $self, $c ) = @_;
 
     my $days = $c->model('Plan')->project_for_meals_dishes_editor( $c->project );
@@ -201,7 +201,7 @@ sub get_project_plan_ajax : GET HEAD Chained('submenu') PathPart('project_plan')
 }
 
 sub move_meal_or_dish_ajax : POST Chained('submenu') PathPart('move_meal_dish') Args(0) Does(~Ajax)
-{
+  RequiresCapability('edit_project') {
     my ( $self, $c ) = @_;
 
     my $project = $c->project;
