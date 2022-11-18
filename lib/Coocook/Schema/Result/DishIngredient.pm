@@ -40,6 +40,7 @@ __PACKAGE__->might_have(
     },
     {
         is_foreign_key_constraint => 0,
+        cascade_delete            => 0,
     }
 );
 
