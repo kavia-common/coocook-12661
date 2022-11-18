@@ -53,9 +53,19 @@ DROP INDEX IF EXISTS dish_ingredients_fk_article_id_unit_id;
 DROP INDEX IF EXISTS dish_ingredients_idx_article_id_unit_id;
 
 ;
+DROP INDEX IF EXISTS dish_ingredients_fk_article_id_unit_id;
+DROP INDEX IF EXISTS items_fk_article_id_unit_id;
+
+;
+DROP INDEX IF EXISTS dish_ingredients_idx_article_id_unit_id;
+DROP INDEX IF EXISTS items_idx_article_id_unit_id;
+
+;
+DROP INDEX IF EXISTS recipe_ingredients_fk_article_id_unit_id;
 DROP INDEX IF EXISTS recipe_ingredients_fk_article_id_unit_id;
 
 ;
+DROP INDEX IF EXISTS recipe_ingredients_idx_article_id_unit_id;
 DROP INDEX IF EXISTS recipe_ingredients_idx_article_id_unit_id;
 
 ;
@@ -177,5 +187,44 @@ DROP TABLE recipe_ingredients_tmp;
 CREATE INDEX recipe_ingredients_idx_article_id ON recipe_ingredients (article_id);
 CREATE INDEX recipe_ingredients_idx_recipe_id ON recipe_ingredients (recipe_id);
 CREATE INDEX recipe_ingredients_idx_unit_id ON recipe_ingredients (unit_id);
+
+-- Drop foreign key from items on article_units
+-- We need to copy table and recreate it without FOREIGN KEY,
+-- because SQLite has no ALTER TABLE
+CREATE TEMPORARY TABLE items_tmp (
+  id INTEGER PRIMARY KEY NOT NULL,
+  purchase_list_id integer NOT NULL,
+  value real NOT NULL,
+  offset real NOT NULL DEFAULT 0,
+  unit_id integer NOT NULL,
+  article_id integer NOT NULL,
+  purchased boolean NOT NULL DEFAULT 0,
+  comment text NOT NULL
+);
+
+INSERT INTO items_tmp SELECT * FROM items;
+DROP TABLE items;
+
+CREATE TABLE items (
+  id INTEGER PRIMARY KEY NOT NULL,
+  purchase_list_id integer NOT NULL,
+  value real NOT NULL,
+  offset real NOT NULL DEFAULT 0,
+  unit_id integer NOT NULL,
+  article_id integer NOT NULL,
+  purchased boolean NOT NULL DEFAULT 0,
+  comment text NOT NULL,
+  FOREIGN KEY (article_id) REFERENCES articles(id),
+  FOREIGN KEY (purchase_list_id) REFERENCES purchase_lists(id) ON DELETE CASCADE,
+  FOREIGN KEY (unit_id) REFERENCES units(id)
+);
+
+INSERT INTO items SELECT * FROM items_tmp;
+DROP TABLE items_tmp;
+
+CREATE INDEX items_idx_article_id ON items (article_id);
+CREATE INDEX items_idx_purchase_list_id ON items (purchase_list_id);
+CREATE INDEX items_idx_unit_id ON items (unit_id);
+CREATE UNIQUE INDEX items_purchase_list_id_article_id_unit_id ON items (purchase_list_id, article_id, unit_id);
 
 COMMIT;

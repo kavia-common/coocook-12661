@@ -370,6 +370,26 @@ CREATE TABLE articles_tags (
 CREATE INDEX articles_tags_idx_article_id ON articles_tags (article_id);
 CREATE INDEX articles_tags_idx_tag_id ON articles_tags (tag_id);
 --
+-- Table: items
+--
+CREATE TABLE items (
+  id INTEGER PRIMARY KEY NOT NULL,
+  purchase_list_id integer NOT NULL,
+  value real NOT NULL,
+  offset real NOT NULL DEFAULT 0,
+  unit_id integer NOT NULL,
+  article_id integer NOT NULL,
+  purchased boolean NOT NULL DEFAULT 0,
+  comment text NOT NULL,
+  FOREIGN KEY (article_id) REFERENCES articles(id),
+  FOREIGN KEY (purchase_list_id) REFERENCES purchase_lists(id) ON DELETE CASCADE,
+  FOREIGN KEY (unit_id) REFERENCES units(id)
+);
+CREATE INDEX items_idx_article_id ON items (article_id);
+CREATE INDEX items_idx_purchase_list_id ON items (purchase_list_id);
+CREATE INDEX items_idx_unit_id ON items (unit_id);
+CREATE UNIQUE INDEX items_purchase_list_id_article_id_unit_id ON items (purchase_list_id, article_id, unit_id);
+--
 -- Table: recipe_ingredients
 --
 CREATE TABLE recipe_ingredients (
@@ -400,28 +420,6 @@ CREATE TABLE dishes_tags (
 );
 CREATE INDEX dishes_tags_idx_dish_id ON dishes_tags (dish_id);
 CREATE INDEX dishes_tags_idx_tag_id ON dishes_tags (tag_id);
---
--- Table: items
---
-CREATE TABLE items (
-  id INTEGER PRIMARY KEY NOT NULL,
-  purchase_list_id integer NOT NULL,
-  value real NOT NULL,
-  offset real NOT NULL DEFAULT 0,
-  unit_id integer NOT NULL,
-  article_id integer NOT NULL,
-  purchased boolean NOT NULL DEFAULT 0,
-  comment text NOT NULL,
-  FOREIGN KEY (article_id) REFERENCES articles(id),
-  FOREIGN KEY (article_id, unit_id) REFERENCES articles_units(article_id, unit_id),
-  FOREIGN KEY (purchase_list_id) REFERENCES purchase_lists(id) ON DELETE CASCADE,
-  FOREIGN KEY (unit_id) REFERENCES units(id)
-);
-CREATE INDEX items_idx_article_id ON items (article_id);
-CREATE INDEX items_idx_article_id_unit_id ON items (article_id, unit_id);
-CREATE INDEX items_idx_purchase_list_id ON items (purchase_list_id);
-CREATE INDEX items_idx_unit_id ON items (unit_id);
-CREATE UNIQUE INDEX items_purchase_list_id_article_id_unit_id ON items (purchase_list_id, article_id, unit_id);
 --
 -- Table: dish_ingredients
 --

@@ -900,7 +900,7 @@ schema:
           type: NORMAL
       name: dishes_tags
       options: []
-      order: 29
+      order: 30
     faqs:
       constraints:
         - deferrable: 1
@@ -1027,21 +1027,6 @@ schema:
         - deferrable: 1
           expression: ''
           fields:
-            - article_id
-            - unit_id
-          match_type: ''
-          name: items_fk_article_id_unit_id
-          on_delete: ''
-          on_update: ''
-          options: []
-          reference_fields:
-            - article_id
-            - unit_id
-          reference_table: articles_units
-          type: FOREIGN KEY
-        - deferrable: 1
-          expression: ''
-          fields:
             - purchase_list_id
           match_type: ''
           name: items_fk_purchase_list_id
@@ -1154,12 +1139,6 @@ schema:
           options: []
           type: NORMAL
         - fields:
-            - article_id
-            - unit_id
-          name: items_idx_article_id_unit_id
-          options: []
-          type: NORMAL
-        - fields:
             - purchase_list_id
           name: items_idx_purchase_list_id
           options: []
@@ -1171,7 +1150,7 @@ schema:
           type: NORMAL
       name: items
       options: []
-      order: 30
+      order: 28
     meals:
       constraints:
         - deferrable: 1
@@ -2094,7 +2073,7 @@ schema:
           type: NORMAL
       name: recipe_ingredients
       options: []
-      order: 28
+      order: 29
     recipes:
       constraints:
         - deferrable: 1

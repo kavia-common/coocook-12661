@@ -407,6 +407,26 @@ CREATE INDEX "articles_tags_idx_tag_id" on "articles_tags" ("tag_id");
 
 ;
 --
+-- Table: items
+--
+CREATE TABLE "items" (
+  "id" serial NOT NULL,
+  "purchase_list_id" integer NOT NULL,
+  "value" real NOT NULL,
+  "offset" real DEFAULT 0 NOT NULL,
+  "unit_id" integer NOT NULL,
+  "article_id" integer NOT NULL,
+  "purchased" boolean DEFAULT '0' NOT NULL,
+  "comment" text NOT NULL,
+  PRIMARY KEY ("id"),
+  CONSTRAINT "items_purchase_list_id_article_id_unit_id" UNIQUE ("purchase_list_id", "article_id", "unit_id")
+);
+CREATE INDEX "items_idx_article_id" on "items" ("article_id");
+CREATE INDEX "items_idx_purchase_list_id" on "items" ("purchase_list_id");
+CREATE INDEX "items_idx_unit_id" on "items" ("unit_id");
+
+;
+--
 -- Table: recipe_ingredients
 --
 CREATE TABLE "recipe_ingredients" (
@@ -435,27 +455,6 @@ CREATE TABLE "dishes_tags" (
 );
 CREATE INDEX "dishes_tags_idx_dish_id" on "dishes_tags" ("dish_id");
 CREATE INDEX "dishes_tags_idx_tag_id" on "dishes_tags" ("tag_id");
-
-;
---
--- Table: items
---
-CREATE TABLE "items" (
-  "id" serial NOT NULL,
-  "purchase_list_id" integer NOT NULL,
-  "value" real NOT NULL,
-  "offset" real DEFAULT 0 NOT NULL,
-  "unit_id" integer NOT NULL,
-  "article_id" integer NOT NULL,
-  "purchased" boolean DEFAULT '0' NOT NULL,
-  "comment" text NOT NULL,
-  PRIMARY KEY ("id"),
-  CONSTRAINT "items_purchase_list_id_article_id_unit_id" UNIQUE ("purchase_list_id", "article_id", "unit_id")
-);
-CREATE INDEX "items_idx_article_id" on "items" ("article_id");
-CREATE INDEX "items_idx_article_id_unit_id" on "items" ("article_id", "unit_id");
-CREATE INDEX "items_idx_purchase_list_id" on "items" ("purchase_list_id");
-CREATE INDEX "items_idx_unit_id" on "items" ("unit_id");
 
 ;
 --
@@ -616,6 +615,18 @@ ALTER TABLE "articles_tags" ADD CONSTRAINT "articles_tags_fk_tag_id" FOREIGN KEY
   REFERENCES "tags" ("id") ON DELETE CASCADE DEFERRABLE;
 
 ;
+ALTER TABLE "items" ADD CONSTRAINT "items_fk_article_id" FOREIGN KEY ("article_id")
+  REFERENCES "articles" ("id") DEFERRABLE;
+
+;
+ALTER TABLE "items" ADD CONSTRAINT "items_fk_purchase_list_id" FOREIGN KEY ("purchase_list_id")
+  REFERENCES "purchase_lists" ("id") ON DELETE CASCADE DEFERRABLE;
+
+;
+ALTER TABLE "items" ADD CONSTRAINT "items_fk_unit_id" FOREIGN KEY ("unit_id")
+  REFERENCES "units" ("id") DEFERRABLE;
+
+;
 ALTER TABLE "recipe_ingredients" ADD CONSTRAINT "recipe_ingredients_fk_article_id" FOREIGN KEY ("article_id")
   REFERENCES "articles" ("id") DEFERRABLE;
 
@@ -634,22 +645,6 @@ ALTER TABLE "dishes_tags" ADD CONSTRAINT "dishes_tags_fk_dish_id" FOREIGN KEY ("
 ;
 ALTER TABLE "dishes_tags" ADD CONSTRAINT "dishes_tags_fk_tag_id" FOREIGN KEY ("tag_id")
   REFERENCES "tags" ("id") ON DELETE CASCADE DEFERRABLE;
-
-;
-ALTER TABLE "items" ADD CONSTRAINT "items_fk_article_id" FOREIGN KEY ("article_id")
-  REFERENCES "articles" ("id") DEFERRABLE;
-
-;
-ALTER TABLE "items" ADD CONSTRAINT "items_fk_article_id_unit_id" FOREIGN KEY ("article_id", "unit_id")
-  REFERENCES "articles_units" ("article_id", "unit_id") DEFERRABLE;
-
-;
-ALTER TABLE "items" ADD CONSTRAINT "items_fk_purchase_list_id" FOREIGN KEY ("purchase_list_id")
-  REFERENCES "purchase_lists" ("id") ON DELETE CASCADE DEFERRABLE;
-
-;
-ALTER TABLE "items" ADD CONSTRAINT "items_fk_unit_id" FOREIGN KEY ("unit_id")
-  REFERENCES "units" ("id") DEFERRABLE;
 
 ;
 ALTER TABLE "dish_ingredients" ADD CONSTRAINT "dish_ingredients_fk_article_id" FOREIGN KEY ("article_id")

@@ -56,6 +56,12 @@ ALTER TABLE dish_ingredients DROP CONSTRAINT dish_ingredients_fk_article_id_unit
 DROP INDEX dish_ingredients_idx_article_id_unit_id;
 
 ;
+ALTER TABLE items DROP CONSTRAINT items_fk_article_id_unit_id;
+
+;
+DROP INDEX items_idx_article_id_unit_id;
+
+;
 ALTER TABLE recipe_ingredients DROP CONSTRAINT recipe_ingredients_fk_article_id_unit_id;
 
 ;
