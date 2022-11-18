@@ -250,7 +250,7 @@ sub add_ingredient : POST PathPart('ingredients/create') Chained('project_base')
             }
         );
         $unit->create_related(
-            'articles_units' => {
+            articles_units => {
                 article_id => $new_ingredient{article_id},
             }
         );
@@ -259,17 +259,15 @@ sub add_ingredient : POST PathPart('ingredients/create') Chained('project_base')
     elsif ( !$existing_article and defined $existing_unit ) {
 
         # create article and connect unit to it
-        $new_ingredient{article_id} = $existing_unit->create_related(
-            articles => {
+        $new_ingredient{article_id} = $project->articles->create(
+            {
                 name    => $ingredient->{article}->{name},
                 comment => '',
-            },
+            }
         )->id;
         $existing_unit->create_related(
-            {
-                'articles_units' => {
-                    article_id => $new_ingredient{article_id},
-                }
+            articles_units => {
+                article_id => $new_ingredient{article_id},
             }
         );
     }
