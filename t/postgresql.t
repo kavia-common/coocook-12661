@@ -107,8 +107,6 @@ schema_diff_like(
               articles
               blacklist_emails
               blacklist_usernames
-              dishes
-              meals
               organizations
               projects
               purchase_lists
@@ -139,6 +137,8 @@ schema_diff_like(
               dish_ingredients
               faqs
               recipe_ingredients
+              meals
+              dishes
               >;
         };
     }
