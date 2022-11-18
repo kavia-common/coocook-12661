@@ -6,6 +6,7 @@ use DateTime;
 use Moose;
 use MooseX::NonMoose;
 use Scalar::Util 'weaken';
+use JSON::MaybeXS;
 
 __PACKAGE__->meta->make_immutable;
 
@@ -158,8 +159,33 @@ sub project {
             push @{ $meals{$prepare_meal_id}{prepared_dishes} }, $dish;
         }
     }
-
     return [ @days{ sort keys %days } ];
+}
+
+sub project_for_meals_dishes_editor {
+    my ( $self, $project ) = @_;
+
+    my %days;
+
+    my $meals = $project->meals->search( undef, { order_by => $project->meals->me('name') } );
+
+    while ( my $meal = $meals->next ) {
+        my $day = $days{ $meal->date->ymd } ||= {};
+
+        $day->{ $meal->id } = $meal->for_meals_dishes_editor;
+    }
+
+    return \%days;
+}
+
+sub resolve_meal_dish_path {
+    my ( $self, $project, $path ) = @_;
+    if ( $path->{item_type} eq 'dish' ) {
+        return $project->dishes->find( $path->{dish_id} );
+    }
+    elsif ( $path->{item_type} eq 'meal' ) {
+        return $project->meals->find( $path->{meal_id} );
+    }
 }
 
 1;

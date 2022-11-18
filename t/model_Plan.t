@@ -111,6 +111,7 @@ is my $project_plan = $plan->project($project) => array {
             item hash {
                 field id         => 1;
                 field project_id => 1;
+                field position   => 1;
                 field date       => string '2000-01-01T00:00:00';
                 field name       => 'breakfast';
                 field comment    => 'Best meal of the day!';
@@ -118,6 +119,7 @@ is my $project_plan = $plan->project($project) => array {
                 field dishes     => array {
                     item hash {
                         field id                 => 1;
+                        field position           => 1;
                         field meal_id            => 1;
                         field meal               => hash { field id => 1; etc() };
                         field prepare_at_meal_id => U();
@@ -127,11 +129,15 @@ is my $project_plan = $plan->project($project) => array {
                         field description        => 'Make them really sweet!';
                         field comment            => '';
                         field servings           => 4;
+                        end();
                     };
                 };
                 field prepared_dishes => [];
+                end();
             };
+            end();
         };
+        end();
     };
     item hash {
         field date  => string '2000-01-02T00:00:00';
@@ -139,6 +145,7 @@ is my $project_plan = $plan->project($project) => array {
             item hash {
                 field id         => 2;
                 field project_id => 1;
+                field position   => 2;
                 field date       => string '2000-01-02T00:00:00';
                 field name       => 'lunch';
                 field comment    => '';
@@ -146,6 +153,7 @@ is my $project_plan = $plan->project($project) => array {
                 field dishes     => array {
                     item hash {
                         field id                 => 2;
+                        field position           => 2;
                         field meal_id            => 2;
                         field meal               => hash { field id => 2; etc() };
                         field prepare_at_meal_id => U();
@@ -155,12 +163,14 @@ is my $project_plan = $plan->project($project) => array {
                         field description        => '';
                         field comment            => '';
                         field servings           => 2;
+                        end();
                     };
                 };
                 field prepared_dishes => array {
                     item $bread = hash {
                         field id                 => 3;
                         field meal_id            => 3;
+                        field position           => 3;
                         field meal               => hash { field id => 3; etc() };
                         field prepare_at_meal_id => 2;
                         field from_recipe_id     => U();
@@ -169,8 +179,10 @@ is my $project_plan = $plan->project($project) => array {
                         field description        => '';
                         field comment            => '';
                         field servings           => 4;
+                        end();
                     };
                 };
+                end();
             };
         };
     };
@@ -180,12 +192,14 @@ is my $project_plan = $plan->project($project) => array {
             item hash {
                 field id              => 3;
                 field project_id      => 1;
+                field position        => 3;
                 field date            => string '2000-01-03T00:00:00';
                 field name            => 'dinner';
                 field deletable       => F();
                 field dishes          => array { item $bread };
                 field prepared_dishes => [];
                 field comment         => '';
+                end();
             };
         };
     };

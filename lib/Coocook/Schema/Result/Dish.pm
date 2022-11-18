@@ -5,11 +5,14 @@ use MooseX::MarkAsMethods autoclean => 1;
 
 extends 'Coocook::Schema::Result';
 
+__PACKAGE__->load_components(qw< Ordered >);
+
 __PACKAGE__->table('dishes');
 
 __PACKAGE__->add_columns(
     id                 => { data_type => 'integer', is_auto_increment => 1 },
     meal_id            => { data_type => 'integer' },
+    position           => { data_type => 'integer' },
     from_recipe_id     => { data_type => 'integer', is_nullable => 1 },
     name               => { data_type => 'text' },
     servings           => { data_type => 'integer' },
@@ -22,6 +25,9 @@ __PACKAGE__->add_columns(
 __PACKAGE__->set_primary_key('id');
 
 # TODO __PACKAGE__->add_unique_constraints([qw<meal_id name>]);
+
+__PACKAGE__->position_column('position');
+__PACKAGE__->grouping_column('meal_id');
 
 __PACKAGE__->belongs_to( meal => 'Coocook::Schema::Result::Meal', 'meal_id' );
 
@@ -82,6 +88,11 @@ sub update_items_and_delete {
             $self->delete;
         }
     );
+}
+
+sub for_meals_dishes_editor {
+    my $self = shift;
+    return { $self->as_hashref->%*, date => $self->meal->date->ymd };
 }
 
 1;

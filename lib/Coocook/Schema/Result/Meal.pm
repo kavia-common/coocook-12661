@@ -2,14 +2,18 @@ package Coocook::Schema::Result::Meal;
 
 use Moose;
 use MooseX::MarkAsMethods autoclean => 1;
+use JSON::MaybeXS;
 
 extends 'Coocook::Schema::Result';
+
+__PACKAGE__->load_components(qw< Ordered >);
 
 __PACKAGE__->table('meals');
 
 __PACKAGE__->add_columns(
     id         => { data_type => 'integer', is_auto_increment => 1 },
     project_id => { data_type => 'integer' },
+    position   => { data_type => 'integer' },
     date       => { data_type => 'date' },
     name       => { data_type => 'text' },
     comment    => { data_type => 'text' },
@@ -18,6 +22,9 @@ __PACKAGE__->add_columns(
 __PACKAGE__->set_primary_key('id');
 
 __PACKAGE__->add_unique_constraints( [qw<project_id date name>] );
+
+__PACKAGE__->position_column('position');
+__PACKAGE__->grouping_column( [ 'project_id', 'date' ] );
 
 __PACKAGE__->belongs_to( project => 'Coocook::Schema::Result::Project', 'project_id' );
 
@@ -56,6 +63,22 @@ sub delete_dishes {
     my $self = shift;
 
     $self->dishes->update_items_and_delete;
+}
+
+sub for_meals_dishes_editor {
+    my $self = shift;
+    my $relevant_columns =
+      [ 'meal_id', 'comment', 'id', 'name', 'prepare_at_meal_id', 'servings', 'position' ];
+    my $related_dishes = $self->search_related( dishes => ( undef, { columns => $relevant_columns } ) );
+    my $prepared_dishes =
+      $self->search_related( prepared_dishes => ( undef, { columns => $relevant_columns } ) );
+    return $self->as_hashref(
+        date            => $self->date->ymd,
+        deletable       => $self->deletable ? JSON()->true : JSON()->false,
+        dishes          => { map { $_->id => $_->for_meals_dishes_editor } $related_dishes->all },
+        prepared_dishes => { map { $_->id => $_->for_meals_dishes_editor } $prepared_dishes->all },
+    );
+
 }
 
 1;

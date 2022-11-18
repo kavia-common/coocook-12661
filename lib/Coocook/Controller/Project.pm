@@ -3,6 +3,7 @@ package Coocook::Controller::Project;
 use DateTime;
 use Moose;
 use MooseX::MarkAsMethods autoclean => 1;
+use JSON::MaybeXS qw/to_json/;
 
 BEGIN { extends 'Coocook::Controller' }
 
@@ -140,47 +141,110 @@ sub edit : GET HEAD Chained('submenu') PathPart('edit') Args(0) RequiresCapabili
 
     my $default_date = DateTime->today;
 
-    my $days = $c->model('Plan')->project( $c->project );
+    my $days = $c->model('Plan')->project_for_meals_dishes_editor( $c->project );
 
-    # calculate dishes per day for table's row-span
-    for my $day (@$days) {
-        $day->{dishes} = 0;
-
-        for my $meal ( @{ $day->{meals} } ) {
-            my $dishes = $meal->{dishes};
-
-            for my $dish (@$dishes) {
-                $dish->{url} = $c->project_uri( '/dish/edit', $dish->{id} );
+    for my $day ( keys %$days ) {
+        for my $meal_key ( keys $days->{$day}->%* ) {
+            my $meal = $days->{$day}->{$meal_key};
+            $meal->{delete_dishes_url} = $c->project_uri( '/meal/delete_dishes', $meal->{id} )->as_string;
+            $meal->{delete_url}        = $c->project_uri( '/meal/delete',        $meal->{id} )->as_string;
+            $meal->{update_url}        = $c->project_uri( '/meal/update',        $meal->{id} )->as_string;
+            for my $dish_key ( keys $meal->{dishes}->%* ) {
+                my $dish = $meal->{dishes}->{$dish_key};
+                $dish->{delete_url} = $c->project_uri( '/dish/delete_ajax', $dish->{id} )->as_string;
+                $dish->{update_url} = $c->project_uri( '/dish/update_ajax', $dish->{id} )->as_string;
             }
-
-            $day->{dishes} += @$dishes;
-
-            $meal->{update_url} = $c->project_uri( '/meal/update', $meal->{id} );
-
-            if ( $meal->{deletable} ) {
-                $meal->{delete_url} = $c->project_uri( '/meal/delete', $meal->{id} );
-            }
-            elsif ( @{ $meal->{dishes} } > 0 ) {
-                $meal->{delete_dishes_url} = $c->project_uri( '/meal/delete_dishes', $meal->{id} );
-            }
-            elsif ( @{ $meal->{prepared_dishes} } > 0 ) {
-                $meal->{prepared_dishes_exist} = 1;
-            }
-
         }
     }
 
     $c->stash(
         default_date         => $default_date,
-        recipes              => [ $c->project->recipes->sorted->all ],
-        days                 => $days,
+        recipes_json_string  => to_json( [ $c->project->recipes->sorted->hri->all ] ),
+        days_json_string     => to_json($days),
+        get_project_plan_url => $c->project_uri('/project/get_project_plan_ajax'),
+        get_all_recipes_url  => $c->project_uri('/recipe/get_all_ajax'),
+        move_meal_dish_url   => $c->project_uri('/project/move_meal_or_dish_ajax'),
         dish_create_url      => $c->project_uri('/dish/create'),
         dish_from_recipe_url => $c->project_uri('/dish/from_recipe'),
         meal_create_url      => $c->project_uri('/meal/create'),
     );
 
-    push @{ $c->stash->{js} },  '/js/project/edit.js';
+    push @{ $c->stash->{js} },  '/lib/web-js-components/meals-dishes-editor/meals-dishes-editor.es.js';
     push @{ $c->stash->{css} }, '/css/project/edit.css';
+}
+
+sub get_project_plan_ajax : GET HEAD Chained('submenu') PathPart('project_plan') Args(0)
+  RequiresCapability('view_project') Does(~Ajax) {
+    my ( $self, $c ) = @_;
+
+    my $days = $c->model('Plan')->project_for_meals_dishes_editor( $c->project );
+
+    for my $day ( keys %$days ) {
+        for my $meal_key ( keys $days->{$day}->%* ) {
+            my $meal = $days->{$day}->{$meal_key};
+            $meal->{delete_dishes_url} = $c->project_uri( '/meal/delete_dishes', $meal->{id} )->as_string;
+            $meal->{delete_url}        = $c->project_uri( '/meal/delete',        $meal->{id} )->as_string;
+            $meal->{update_url}        = $c->project_uri( '/meal/update',        $meal->{id} )->as_string;
+            for my $dish_key ( keys $meal->{dishes}->%* ) {
+                my $dish = $meal->{dishes}->{$dish_key};
+                $dish->{delete_url} = $c->project_uri( '/dish/delete_ajax', $dish->{id} )->as_string;
+                $dish->{update_url} = $c->project_uri( '/dish/update_ajax', $dish->{id} )->as_string;
+            }
+        }
+    }
+
+    $c->stash->{json_data} = {
+        project_plan         => $days,
+        get_project_plan_url => $c->project_uri('/project/get_project_plan_ajax')->as_string,
+        move_meal_dish_url   => $c->project_uri('/project/move_meal_or_dish_ajax')->as_string,
+    };
+}
+
+sub move_meal_or_dish_ajax : POST Chained('submenu') PathPart('move_meal_dish') Args(0) Does(~Ajax)
+  RequiresCapability('edit_project') {
+    my ( $self, $c ) = @_;
+
+    my $project = $c->project;
+
+    my $source_path = $c->req->body_data->{source_path};
+    my $target_path = $c->req->body_data->{target_path};
+    my $direction   = $c->req->body_data->{direction};
+
+    my $plan = $c->model('Plan');
+
+    my $moved = $plan->resolve_meal_dish_path( $project, $source_path );
+    return $c->stash->{json_data} = { error => { message => 'Invalid source_path' } }
+      unless ( defined $moved );
+
+    my $target = $plan->resolve_meal_dish_path( $project, $target_path );
+    return $c->stash->{json_data} = { error => { message => 'Invalid target_path' } }
+      unless ( defined $target );
+
+    if ( $source_path->{item_type} eq 'dish' && $target_path->{item_type} eq 'dish' ) {
+        $moved->move_to_group( { meal_id => $target->meal->id }, $target->position );
+    }
+    elsif ( $source_path->{item_type} eq 'dish' && $target_path->{item_type} eq 'meal' ) {
+        $moved->move_to_group( { meal_id => $target->id }, $direction eq "over" ? 1 : undef );
+    }
+    elsif ( $source_path->{item_type} eq 'meal' && $target_path->{item_type} eq 'dish' ) {
+        $c->stash->{json_data} = { error => { message => 'Cannot move meal on dish.' } };
+        return;
+    }
+    elsif ( $source_path->{item_type} eq 'meal' && $target_path->{item_type} eq 'meal' ) {
+        $moved->move_to_group( { project_id => $project->id, date => $target->date }, $target->position );
+    }
+
+    $moved = $moved->for_meals_dishes_editor;
+    if ( $source_path->{item_type} eq 'dish' ) {
+        $moved->{delete_url} = $c->project_uri( '/dish/delete_ajax', $moved->{id} )->as_string;
+        $moved->{update_url} = $c->project_uri( '/dish/update_ajax', $moved->{id} )->as_string;
+    }
+    elsif ( $source_path->{item_type} eq 'meal' ) {
+        $moved->{delete_dishes_url} = $c->project_uri( '/meal/delete_dishes', $moved->{id} )->as_string;
+        $moved->{delete_url}        = $c->project_uri( '/meal/delete',        $moved->{id} )->as_string;
+        $moved->{update_url}        = $c->project_uri( '/meal/update',        $moved->{id} )->as_string;
+    }
+    $c->stash->{json_data} = $moved;
 }
 
 sub settings : GET HEAD Chained('submenu') PathPart('settings') Args(0)
