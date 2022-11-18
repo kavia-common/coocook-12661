@@ -134,22 +134,26 @@ sub create : POST Chained('/project/base') PathPart('dishes/create') Does(~Ajax)
 }
 
 sub from_recipe : POST Chained('/project/base') PathPart('dishes/from_recipe') Args(0)
-  RequiresCapability('edit_project') {
+  RequiresCapability('edit_project') Does(~Ajax) {
     my ( $self, $c ) = @_;
 
-    my $meal   = $c->project->meals->find( $c->req->params->get('meal') );
-    my $recipe = $c->project->recipes->find( $c->req->params->get('recipe') );
+    my $meal   = $c->project->meals->find( $c->req->body_data->{meal_id} );
+    my $recipe = $c->project->recipes->find( $c->req->body_data->{recipe_id} );
 
     my $dish = $c->model('DB::Dish')->from_recipe(
         $recipe,
         (
             meal     => $meal->id,
-            servings => $c->req->params->get('servings'),
-            comment  => $c->req->params->get('comment') // "",
+            servings => $c->req->body_data->{servings},
+            comment  => $c->req->body_data->{comment} // "",
         )
     );
 
-    $c->response->redirect( $c->project_uri( '/dish/edit', $dish->id ) );
+    $c->stash->{json_data} = {
+        $dish->for_meals_dishes_editor->%*,
+        delete_url => $c->project_uri( '/dish/delete_ajax', $dish->id )->as_string,
+        update_url => $c->project_uri( '/dish/update_ajax', $dish->id )->as_string,
+    };
 }
 
 sub recalculate : POST Chained('base') Args(0) RequiresCapability('edit_project') {

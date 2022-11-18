@@ -4,12 +4,14 @@
 const mealsDishesEditorData = {
     projectId: [% project.id %],
     projectName: '[% project.name %]',
-    projectPlan: JSON.parse('[% days_json %]'),
-    recipes: '[% recipes %]',
+    projectPlan: JSON.parse('[% days_json_string %]'),
+    recipes: JSON.parse('[% recipes_json_string %]'),
     getProjectPlanURL: '[% get_project_plan_url %]',
+    getAllRecipesURL: '[% get_all_recipes_url %]',
     moveMealDishURL: '[% move_meal_dish_url %]',
     createMealURL: '[% meal_create_url %]',
     createDishURL: '[% dish_create_url %]',
+    dishFromRecipeURL: '[% dish_from_recipe_url %]',
     updateMealURL: '[% meal.update_url %]',
 };
 </script>

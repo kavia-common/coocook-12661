@@ -33,23 +33,27 @@ sub submenu : Chained('/project/base') PathPart('') CaptureArgs(0) {
     );
 }
 
-=head2 index
-
-=cut
-
-sub index : GET HEAD Chained('submenu') PathPart('recipes') Args(0)
-  RequiresCapability('view_project') {
+sub recipes : GET HEAD Chained('submenu') PathPart('recipes') RequiresCapability('view_project')
+  CaptureArgs(0) {
     my ( $self, $c ) = @_;
 
     my @recipes = $c->project->recipes->sorted->hri->all;
 
     for my $recipe (@recipes) {
-        $recipe->{edit_url}      = $c->project_uri( $self->action_for('edit'),      $recipe->{id} );
-        $recipe->{duplicate_url} = $c->project_uri( $self->action_for('duplicate'), $recipe->{id} );
-        $recipe->{delete_url}    = $c->project_uri( $self->action_for('delete'),    $recipe->{id} );
+        $recipe->{edit_url} = $c->project_uri( $self->action_for('edit'), $recipe->{id} )->as_string;
+        $recipe->{duplicate_url} =
+          $c->project_uri( $self->action_for('duplicate'), $recipe->{id} )->as_string;
+        $recipe->{delete_url} = $c->project_uri( $self->action_for('delete'), $recipe->{id} )->as_string;
     }
 
     $c->stash( recipes => \@recipes );
+}
+
+=head2 index
+
+=cut
+
+sub index : GET HEAD Chained('recipes') PathPart('') RequiresCapability('view_project') Args(0) {
 }
 
 sub base : Chained('submenu') PathPart('recipe') CaptureArgs(1) {
@@ -392,6 +396,15 @@ sub deleteAjax : POST PathPart('ingredients/delete') Does('~Ajax') Chained('base
     $ingrDB->delete();
 
     $c->stash->{json_data} = { id => $ingrDB->id };
+}
+
+sub get_all_ajax : GET HEAD PathPart('ajax') Does(~Ajax) Chained('recipes')
+  RequiresCapability('view_project') Args(0) {
+    my ( $self, $c ) = @_;
+    $c->stash->{json_data} = {
+        recipes             => $c->stash->{recipes},
+        get_all_recipes_url => $c->project_uri('/recipe/get_all_ajax')->as_string,
+    };
 }
 
 __PACKAGE__->meta->make_immutable;

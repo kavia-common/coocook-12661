@@ -159,9 +159,10 @@ sub edit : GET HEAD Chained('submenu') PathPart('edit') Args(0) RequiresCapabili
 
     $c->stash(
         default_date         => $default_date,
-        recipes              => [ $c->project->recipes->sorted->all ],
-        days_json            => to_json($days),
+        recipes_json_string  => to_json( [ $c->project->recipes->sorted->hri->all ] ),
+        days_json_string     => to_json($days),
         get_project_plan_url => $c->project_uri('/project/get_project_plan_ajax'),
+        get_all_recipes_url  => $c->project_uri('/recipe/get_all_ajax'),
         move_meal_dish_url   => $c->project_uri('/project/move_meal_or_dish_ajax'),
         dish_create_url      => $c->project_uri('/dish/create'),
         dish_from_recipe_url => $c->project_uri('/dish/from_recipe'),
