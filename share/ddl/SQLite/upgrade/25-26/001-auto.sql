@@ -47,16 +47,16 @@ SET
 WHERE unit1_id > unit2_id;
 
 ;
-DROP INDEX dish_ingredients_fk_article_id_unit_id;
+DROP INDEX IF EXISTS dish_ingredients_fk_article_id_unit_id;
 
 ;
-DROP INDEX dish_ingredients_idx_article_id_unit_id;
+DROP INDEX IF EXISTS dish_ingredients_idx_article_id_unit_id;
 
 ;
-DROP INDEX recipe_ingredients_fk_article_id_unit_id;
+DROP INDEX IF EXISTS recipe_ingredients_fk_article_id_unit_id;
 
 ;
-DROP INDEX recipe_ingredients_idx_article_id_unit_id;
+DROP INDEX IF EXISTS recipe_ingredients_idx_article_id_unit_id;
 
 ;
 CREATE TEMPORARY TABLE units_temp_alter (
@@ -98,7 +98,84 @@ DROP TABLE units_temp_alter;
 ;
 DROP TABLE quantities;
 
-;
+-- Drop foreign key from dish_ingredients on article_units
+-- We need to copy table and recreate it without FOREIGN KEY,
+-- because SQLite has no ALTER TABLE
+CREATE TEMPORARY TABLE dish_ingredients_tmp (
+  id INTEGER PRIMARY KEY NOT NULL,
+  position integer NOT NULL DEFAULT 1,
+  dish_id integer NOT NULL,
+  prepare boolean NOT NULL,
+  article_id integer NOT NULL,
+  unit_id integer NOT NULL,
+  value real NOT NULL,
+  comment text NOT NULL,
+  item_id integer
+);
+
+INSERT INTO dish_ingredients_tmp SELECT * FROM dish_ingredients;
+DROP TABLE dish_ingredients;
+
+CREATE TABLE dish_ingredients (
+  id INTEGER PRIMARY KEY NOT NULL,
+  position integer NOT NULL DEFAULT 1,
+  dish_id integer NOT NULL,
+  prepare boolean NOT NULL,
+  article_id integer NOT NULL,
+  unit_id integer NOT NULL,
+  value real NOT NULL,
+  comment text NOT NULL,
+  item_id integer,
+  FOREIGN KEY (article_id) REFERENCES articles(id),
+  FOREIGN KEY (dish_id) REFERENCES dishes(id) ON DELETE CASCADE,
+  FOREIGN KEY (item_id) REFERENCES items(id) ON DELETE SET NULL,
+  FOREIGN KEY (unit_id) REFERENCES units(id)
+);
+
+INSERT INTO dish_ingredients SELECT * FROM dish_ingredients_tmp;
+DROP TABLE dish_ingredients_tmp;
+
+CREATE INDEX dish_ingredients_idx_article_id ON dish_ingredients (article_id);
+CREATE INDEX dish_ingredients_idx_dish_id ON dish_ingredients (dish_id);
+CREATE INDEX dish_ingredients_idx_item_id ON dish_ingredients (item_id);
+CREATE INDEX dish_ingredients_idx_unit_id ON dish_ingredients (unit_id);
+
+-- Drop foreign key from recipe_ingredients on article_units
+-- We need to copy table and recreate it without FOREIGN KEY,
+-- because SQLite has no ALTER TABLE
+CREATE TEMPORARY TABLE recipe_ingredients_tmp (
+  id INTEGER PRIMARY KEY NOT NULL,
+  position integer NOT NULL DEFAULT 1,
+  recipe_id integer NOT NULL,
+  prepare boolean NOT NULL,
+  article_id integer NOT NULL,
+  unit_id integer NOT NULL,
+  value real NOT NULL,
+  comment text NOT NULL
+);
+
+INSERT INTO recipe_ingredients_tmp SELECT * FROM recipe_ingredients;
+DROP TABLE recipe_ingredients;
+
+CREATE TABLE recipe_ingredients (
+  id INTEGER PRIMARY KEY NOT NULL,
+  position integer NOT NULL DEFAULT 1,
+  recipe_id integer NOT NULL,
+  prepare boolean NOT NULL,
+  article_id integer NOT NULL,
+  unit_id integer NOT NULL,
+  value real NOT NULL,
+  comment text NOT NULL,
+  FOREIGN KEY (article_id) REFERENCES articles(id),
+  FOREIGN KEY (recipe_id) REFERENCES recipes(id) ON DELETE CASCADE ON UPDATE CASCADE,
+  FOREIGN KEY (unit_id) REFERENCES units(id)
+);
+
+INSERT INTO recipe_ingredients SELECT * FROM recipe_ingredients_tmp;
+DROP TABLE recipe_ingredients_tmp;
+
+CREATE INDEX recipe_ingredients_idx_article_id ON recipe_ingredients (article_id);
+CREATE INDEX recipe_ingredients_idx_recipe_id ON recipe_ingredients (recipe_id);
+CREATE INDEX recipe_ingredients_idx_unit_id ON recipe_ingredients (unit_id);
 
 COMMIT;
-
