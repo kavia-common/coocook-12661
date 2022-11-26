@@ -262,7 +262,7 @@ sub exportable_projects : Private {
     my ( $self, $c ) = @_;
 
     return [ grep { $c->has_capability( export_from_project => { source_project => $_ } ) }
-          $c->project->other_projects->all ];
+          $c->project->other_projects->sorted->all ];
 }
 
 sub get_import : GET HEAD Chained('base') PathPart('import') Args(0) Does('~HasCSS') Does('~HasJS')
