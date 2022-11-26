@@ -23,4 +23,18 @@ __PACKAGE__->belongs_to( unit2 => 'Coocook::Schema::Result::Unit', 'unit2_id' );
 
 __PACKAGE__->meta->make_immutable;
 
+sub reverse {
+    my $self = shift;
+
+    $self->set_columns(
+        {
+            unit1_id => $self->unit2_id,
+            factor   => 1 / $self->factor,
+            unit2_id => $self->unit1_id,
+        }
+    );
+
+    return $self;
+}
+
 1;

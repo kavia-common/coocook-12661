@@ -36,6 +36,7 @@ sub run {
     $self->check_sqlite_numeric_values();
     $self->check_fc_values();
     $self->check_url_name_values();
+    $self->check_unit_conversions_values();
 }
 
 sub check_schema {
@@ -225,6 +226,20 @@ sub check_url_name_values {
         $project->url_name_fc eq Coocook::Util::url_name( fc $project->name )
           or warn sprintf "Incorrect url_name_fc for project '%s': '%s'\n", $project->name,
           $project->url_name_fc;
+    }
+}
+
+sub check_unit_conversions_values {
+    my $self = shift;
+
+    my $count = $self->_schema->resultset('UnitConversion')->count(
+        {
+            unit1_id => { '>' => { -ident => 'unit2_id' } },
+        }
+    );
+
+    if ( $count > 0 ) {
+        warn sprintf "%i rows in unit_conversions not normalized: unit1_id > unit2_id\n", $count;
     }
 }
 

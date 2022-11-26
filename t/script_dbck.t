@@ -8,7 +8,7 @@ use lib 't/lib/';
 use TestDB;
 use Test::Coocook;    # makes Coocook::Script::Dbck not read real config files
 
-plan(18);
+plan(19);
 
 my $db = TestDB->new();
 
@@ -106,6 +106,17 @@ for my $col (qw< url_name url_name_fc >) {
     $db->resultset('Project')->one_row->update( { $col => 'foobar' } );
 
     like warning { $app->run } => qr/Incorrect $col for project/, "incorrect $col in projects";
+
+    $db->txn_rollback;
+}
+
+{
+    $db->txn_begin;
+
+    $db->resultset('UnitConversion')->one_row->reverse()->update();
+
+    like warning { $app->run } => qr/unit1_id.+unit2_id/,
+      "unit_conversions: unit1_id must be lower than unit2_id (relationship normalization)";
 
     $db->txn_rollback;
 }

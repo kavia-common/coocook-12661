@@ -267,17 +267,15 @@ sub add_conversion : POST Chained('base') Args(0) RequiresCapability('edit_proje
     my ( $value1, $value2 ) = map { $c->req->params->get($_) } qw( value1 value2 );
     my $factor = $value2 / $value1;
 
-    if ( $unit1->id > $unit2->id ) {
-        ( $unit1, $unit2 ) = ( $unit2, $unit1 );
-        $factor = $value1 / $value2;
-    }
-
-    $unit1->conversions_from->create(
+    my $conversion = $unit1->conversions_from->new_result(
         {
             unit2_id => $unit2->id,
             factor   => $factor,
         }
     );
+
+    $conversion->reverse() unless $unit1->id < $unit2->id;
+    $conversion->insert();
 
     $c->detach('redirect');
 }
