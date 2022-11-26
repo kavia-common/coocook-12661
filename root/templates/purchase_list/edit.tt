@@ -10,6 +10,10 @@ html_title = html_title _ ' for ' _ display_date(list.date, {html=>1});
 <div class="row my-3">
 	<div class="col-12 mb-2">
 		<h3 class="shop-section text-primary">[% section.name || "No shop section" | html FILTER ucfirst %]</h3>
+
+	[% UNLESS section.name %]
+		<p class="no-print">To sort these items into specific shop sections, edit the <a href="[% project_urls.articles %]">articles</a> and select shop sections there.</p>
+	[% END %]
 	</div>
 	
 	<div class="col-12 mb-2 table-responsive">
