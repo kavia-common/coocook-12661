@@ -94,13 +94,6 @@ sub index : GET HEAD Chained('/project/base') PathPart('units') Args(0)
     );
 }
 
-sub new_unit : GET HEAD Chained('/project/base') PathPart('units/new')
-  RequiresCapability('edit_project') {
-    my ( $self, $c ) = @_;
-
-    $c->stash( template => 'unit/edit.tt' );
-}
-
 sub base : Chained('/project/base') PathPart('unit') CaptureArgs(1) {
     my ( $self, $c, $id ) = @_;
 
@@ -246,7 +239,7 @@ sub update_or_insert : Private {
             $c->project_uri(
                 $unit->in_storage
                 ? ( $self->action_for('edit'), $unit->id )
-                : $self->action_for('new_unit')
+                : $self->action_for('index')
             )
         );
     }
