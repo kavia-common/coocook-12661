@@ -248,13 +248,19 @@ sub delete : POST Chained('base') Args(0) RequiresCapability('edit_project') {
     my ( $self, $c ) = @_;
 
     $c->stash->{unit}->delete();
+    delete $c->stash->{unit};
     $c->detach('redirect');
 }
 
 sub redirect : Private {
     my ( $self, $c ) = @_;
 
-    $c->response->redirect( $c->project_uri( $self->action_for('index') ) );
+    if ( my $unit = $c->stash->{unit} ) {
+        $c->response->redirect( $c->project_uri( $self->action_for('edit'), $unit->id ) );
+    }
+    else {
+        $c->response->redirect( $c->project_uri( $self->action_for('index') ) );
+    }
 }
 
 __PACKAGE__->meta->make_immutable;
