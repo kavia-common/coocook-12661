@@ -24,9 +24,13 @@ MACRO display_unit(unit, opts) BLOCK;
 END;
 
 MACRO display_value(value, opts) BLOCK;
+    '−' IF value < 0; # non-ASCII minus https://www.compart.com/de/unicode/U+2212
     IF opts.force_sign;
         '±' IF value == 0;
         '+' IF value > 0;
+    END;
+    IF value < 0;
+        value = 0 - value;
     END;
     USE NiceNumber;
     value | $NiceNumber;
