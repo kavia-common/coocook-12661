@@ -108,4 +108,21 @@ sub convertible_into {
     )->all;
 }
 
+sub find_conversion_into {
+    my ( $self, $unit_id ) = @_;
+
+    return $self->result_source->schema->resultset('UnitConversion')->search(
+        [    # OR
+            {
+                unit1_id => $self->id,
+                unit2_id => $unit_id,
+            },
+            {
+                unit1_id => $unit_id,
+                unit2_id => $self->id,
+            }
+        ]
+    )->single;
+}
+
 1;

@@ -177,11 +177,23 @@ sub edit : GET HEAD Chained('base') PathPart('') Args(0) RequiresCapability('edi
         push @groups, [ grep { not exists $groups_per_unit{ $_->{id} } } @units ];
     }
 
+    for my $unit2 (@$primary_group) {
+        $unit2->{url} = $c->project_uri( $self->action_for('edit'), $unit2->{id} );
+
+        $unit2->{update_url} =
+          $c->project_uri( $self->action_for('update_conversion'), $unit->id, $unit2->{id} );
+
+        $unit2->{delete_url} =
+          $c->project_uri( $self->action_for('delete_conversion'), $unit->id, $unit2->{id} );
+
+    }
+
     $c->stash(
-        articles      => \@articles,
-        conversions   => $primary_group,
-        grouped_units => \@groups,
-        update_url    => $c->project_uri( $self->action_for('update'), $unit->id ),
+        articles           => \@articles,
+        conversions        => $primary_group,
+        grouped_units      => \@groups,
+        update_url         => $c->project_uri( $self->action_for('update'),         $unit->id ),
+        add_conversion_url => $c->project_uri( $self->action_for('add_conversion'), $unit->id ),
     );
 }
 
@@ -249,6 +261,59 @@ sub delete : POST Chained('base') Args(0) RequiresCapability('edit_project') {
 
     $c->stash->{unit}->delete();
     delete $c->stash->{unit};
+    $c->detach('redirect');
+}
+
+sub add_conversion : POST Chained('base') Args(0) RequiresCapability('edit_project') {
+    my ( $self, $c ) = @_;
+
+    my $unit1 = $c->stash->{unit} || die;
+    my $unit2 =
+      $unit1->other_units->find( $c->req->params->get('unit2') ) || $c->detach('/error/bad_request');
+
+    my ( $value1, $value2 ) = map { $c->req->params->get($_) } qw( value1 value2 );
+    my $factor = $value2 / $value1;
+
+    if ( $unit1->id > $unit2->id ) {
+        ( $unit1, $unit2 ) = ( $unit2, $unit1 );
+        $factor = $value1 / $value2;
+    }
+
+    $unit1->conversions_from->create(
+        {
+            unit2_id => $unit2->id,
+            factor   => $factor,
+        }
+    );
+
+    $c->detach('redirect');
+}
+
+sub update_conversion : POST Chained('base') Args(1) RequiresCapability('edit_project') {
+    my ( $self, $c, $unit2_id ) = @_;
+
+    my $factor = $c->req->params->get('factor') || $c->detach('/error/bad_request');
+    $factor += 0;    # cast into number
+
+    my $conversion = $c->stash->{unit}->find_conversion_into($unit2_id)
+      || $c->detach('/error/not_found');
+
+    if ( $conversion->unit2_id != $unit2_id ) {
+        $factor**= -1;
+    }
+
+    $conversion->update( { factor => $factor } );
+
+    $c->detach('redirect');
+}
+
+sub delete_conversion : POST Chained('base') Args(1) RequiresCapability('edit_project') {
+    my ( $self, $c, $unit2_id ) = @_;
+
+    my $conversion = $c->stash->{unit}->find_conversion_into($unit2_id)
+      || $c->detach('/error/not_found');
+
+    $conversion->delete();
     $c->detach('redirect');
 }
 
