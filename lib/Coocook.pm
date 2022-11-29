@@ -95,7 +95,7 @@ __PACKAGE__->config(
     help_links => [
         {
             title => "Mailing list",
-            url   => 'https://lists.coocook.org/mailman/listinfo/coocook',
+            url   => 'https://lists.coocook.org/',
         },
         {
             title => "Report issues",
