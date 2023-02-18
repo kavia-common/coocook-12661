@@ -88,7 +88,6 @@ sub base : Chained('/base') PathPart('project') CaptureArgs(2) {
             tags             => $c->project_uri('/tag/index'),
             unassigned_items => $c->project_uri('/item/unassigned'),
             purchase_lists   => $c->project_uri('/purchase_list/index'),
-            print            => $c->project_uri('/print/index'),
             shop_sections    => $c->project_uri('/shop_section/index'),
             units            => $c->project_uri('/unit/index'),
             archive          => $c->project_uri('/project/archive'),

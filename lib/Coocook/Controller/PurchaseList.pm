@@ -28,7 +28,6 @@ sub submenu : Chained('/project/base') PathPart('') CaptureArgs(0) {
             { text => "Purchase lists",   action => 'purchase_list/index' },
             { text => "Unassigned items", action => 'item/unassigned' },
             { text => "Shop sections",    action => 'shop_section/index' },
-            { text => "Printing",         action => 'print/index' },
         ]
     );
 }

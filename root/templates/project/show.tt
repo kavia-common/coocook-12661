@@ -42,7 +42,7 @@
             You can <button class="alert-link" type="submit">📁 archive this project</button>
         </form>
     [% ELSE %]
-        Once you’ve finished this project you can <a class="alert-link" href="[% project_urls.print %]">print documents</a> to take action.
+        Once you’ve finished this project you can print <a class="alert-link" href="[% project_urls.purchase_lists %]">your purchase lists</a> to take action.
     [% END %]
 </div>
 [% END %]
@@ -131,6 +131,7 @@ END %]
                     <div class="mb-3">
                         <label for="col-name" class="form-label">Name</label>
                         <input id="col-name" class="form-control" type="text" name="name" required>
+                        <div class="d-flex align-items-center mt-3"><span class="material-icons">info</span> <span class="ms-1">Extra columns are <b>not</b> saved permanently.</span></div>
                     </div>
                 </div>
                 <div class="modal-footer">
