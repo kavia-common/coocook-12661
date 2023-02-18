@@ -357,8 +357,14 @@ cc-autocomplete {
     font-style: italic;
 }
 
-.article {
+.article,
+.extra-col {
     width: 100px;
+}
+
+.extra-col button {
+    font-weight: bold;
+    padding: 1px;
 }
 
 .print {

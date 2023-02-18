@@ -144,6 +144,8 @@ sub show : GET HEAD Chained('submenu') PathPart('') Args(0) RequiresCapability('
         can_unarchive => !!$c->has_capability('unarchive_project'),
         days          => $days,
     );
+
+    push @{ $c->stash->{css} }, '/css/print.css';
 }
 
 sub edit : GET HEAD Chained('submenu') PathPart('edit') Args(0) RequiresCapability('edit_project') {
