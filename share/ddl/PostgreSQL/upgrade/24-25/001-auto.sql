@@ -26,7 +26,7 @@ INSERT INTO dishes_tmp SELECT * FROM dishes;
 DROP TABLE dishes;
 
 CREATE TABLE dishes (
-  id INTEGER PRIMARY KEY NOT NULL,
+  id serial PRIMARY KEY NOT NULL,
   meal_id integer NOT NULL,
   position integer NOT NULL,
   from_recipe_id integer,
@@ -95,7 +95,7 @@ INSERT INTO meals_tmp SELECT * FROM meals;
 DROP TABLE meals;
 
 CREATE TABLE meals (
-  id INTEGER PRIMARY KEY NOT NULL,
+  id serial PRIMARY KEY NOT NULL,
   project_id integer NOT NULL,
   position integer NOT NULL,
   date date NOT NULL,
