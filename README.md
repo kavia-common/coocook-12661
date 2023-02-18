@@ -22,13 +22,24 @@ Get source code:
     $ git clone https://gitlab.com/coocook/coocook.git
     $ cd coocook/
 
-### Configure database
+### Configuration
 
-Copy the config template [`share/examples/dbic.yaml`](share/examples/dbic.yaml) to the working directory:
+The only configuration required to start a development server is a database connection.
+It’s recommended to configure (possibly multiple) connections in `dbic.yaml` in the project root directory.
 
-    $ cp share/examples/dbic.yaml dbic.yaml
+You can copy the example file [`share/examples/dbic.yaml`](share/examples/dbic.yaml) to the project root directory:
 
-A database from the YAML file other than `development` or a literal DSN can be configured in [`coocook.yaml`](share/examples/coocook.yaml).
+    $ cp share/examples/dbic.yaml .
+
+By default Coocook will connect to the connection in `dbic.yaml` with key `development`.
+The example file defines a local SQLite file `coocook.sqlite`.
+
+The selected connection key and other settings can be configured in a config file format supported by [`Catalyst::Plugin::ConfigLoader`](https://metacpan.org/dist/Catalyst-Plugin-ConfigLoader/view/lib/Catalyst/Plugin/ConfigLoader/Manual.pod) like `coocook.yaml`.
+You can copy the example file [`share/examples/coocook.yaml`](share/examples/coocook.yaml)
+with the most common settings to the project root directory:
+
+    $ cp share/examples/coocook.yaml .
+
 For other possible settings see the default values defined in [`lib/Coocook.pm`](lib/Coocook.pm).
 
 ### Run with native Perl (works best on Unix-like Operating Systems)
