@@ -104,9 +104,9 @@ INSERT INTO "dish_ingredients"
 ( 4,        1,       2, FALSE,            1,       2,    0.5,      '',    NULL),
 ( 5,        2,       2, FALSE,            3,       3,   0.25,      '',    NULL),
 ( 6,        3,       2, FALSE,            2,       1,   12.5,      '',    NULL),
-( 7,        1,       3, FALSE,            1,       2,    1.0,      '',    NULL),
-( 8,        2,       3, FALSE,            2,       1,   25.0,      '',    NULL),
-( 9,        3,       3, FALSE,            3,       3,    1.0,      '',    NULL),
+( 7,        1,       3, TRUE,             1,       2,    1.0,      '',    NULL),
+( 8,        2,       3, TRUE,             2,       1,   25.0,      '',    NULL),
+( 9,        3,       3, TRUE,             3,       3,    1.0,      '',    NULL),
 (10,        4,       3, FALSE,            4,       1,  500.0,      '',    NULL),
 (11,        5,       3, FALSE,            1,       2,   12.5,      '',    NULL);
 

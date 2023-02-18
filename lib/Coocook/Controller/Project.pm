@@ -122,7 +122,8 @@ sub submenu : Chained('base') PathPart('') CaptureArgs(0) {
     );
 }
 
-sub show : GET HEAD Chained('submenu') PathPart('') Args(0) RequiresCapability('view_project') {
+sub show : GET HEAD Chained('submenu') PathPart('') Args(0) RequiresCapability('view_project')
+  Does('~HasJS') {
     my ( $self, $c ) = @_;
 
     my $days = $c->model('Plan')->project( $c->project );
