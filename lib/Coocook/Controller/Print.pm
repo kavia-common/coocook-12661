@@ -114,7 +114,7 @@ sub day : GET HEAD Chained('/purchase_list/submenu') PathPart('print/day') Args(
         day        => $dt,
         meals      => $meals,
         title      => "Print " . $dt->strftime( $c->stash->{date_format_short} ),
-        html_title => "Print " . $dt->strftime( $c->stash->{date_format_long} ),
+        html_title => $dt->strftime( $c->stash->{date_format_long} ),
     );
 }
 

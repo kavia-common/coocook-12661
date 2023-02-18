@@ -352,6 +352,15 @@ cc-autocomplete {
     display: none;
 }
 
+.comment {
+    color: DarkGrey;
+    font-style: italic;
+}
+
+.article {
+    width: 100px;
+}
+
 .print {
     display: none;
 }

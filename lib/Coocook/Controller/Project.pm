@@ -134,6 +134,9 @@ sub show : GET HEAD Chained('submenu') PathPart('') Args(0) RequiresCapability('
                 $dish->{url} = $c->project_uri( '/dish/edit', $dish->{id} );
             }
         }
+
+        my $date = $day->{date};
+        $day->{url} = $c->project_uri( '/print/day', $date->year, $date->month, $date->day );
     }
 
     $c->stash(

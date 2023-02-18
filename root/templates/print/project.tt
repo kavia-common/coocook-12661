@@ -17,7 +17,7 @@ project.description | markdown %]
     FOREACH meal IN day.meals %]
     <tr>
         [% IF loop.first %]
-        <td rowspan="[% day.meals.size %]">[% display_date(day.date, {html=>1}) %]</td>
+        <td rowspan="[% day.meals.size %]"><a href="[% day.url %]">[% display_date(day.date, {html=>1}) %]</a></td>
         [% END %]
         <td>
             [% meal.name | html %]

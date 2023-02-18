@@ -1,86 +1,109 @@
+<button class="btn btn-primary my-3 material-icons" onclick="print()" title="Print">print</button>
+
 [% FOR meal IN meals %]
-<h3>[% meal.name | html %]</h3>
+<h3 class="display-5">[% meal.name | html %]</h3>
 
 [% IF meal.comment %]
     <p class="comment">[% meal.comment | html %]</p>
 [% END %]
 
-    [% FOR dish IN meal.dishes %]
+[% FOR dish IN meal.dishes %]
+<div class="mb-5">
+    <h4><a class="display-6" href="[% dish.url %]">[% dish.name | html %]</a> ([% dish.servings %] servings)</h4>
+    [% IF dish.comment %]
+        <p class="comment">[% dish.comment | html %]</p>
+    [% END %]
 
-<div class="dish">
+    [% PROCESS table prepare = 0 %]
 
-<h4><a href="[% dish.url %]">[% dish.name | html %]</a> ([% dish.servings %] servings)</h4>
+    [% IF dish.preparation.length %]
+        <h5>Preparation
+            [% IF dish.prepare_at_meal;
+                prep_meal = dish.prepare_at_meal %]
+                (scheduled for <a href="[% prep_meal.url %]">[% prep_meal.name | html %] on [% display_date(prep_meal.date) %]</a>)
+            [% END %]
+        </h5>
 
-[% IF dish.comment %]
-    <p class="comment">[% dish.comment | html %]</p>
-[% END %]
+        <div>[% USE Markdown; dish.preparation | markdown %]</div>
+    [% END %]
 
-[% PROCESS table prepare = 0 %]
-
-[% IF dish.preparation.length %]
-    <h5>Preparation
-        [% IF dish.prepare_at_meal;
-            prep_meal = dish.prepare_at_meal %]
-            (scheduled for <a href="[% prep_meal.url %]">[% prep_meal.name | html %] on [% display_date(prep_meal.date) %]</a>)
-        [% END %]
-    </h5>
-
-    [% USE Markdown; dish.preparation | markdown;
-END %]
-
-<h5>Description</h5>
-[% USE Markdown; dish.description | markdown %]
-
+    <h5>Description</h5>
+    <div>[% USE Markdown; dish.description | markdown %]</div>
 </div>
+[% END;
+  
+FOR dish IN meal.prepared_dishes %]
+<div class="mb-5">
+    <h4><span class="display-6">Prepare for <a href="[% dish.meal.url %]">[% dish.meal.name | html %] on [% display_date(dish.meal.date) %]</a>: <a href="[% dish.url %]">[% dish.name | html %]</a></span> ([% dish.servings %] servings)</h4>
 
-    [% END;
-
-    FOR dish IN meal.prepared_dishes %]
-<h4 style="clear:left">Prepare for <a href="[% dish.meal.url %]">[% dish.meal.name | html %] on [% display_date(dish.meal.date) %]</a>: <a href="[% dish.url %]">[% dish.name | html %]</a> ([% dish.servings %] servings)</h4>
-
-[% PROCESS table prepare = 1 %]
-
-<p>[% USE Markdown; dish.preparation | markdown %]</p>
-    [% END;
+    [% PROCESS table prepare = 1 %]
+  
+    <div>[% USE Markdown; dish.preparation | markdown %]</div>
+</div>
+[% END;
 END;
 
-BLOCK table %]
-<table class="ingredients">
-    <tr>
-        <th colspan="2">Amount</th>
-        <th>Article</th>
-        <th>Comment</th>
-    </tr>
+BLOCK table;
+IF dish.ingredients.size;
+has_prep = "f" %]
+<table class="table">
+    <thead>
+        <tr>
+            <th>Amount</th>
+            <th>Article</th>
+        </tr>
+    </thead>
+    [% IF NOT prepare AND dish.has_prepared_ingredients %]
+    <tbody>
+        <tr>
+            <td colspan="3"><b>[% IF dish.prepare_at_meal %]Prepared at [% IF dish.prepare_at_meal;
+                prep_meal = dish.prepare_at_meal %]
+                <a href="[% dish.meal.url %]">[% prep_meal.name | html %] on [% display_date(prep_meal.date) %]</a>
+                [% END;
+                ELSE %]For preparation[% END %]:</b></td>
+        </tr>
+    </tbody>
+    [% END;
+    IF dish.has_prepared_ingredients %]
+    <tbody>
         [% FOREACH ingredient IN dish.ingredients;
-            NEXT IF prepare AND NOT ingredient.prepare %]
-    <tr class="[% 'prepare' IF ingredient.prepare AND NOT prepare %]">
-        <td class="right-align">[% USE NiceNumber; ingredient.value | $NiceNumber %]</td>
-        <td>[% ingredient.unit.long_name | html %]</td>
-        <td>[% ingredient.article.name | html ~%]
-        [%~ IF ingredient.article.comment.length;
-            ': ';
-            ingredient.article.comment | html;
-        END %]</td>
-        <td>[% ingredient.comment | html %]</td>
-    </tr>
+            NEXT IF NOT ingredient.prepare;
+            has_prep = "t";
+            PROCESS table_row;
+        END %]
+    </tbody>
+    [% END;
+    IF NOT prepare;
+        IF has_prep == "t" %]
+    <tbody>
+        <tr>
+            <td colspan="3" class="pt-4"><b>Other ingredients:</b></td>
+        </tr>
+    </tbody>
         [% END %]
+    <tbody>
+        [% FOREACH ingredient IN dish.ingredients;
+            NEXT IF ingredient.prepare;
+            PROCESS table_row;
+        END %]
+    </tbody>
+    [% END %]
 </table>
+[% END;
+END;
+
+BLOCK table_row %]
+<tr>
+    <td class="article">
+        [% USE NiceNumber; ingredient.value | $NiceNumber %]&nbsp;[% ingredient.unit.long_name | html %]
+    </td>
+    <td>
+        [% ingredient.article.name | html;
+        IF ingredient.article.comment.length %]
+        <span class="comment">&nbsp;([% ingredient.article.comment | html %])</span>
+        [% END;
+        IF ingredient.comment.length %]
+        <br><span class="comment">[% ingredient.comment | html %]</span>
+        [% END %]
+</tr>
 [% END %]
-
-<style>
-.ingredients {
-    float: left;
-    margin-right:  1em;
-    margin-bottom: 1em;
-}
-
-div.dish + *,
-table {
-    clear: left;
-}
-
-tr.prepare th,
-tr.prepare td {
-    background-color: LightGrey;
-}
-</style>
