@@ -111,10 +111,16 @@ sub can_be_quantity_default {
     return 1;
 }
 
+=head2 is_quantity_default()
+
+Always returns a single scalar with a boolean value.
+
+=cut
+
 sub is_quantity_default {
     my $self = shift;
 
-    my $default_unit_id = $self->quantity->default_unit_id // return;
+    my $default_unit_id = $self->quantity->default_unit_id // return '';
 
     return ( $self->id == $default_unit_id );
 }
