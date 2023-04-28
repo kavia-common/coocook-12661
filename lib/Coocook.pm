@@ -94,6 +94,10 @@ __PACKAGE__->config(
     # TODO move to local config of Coocook.org once 3rd party instances exist
     help_links => [
         {
+            title => "Matrix chat",
+            url   => 'https://matrix.to/#/#Coocook:matrix.org',
+        },
+        {
             title => "Mailing list",
             url   => 'https://lists.coocook.org/',
         },
