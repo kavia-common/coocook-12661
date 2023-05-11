@@ -45,7 +45,7 @@ sub check_schema {
     my $live_schema = $self->_schema;
 
     $live_schema->storage->sqlt_type eq 'SQLite'
-      or die "Only implemented for SQLite!";
+      or return;    # only implemented for SQLite
 
     my $code_schema = Coocook::Schema->connect('dbi:SQLite::memory:');
     $code_schema->deploy();
