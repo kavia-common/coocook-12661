@@ -42,13 +42,16 @@ sub day {
     my $schema = $project->result_source->schema;
 
     {
-        my $dishes = $schema->resultset('Dish')->search(
+        my $dishes = $schema->resultset('Dish');
+
+        $dishes = $dishes->search(
             [    # OR
                 meal_id            => { -in => [ keys %meals ] },
                 prepare_at_meal_id => { -in => [ keys %meals ] },
             ],
             {
                 prefetch => 'prepare_at_meal',
+                order_by => $dishes->me('position'),
             }
         );
 
@@ -91,13 +94,18 @@ sub day {
     }
 
     {
-        my $ingredients = $schema->resultset('DishIngredient')->search(
+        my $ingredients = $schema->resultset('DishIngredient');
+
+        $ingredients = $ingredients->search(
             {
                 dish_id => { -in => [ keys %dishes ] },
             },
             {
-                order_by => 'position',
                 prefetch => [ 'article', 'unit' ],
+                order_by => [
+                    $ingredients->me('prepare'),    #perltidy
+                    $ingredients->me('position'),
+                ],
             }
         );
 
@@ -147,6 +155,7 @@ sub project {
     }
 
     my $dishes = $meals->search_related('dishes')->hri;
+    $dishes = $dishes->search( undef, { order_by => $dishes->me('position') } );
 
     for my $dish ( $dishes->all ) {
         $dish->{meal} = $meals{ $dish->{meal_id} };
@@ -167,6 +176,8 @@ sub project_for_meals_dishes_editor {
 
     my %days;
 
+    # TODO is this order_by correct?
+    # probably not but I think sorting is done in the JS component anyway
     my $meals = $project->meals->search( undef, { order_by => $project->meals->me('name') } );
 
     while ( my $meal = $meals->next ) {
