@@ -9,12 +9,6 @@ use MooseX::NonMoose;
 
 extends 'Catalyst::View::TT';
 
-sub json_script_filter {
-    my $json = shift;
-    $json =~ s/<\/script>/<\\\\2F script>/g;
-    return $json;
-}
-
 __PACKAGE__->meta->make_immutable;
 
 __PACKAGE__->config(
@@ -23,9 +17,6 @@ __PACKAGE__->config(
     PRE_PROCESS        => 'macros.tt',
     TEMPLATE_EXTENSION => '.tt',
     WRAPPER            => 'wrapper.tt',
-    FILTERS            => {
-        json_script => \&json_script_filter,
-    },
 
     expose_methods => ['escape_title'],
     render_die     => 1,
