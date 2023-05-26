@@ -83,6 +83,23 @@ sub BUILD {
         }
     }
 
+    # sort ingredients per item
+    for my $item ( values %items ) {
+        my $ingredients = $item->{ingredients};
+
+        @$ingredients = sort {
+            $a->{dish_id} == $b->{dish_id}
+              ? (
+                $b->{prepare} <=> $a->{prepare}          # prepared first
+                  or $a->{position} <=> $b->{position}
+              )
+              : $a->{dish}{meal_id} == $b->{dish}{meal_id}    #perltidy
+              ? $a->{dish}{position} <=> $b->{dish}{position}
+              : (    $a->{dish}{meal}{date} <=> $b->{dish}{meal}{date}
+                  or $a->{dish}{meal}{position} <=> $b->{dish}{meal}{position} )
+        } @$ingredients;
+    }
+
     {    # add convertible_into units to each item
         my $articles_units = $list->articles->search_related(
             'articles_units',
