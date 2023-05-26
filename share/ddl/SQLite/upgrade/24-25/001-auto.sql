@@ -44,7 +44,6 @@ INSERT INTO dishes
         meal_id,
         ROW_NUMBER () OVER (
             PARTITION BY meal_id
-            ORDER BY name ASC
         ) position,
         from_recipe_id,
         name,

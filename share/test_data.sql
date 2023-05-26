@@ -51,9 +51,9 @@ INSERT INTO "articles"
 INSERT INTO "meals"
 (id, project_id, position,         date,         name,                comment) VALUES
 ( 1,          1, 1,        '2000-01-01',  'breakfast','Best meal of the day!'),
-( 2,          1, 2,        '2000-01-02',      'lunch',                     ''),
-( 3,          1, 3,        '2000-01-03',     'dinner',                     ''),
-( 9,          2, 4,        '2000-01-01', 'other meal',                     '');
+( 2,          1, 1,        '2000-01-02',      'lunch',                     ''),
+( 3,          1, 1,        '2000-01-03',     'dinner',                     ''),
+( 9,          2, 1,        '2000-01-01', 'other meal',                     '');
 
 INSERT INTO "quantities"
 (id, project_id,       name, default_unit_id) VALUES

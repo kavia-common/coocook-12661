@@ -21,9 +21,9 @@ sub day {
             {
                 date => $dt->ymd,
             },
-            {    # TODO allow manual ordering
+            {
                 columns  => [ 'id', 'name', 'comment' ],
-                order_by => 'id',
+                order_by => 'position',
             }
         );
 
@@ -129,7 +129,7 @@ sub project {
     my %meals;
 
     my $meals = $project->meals;
-    $meals = $meals->search( undef, { order_by => $meals->me('name') } );
+    $meals = $meals->search( undef, { order_by => $meals->me('position') } );
 
     while ( my $meal = $meals->next ) {
         my $day = $days{ $meal->date } ||= {
