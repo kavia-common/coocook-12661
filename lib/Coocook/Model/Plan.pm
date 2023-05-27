@@ -176,9 +176,7 @@ sub project_for_meals_dishes_editor {
 
     my %days;
 
-    # TODO is this order_by correct?
-    # probably not but I think sorting is done in the JS component anyway
-    my $meals = $project->meals->search( undef, { order_by => $project->meals->me('name') } );
+    my $meals = $project->meals;
 
     while ( my $meal = $meals->next ) {
         my $day = $days{ $meal->date->ymd } ||= {};
