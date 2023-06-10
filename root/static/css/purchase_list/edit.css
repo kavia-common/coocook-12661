@@ -2,6 +2,10 @@
     min-width: 1150px;
 }
 
+.no-break-inside {
+    break-inside: avoid;
+}
+
 @media print {
     .shop-section {
         color: #000 !important;
