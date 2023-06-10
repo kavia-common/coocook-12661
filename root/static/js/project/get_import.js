@@ -1,4 +1,5 @@
 // properties comes from root/templates/project/import.tt
+properties = properties || [];
 
 const properties = getJsonData("properties-data");
 
@@ -11,14 +12,19 @@ for (let property of properties) {
             document.getElementById("property_" + key)
         );
 
-        let prop = document.getElementById('property_' + property.key);
+        let prop = document.getElementById("property_" + property.key);
 
-        prop.addEventListener( 'change', function() {
-            if( this.checked ) {
-                depends_on.forEach(function(dep) { dep.checked = true; dep.dispatchEvent(new Event('change')) });
-            }
-            else {
-                dependency_of.forEach(function(dep) { dep.checked = false; dep.dispatchEvent(new Event('change')) });
+        prop?.addEventListener("change", function () {
+            if (this.checked) {
+                depends_on.forEach((dep) => {
+                    dep.checked = true;
+                    dep.dispatchEvent(new Event("change"));
+                });
+            } else {
+                dependency_of.forEach((dep) => {
+                    dep.checked = false;
+                    dep.dispatchEvent(new Event("change"));
+                });
             }
         });
     }
