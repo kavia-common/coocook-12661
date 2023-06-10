@@ -88,15 +88,17 @@ sub BUILD {
         my $ingredients = $item->{ingredients};
 
         @$ingredients = sort {
-            $a->{dish_id} == $b->{dish_id}
-              ? (
-                $b->{prepare} <=> $a->{prepare}          # prepared first
-                  or $a->{position} <=> $b->{position}
-              )
-              : $a->{dish}{meal_id} == $b->{dish}{meal_id}    #perltidy
-              ? $a->{dish}{position} <=> $b->{dish}{position}
-              : (    $a->{dish}{meal}{date} <=> $b->{dish}{meal}{date}
-                  or $a->{dish}{meal}{position} <=> $b->{dish}{meal}{position} )
+            if ( $a->{dish_id} == $b->{dish_id} ) {    # items of same dish
+                $b->{prepare} <=> $a->{prepare}            # 1. prepared first
+                  or $a->{position} <=> $b->{position};    # 2. position inside list
+            }
+            elsif ( $a->{dish}{meal_id} == $b->{dish}{meal_id} ) {    # items of same meal
+                $a->{dish}{position} <=> $b->{dish}{position};
+            }
+            else {                                                    # unrelated items
+                $a->{dish}{meal}{date} <=> $b->{dish}{meal}{date}
+                  or $a->{dish}{meal}{position} <=> $b->{dish}{meal}{position};
+            }
         } @$ingredients;
     }
 
