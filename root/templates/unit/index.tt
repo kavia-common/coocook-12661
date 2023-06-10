@@ -3,9 +3,9 @@
 USE NiceNumber %]
 
 <table class="table">
-    <tr>
+    <tr class="sticky-top bg-white" style="z-index:1011;">
         <th>Unit</th>
-        <th colspan="2">Conversions</th>
+        <th>Conversions</th>
         <th>Actions</th>
     </tr>
     [% FOR unit IN units;
@@ -14,8 +14,10 @@ USE NiceNumber %]
         FOR conversion IN conversions;
             IF loop.first %]
             <tr>
-                <td rowspan="[% unit.conversions.size %]" style="vertical-align: middle;">
-                    <a href="[% unit.url %]">[% unit.short_name | html %] ([% unit.long_name | html %])</a>
+                <td rowspan="[% unit.conversions.size %]">
+                    <div class="sticky-top sticky-stacked bg-white" style="z-index:1010;">
+                        <a href="[% unit.url %]">[% unit.short_name | html %] ([% unit.long_name | html %])</a>
+                    </div>
                 </td>
             [% END;
 
@@ -24,8 +26,7 @@ USE NiceNumber %]
                     [% display_value_unit(1, unit, {html=>1}) %]
                     =
                     [% display_value_unit(conversion.factor, conversion.unit, {html=>1}) %]
-                </td>
-                <td style="vertical-align: middle;">
+                    <span> | </span>
                     [% display_value_unit(1, conversion.unit, {html=>1}) %]
                     =
                     [% display_value_unit(1 / conversion.factor, unit, {html=>1}) %]
@@ -51,7 +52,7 @@ USE NiceNumber %]
     END %]
 </table>
 
-<div class="card">
+<div class="card mt-5">
     <div class="card-header">
         <h3 class="m-0">Add Unit</h3>
     </div>
