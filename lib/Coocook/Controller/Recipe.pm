@@ -94,6 +94,13 @@ sub edit : GET HEAD Chained('base') PathPart('') Args(0) RequiresCapability('vie
     }
 
     $c->stash(
+        recipe_json => to_json(
+            {
+                project_id   => $c->project->id,
+                project_name => $c->project->url_name,
+                recipe_id    => $recipe->id,
+            }
+        ),
         recipe             => $recipe,
         ingredients        => $ingredients->as_arrayref,
         articles           => $ingredients->all_articles,
