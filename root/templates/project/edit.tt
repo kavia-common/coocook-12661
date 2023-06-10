@@ -2,4 +2,4 @@
 
 <script id="meals-dishes-editor-data" type="application/json">[% meals_dishes_editor_json | html %]</script>
 
-<div id="meals-dishes-editor"></div>
+<div class="meals-dishes-editor" data-meals-dishes-editor-json-id="meals-dishes-editor-data"></div>
