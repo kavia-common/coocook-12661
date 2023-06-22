@@ -103,9 +103,9 @@ subtest import => sub {
             owner_id    => 1,
         }
     );
-    my $id = $project->id;
+    my $base_url = "/project/" . $project->id . "/" . $project->url_name;
 
-    $t->get_ok("/project/$id/Statistics-Project/import");
+    $t->get_ok("$base_url/import");
     $t->content_lacks('disabled');
 
     $t->get_ok('/project/1/Test-Project/import');
@@ -113,7 +113,7 @@ subtest import => sub {
 
     # former bug: properties are stored in a package variable and were
     # modified through a reference given by Model::ProjectImporter
-    $t->get_ok("/project/$id/Statistics-Project/import");
+    $t->get_ok("$base_url/import");
     $t->content_lacks('disabled');
 
     $t->logout_ok();
@@ -128,7 +128,7 @@ my $project = $t->schema->resultset('Project')->create(
     }
 );
 
-my $id = $project->id;
+my $base_url = "/project/" . $project->id . "/" . $project->url_name;
 
 message_contains('archived');
 $t->content_lacks('unarchive this project');
@@ -193,19 +193,19 @@ $list->update( { date => $list->format_date( DateTime->today->add( years => 1 ) 
 message_contains('print');
 
 sub message_contains {
-    $t->get_ok("/project/$id/Statistics-Project");
+    $t->get_ok($base_url);
     $t->text_contains(@_)
       or note $t->text;
 }
 
 sub message_lacks {
-    $t->get_ok("/project/$id/Statistics-Project");
+    $t->get_ok($base_url);
     $t->text_lacks(@_)
       or note $t->text;
 }
 
 sub message_like {
-    $t->get_ok("/project/$id/Statistics-Project");
+    $t->get_ok($base_url);
     $t->text_like(@_)
       or note $t->text;
 }
