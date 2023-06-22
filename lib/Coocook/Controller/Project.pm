@@ -91,14 +91,21 @@ sub base : Chained('/base') PathPart('project') CaptureArgs(2) {
             print            => $c->project_uri('/print/index'),
             shop_sections    => $c->project_uri('/shop_section/index'),
             units            => $c->project_uri('/unit/index'),
-            import           => $c->project_uri('/project/get_import'),
             archive          => $c->project_uri('/project/archive'),
             unarchive        => $c->project_uri('/project/unarchive'),
         },
     );
 
     if ( $c->request->method eq "GET" or $c->request->method eq "HEAD" ) {
-        $c->stash( inventory => $c->project->inventory );
+        my $importer  = $c->model('ProjectImporter');
+        my $inventory = $c->project->inventory;
+
+        $c->stash( inventory => $inventory );
+
+        $c->stash->{project_urls}{import} =
+            $importer->importable_properties($inventory) > 0
+          ? $c->project_uri('/project/get_import')
+          : undef;
     }
 }
 
