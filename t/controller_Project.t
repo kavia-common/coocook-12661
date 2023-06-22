@@ -5,7 +5,7 @@ use DateTime;
 use lib 't/lib';
 use Test::Coocook;
 
-plan(38);
+plan(41);
 
 my $t = Test::Coocook->new();
 
@@ -106,15 +106,18 @@ subtest import => sub {
     my $base_url = "/project/" . $project->id . "/" . $project->url_name;
 
     $t->get_ok("$base_url/import");
-    $t->content_lacks('disabled');
+    $t->content_lacks(
+        'data-bs-title="Nothing can be imported because there already is data in all categories"');
 
     $t->get_ok('/project/1/Test-Project/import');
-    $t->content_contains('disabled');
+    $t->content_contains(
+        'data-bs-title="Nothing can be imported because there already is data in all categories"');
 
     # former bug: properties are stored in a package variable and were
     # modified through a reference given by Model::ProjectImporter
     $t->get_ok("$base_url/import");
-    $t->content_lacks('disabled');
+    $t->content_lacks(
+        'data-bs-title="Nothing can be imported because there already is data in all categories"');
 
     $t->logout_ok();
 };
@@ -191,6 +194,13 @@ message_contains('stale');
 
 $list->update( { date => $list->format_date( DateTime->today->add( years => 1 ) ) } );
 message_contains('print');
+
+$t->content_lacks( my $html =
+      q(data-bs-title="Nothing can be imported because there already is data in all categories") );
+
+$project->create_related( shop_sections => { name => "Meat" } );
+$t->reload_ok();
+$t->content_contains($html);
 
 sub message_contains {
     $t->get_ok($base_url);
