@@ -80,9 +80,9 @@ There are a few additional dependencies for *development* as well *recommended* 
 
     $ cpanm --installdeps --with-develop --with-recommends --with-suggests .
 
-Install database schema into configured database (see above) and start development server in debug mode:
+Install the database schema into a connection from your `dbic.yaml` (see above) and start development server in debug mode:
 
-    $ script/coocook_deploy.pl install
+    $ script/coocook_deploy.pl --connection_name 'development' install
     $ script/coocook_server.pl --debug
     ...
     HTTP::Server::PSGI: Accepting connections at http://0:3000/
