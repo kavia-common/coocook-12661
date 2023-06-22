@@ -27,7 +27,7 @@
             <p id="jsWarning">Properties depend on each other. Enable JavaScript to resolve dependencies automatically.</p>
             [% FOR property IN properties %]
             <div class="form-check">
-                <input class="form-check-input" type="checkbox" value="" id="property_[% property.key %]" name="property_[% property.key %]" [% 'disabled' IF property.disabled %]>
+                <input class="form-check-input" id="property_[% property.key %]" name="property_[% property.key %]" type="checkbox" [% 'disabled' IF property.disabled %]>
                 <label class="form-check-label" for="property_[% property.key %]">[% property.name | html %]</label>
             </div>
             [% END %]

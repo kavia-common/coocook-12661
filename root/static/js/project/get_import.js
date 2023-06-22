@@ -1,5 +1,4 @@
 // properties comes from root/templates/project/import.tt
-properties = properties || [];
 
 const properties = getJsonData("properties-data");
 
