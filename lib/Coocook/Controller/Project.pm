@@ -282,7 +282,7 @@ sub get_import : GET HEAD Chained('base') PathPart('import') Args(0) Does('~HasC
     my $properties = $importer->properties;
     my %properties = map { $_->{key} => $_ } @$properties;
 
-    for my $property ( $importer->unimportable_properties( $c->project ) ) {
+    for my $property ( $importer->unimportable_properties($inventory) ) {
         $properties{ $property->{key} }->{disabled} = 1;
     }
 
