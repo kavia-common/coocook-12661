@@ -22,6 +22,30 @@ END %]
 <p>Here are your already added conversions listed.</p>
 
 <div class="container">
+    <form action="[% add_conversion_url %]" method="post">
+        <div class="row border-top border-bottom p-3 bg-light">
+            <div class="d-flex justify-content-between">
+                <div class="d-flex gap-2 align-items-center" style="width: fit-content;">
+                    <input type="number" name="value1" value="1" step="any" class="form-control form-control-sm" style="width: 150px;">
+                    <i>[% unit.long_name | html %]</i>
+                    <span class="text-nowrap">is equal to</span>
+                    <input type="number" name="value2" value="1" step="any" class="form-control form-control-sm" style="width: 150px;">
+                    <select class="form-select form-select-sm" style="width: 200px;" name="unit2" required>
+                        <option value="">Select unit</option>
+                        [% FOR group IN grouped_units %]
+                            [% FOR u IN group %]
+                                <option value="[% u.id %]">[% u.long_name | html %]</option>
+                            [% END %]
+                        [% END %]
+                    </select>
+                </div>
+                <div class="d-flex align-items-center" style="width: fit-content;">
+                    <input type="submit" value="Add" class="btn btn-primary btn-sm">
+                </div>
+            </div>
+        </div>
+    </form>
+
 [% FOR conversion IN conversions %]
     <div class="row border-top d-flex justify-content-between p-3">
         <div class="d-flex gap-2 align-items-center" style="width: fit-content;">
@@ -55,30 +79,6 @@ END %]
         </div>
     </div>
 [% END %]
-
-    <form action="[% add_conversion_url %]" method="post">
-        <div class="row border-top border-bottom p-3 bg-light">
-            <div class="d-flex justify-content-between">
-                <div class="d-flex gap-2 align-items-center" style="width: fit-content;">
-                    <input type="number" name="value1" value="1" step="any" class="form-control form-control-sm" style="width: 150px;">
-                    <i>[% unit.long_name | html %]</i>
-                    <span class="text-nowrap">is equal to</span>
-                    <input type="number" name="value2" value="1" step="any" class="form-control form-control-sm" style="width: 150px;">
-                    <select class="form-select form-select-sm" style="width: 200px;" name="unit2" required>
-                        <option value="">Select unit</option>
-                        [% FOR group IN grouped_units %]
-                            [% FOR u IN group %]
-                                <option value="[% u.id %]">[% u.long_name | html %]</option>
-                            [% END %]
-                        [% END %]
-                    </select>
-                </div>
-                <div class="d-flex align-items-center" style="width: fit-content;">
-                    <input type="submit" value="Add" class="btn btn-primary btn-sm">
-                </div>
-            </div>
-        </div>
-    </form>
 </div>
 
 [% IF articles.exists %]
