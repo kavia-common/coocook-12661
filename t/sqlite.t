@@ -18,7 +18,7 @@ use TestDB qw(install_ok upgrade_ok);
 # older than version 13.
 my %SCHEMA_VERSIONS_WITH_DIFFERENCES = map { $_ => 1 } ( 3 .. 5, 7 .. 12 );
 
-plan tests => 1 + 3 * ( $Coocook::Schema::VERSION - 1 ) + 2;
+plan tests => 1 + 3 * ( $Coocook::Schema::VERSION - 1 ) + 3;
 
 my $schema_from_code = TestDB->new();
 my $schema_from_deploy;
@@ -58,6 +58,37 @@ schema_eq(
     $schema_from_upgrades => $schema_from_code,
     "schema from upgrade SQLs and schema from Coocook::Schema code are equal"
 );
+
+subtest "issue #266 order of meals/dishes" => sub {
+    my $schema = TestDB->new( deploy => 0 );
+    install_ok( $schema, 24 );
+    my $user = $schema->resultset('User')
+      ->create( { name => '', password_hash => '', display_name => '', email_fc => '' } );
+    my $project = $user->create_related( owned_projects => { name => '', description => '' } );
+    $schema->storage->dbh_do(
+        sub {
+            my ( undef, $dbh ) = @_;
+
+            $dbh->do(<<~SQL) for qw( b c a );    # irregular order
+            INSERT INTO meals (project_id,date,name,comment) VALUES (1,'2000-01-01', '$_','')
+            SQL
+
+            $dbh->do(<<~SQL) for qw( b c a );    # irregular order
+            INSERT INTO dishes (meal_id,servings,preparation,description,name,comment) VALUES (1,42,'','', '$_','')
+            SQL
+        }
+    );
+    upgrade_ok( $schema, 25 );
+    is [
+        $schema->resultset('Meal')->search( undef, { order_by => 'position' } )->get_column('name')->all ]
+      => [qw( a b c )],
+      "alphabetical order of meals";
+
+    is [
+        $schema->resultset('Dish')->search( undef, { order_by => 'position' } )->get_column('name')->all ]
+      => [qw( b c a )],
+      "dishes in order of insertion into database";
+};
 
 sub schema_eq {
     my ( $schema1, $schema2, $test_name ) = @_;
