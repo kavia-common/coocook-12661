@@ -1,5 +1,8 @@
 [% title = "Import" %]
 
+[% no_import = 1; FOR p IN properties; IF !p.disabled; no_import = 0; END; END; IF no_import; %]
+<p>Nothing can be imported to this project, because you already created your own stuff in all possible categories.</p>
+[% ELSE %]
 <form method="post" action="[% import_url %]" class="import">
     <div class="card">
         <div class="card-header"><h3>Source Project</h3></div>
@@ -33,7 +36,6 @@
 
     <p><input type="submit" value="Import"></p>
 </form>
+[% END %]
 
-<script>
-var properties = [% properties_json %];
-</script>
+<script  id="properties-data" type="application/json">[% no_import ? '[]' : properties_json | html %]</script>

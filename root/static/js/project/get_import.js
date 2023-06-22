@@ -1,9 +1,15 @@
 // properties comes from root/templates/project/import.tt
 
-for ( var property of properties ) {
-    if( property.depends_on.length || property.dependency_of.length ) {
-        let depends_on    = property.depends_on   .map(function(key) { return document.getElementById('property_' + key) });
-        let dependency_of = property.dependency_of.map(function(key) { return document.getElementById('property_' + key) });
+const properties = getJsonData("properties-data");
+
+for (let property of properties) {
+    if (property.depends_on.length || property.dependency_of.length) {
+        let depends_on = property.depends_on.map((key) =>
+            document.getElementById("property_" + key)
+        );
+        let dependency_of = property.dependency_of.map((key) =>
+            document.getElementById("property_" + key)
+        );
 
         let prop = document.getElementById('property_' + property.key);
 
@@ -19,4 +25,4 @@ for ( var property of properties ) {
 }
 
 // JavaScript worked until here -> remove warning
-document.getElementById('jsWarning').remove();
+document.getElementById("jsWarning")?.remove();
