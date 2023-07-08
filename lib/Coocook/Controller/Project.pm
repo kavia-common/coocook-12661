@@ -168,7 +168,8 @@ sub edit : GET HEAD Chained('submenu') PathPart('edit') Args(0) RequiresCapabili
         meal_create_url      => $c->project_uri('/meal/create'),
     );
 
-    push @{ $c->stash->{js} },  '/lib/web-js-components/meals-dishes-editor/meals-dishes-editor.es.js';
+    push @{ $c->stash->{js} },
+      '/lib/coocook-web-components/dist/meals-dishes-editor/meals-dishes-editor.es.js';
     push @{ $c->stash->{css} }, '/css/project/edit.css';
 }
 

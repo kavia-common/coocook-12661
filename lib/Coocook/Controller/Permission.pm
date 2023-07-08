@@ -86,7 +86,7 @@ sub index : GET HEAD Chained('/project/submenu') PathPart('permissions') Args(0)
         template    => 'project/permissions.tt',
     );
 
-    push @{ $c->stash->{js} }, '/lib/web-js-components/autocomplete/autocomplete.es.js';
+    push @{ $c->stash->{js} }, '/lib/coocook-web-components/dist/autocomplete/autocomplete.es.js';
 
 }
 
