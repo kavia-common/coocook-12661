@@ -23,3 +23,9 @@
     </li>
 [% END %]
 </table>
+
+<div class="mt-2 alert alert-light border p-2 ">
+    <p class="m-0 text-center">
+       <i class="material-icons">info</i> A <b>recipe</b> is a set of instructions how to prepare and cook a certain <b>dish</b>, including a list of ingredients (<b>articles</b>).
+    </p>
+</div>

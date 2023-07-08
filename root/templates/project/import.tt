@@ -48,3 +48,23 @@ IF no_import; %]
 [% END %]
 
 <script  id="properties-data" type="application/json">[% no_import ? '[]' : properties_json | html %]</script>
+
+<div class="mt-2 alert alert-light border p-2">
+    <p class="m-0 text-center">
+        <span class="d-inline-block mb-2">
+            <i class="material-icons">info</i> A <b>unit</b> is a measurement quantity for an amount of an <b>article</b>. Units can be converted into other units by specifying a
+            conversion factor between these.
+        </span>
+        <span class="d-inline-block mb-2"><b>Shop sections</b> can be used on purchase lists to group similar articles.</span>
+        <span class="d-inline-block mb-2">
+            An <b>article</b> is an actual item with a defined <b>unit</b>, which can be bought in a supermarket/store. It can be used as ingredient in <b>recipes</b>
+            and <b>dishes</b>. An article may also contain information about shelf life and availability.
+        </span>
+        <span class="d-inline-block mb-2">A <b>recipe</b> is a set of instructions how to prepare and cook a certain <b>dish</b>, including a list of ingredients (<b>articles</b>).</span>
+        <span class="d-inline-block mb-2"><b>Shop sections</b> can be used on purchase lists to group similar articles.</span>
+        <span class="d-inline-block mb-2">
+            A <b>tag</b> is a keyword which can be attached to <b>recipes</b>, <b>dishes</b> and <b>articles</b> to filter them when your search a specific item out of these categories.
+            A <b>tag group</b> can be used to organize similar <b>tags</b> together.
+        </span>
+    </p>
+</div>

@@ -7,3 +7,10 @@ js.push('/lib/coocook-web-components/dist/meals-dishes-editor/meals-dishes-edito
 <script id="meals-dishes-editor-data" type="application/json">[% meals_dishes_editor_json | html %]</script>
 
 <div class="meals-dishes-editor" data-meals-dishes-editor-json-id="meals-dishes-editor-data"></div>
+
+<div class="mt-2 alert alert-light border p-2">
+    <p class="m-0 text-center">
+       <i class="material-icons">info</i> A <b>meal</b> is an occasion when food is eaten (e.g. breakfast, lunch, dinner). It consists of one or more <b>dishes</b>.
+        A <b>dish</b> is part of a <b>meal</b>, is derived from a <b>recipe</b> and may contain deviations from the recipe.
+    </p>
+</div>

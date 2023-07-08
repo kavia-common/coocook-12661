@@ -63,6 +63,13 @@ js_push_template_path() %]
     </div>
 </form>
 
+<div class="mt-2 alert alert-light border p-2">
+    <p class="m-0 text-center">
+        <i class="material-icons">info</i> To plan when you need to buy which <b>article</b> for which <b>meal/dish</b> and where, you can use <b>purchase lists</b>.
+        Inside a <b>purchase list</b> the articles can be grouped into <b>shop sections</b> like vegetables, meat or dairy products.
+    </p>
+</div>
+
 <form method="post" action="[% create_url %]">
     <div class="modal fade" id="addList" tabindex="-1" aria-labelledby="addListLabel" aria-hidden="true">
         <div class="modal-dialog">

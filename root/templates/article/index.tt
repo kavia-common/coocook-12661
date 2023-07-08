@@ -40,3 +40,10 @@
 </table>
 
 [% new %]
+
+<div class="mt-2 alert alert-light border p-2">
+    <p class="m-0 text-center">
+        <i class="material-icons">info</i> An <b>article</b> is an actual item with a defined <b>unit</b>, which can be bought in a supermarket/store. It can be used as ingredient in <b>recipes</b>
+        and <b>dishes</b>. An article may also contain information about shelf life and availability.
+    </p>
+</div>
