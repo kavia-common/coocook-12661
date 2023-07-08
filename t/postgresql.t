@@ -8,6 +8,7 @@ use Coocook::Schema;
 use Data::Dumper;
 use DBI;
 use DBIx::Diff::Schema qw(diff_db_schema);
+use Test::Builder;
 
 use lib 't/lib';
 use TestDB qw(install_ok upgrade_ok);
@@ -127,57 +128,63 @@ $schema_from_deploy->storage->dbh_do( sub { $_[1]->do('ALTER SCHEMA public RENAM
 
 my $sqlite_schema = TestDB->new();
 
-schema_diff_like(
-    $schema_from_deploy,
-    $sqlite_schema,
-    hash {
-        field deleted_tables => [
-            'main.dbix_class_deploymenthandler_versions',    # not created by DBIC
-        ];
-        field modified_tables => hash {
-            my $lc2uc_id = { id => { old_type => 'integer', new_type => 'INTEGER' } };
+SKIP: {
+    # https://metacpan.org/release/ISHIGAKI/DBD-SQLite-1.72/source/Changes#L14
+    $DBD::SQLite::VERSION < 1.71
+      or skip "DBD::SQLite broke compatibility with 1.71_05";
 
-            # SQLite PKs are deployed with uppercase 'id INTEGER PRIMARY KEY'
-            field 'main.' . $_ => { modified_columns => $lc2uc_id } for qw<
-              articles
-              blacklist_emails
-              blacklist_usernames
-              organizations
-              projects
-              purchase_lists
-              recipes_of_the_day
-              recipes
-              shop_sections
-              tag_groups
-              tags
-              terms
-              units
-              unit_conversions
-              users
-            >;
+    schema_diff_like(
+        $schema_from_deploy,
+        $sqlite_schema,
+        hash {
+            field deleted_tables => [
+                'main.dbix_class_deploymenthandler_versions',    # not created by DBIC
+            ];
+            field modified_tables => hash {
+                my $lc2uc_id = { id => { old_type => 'integer', new_type => 'INTEGER' } };
 
-            # https://github.com/perlancar/perl-DBIx-Diff-Schema/issues/1
-            field 'main.items' => {
-                added_columns    => ['offset'],
-                deleted_columns  => ['"offset"'],
-                modified_columns => $lc2uc_id,
+                # SQLite PKs are deployed with uppercase 'id INTEGER PRIMARY KEY'
+                field 'main.' . $_ => { modified_columns => $lc2uc_id } for qw<
+                  articles
+                  blacklist_emails
+                  blacklist_usernames
+                  organizations
+                  projects
+                  purchase_lists
+                  recipes_of_the_day
+                  recipes
+                  shop_sections
+                  tag_groups
+                  tags
+                  terms
+                  units
+                  unit_conversions
+                  users
+                >;
+
+                # https://github.com/perlancar/perl-DBIx-Diff-Schema/issues/1
+                field 'main.items' => {
+                    added_columns    => ['offset'],
+                    deleted_columns  => ['"offset"'],
+                    modified_columns => $lc2uc_id,
+                };
+                field 'main.'
+                  . $_ => {
+                    added_columns    => ['position'],
+                    deleted_columns  => ['"position"'],
+                    modified_columns => $lc2uc_id,
+                  }
+                  for qw<
+                  dish_ingredients
+                  faqs
+                  recipe_ingredients
+                  meals
+                  dishes
+                  >;
             };
-            field 'main.'
-              . $_ => {
-                added_columns    => ['position'],
-                deleted_columns  => ['"position"'],
-                modified_columns => $lc2uc_id,
-              }
-              for qw<
-              dish_ingredients
-              faqs
-              recipe_ingredients
-              meals
-              dishes
-              >;
-        };
-    }
-);
+        }
+    );
+}
 
 # most important finding: CURRENT_TIMESTAMP is UTC in SQLite but local timezone in PostgreSQL
 subtest "timestamps are stored in UTC" => sub {
@@ -278,6 +285,8 @@ sub schema_diff_like {
 
     # TODO doesn't detect constraint changes, e.g. missing UNIQUEs
     my $diff = diff_db_schema( map { $_->storage->dbh } $schema1, $schema2 );
+
+    local $Test::Builder::Level = $Test::Builder::Level + 1;
 
     is $diff => $expected_diff,
       $name // "database schemas equal"
