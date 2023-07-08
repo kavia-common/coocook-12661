@@ -134,12 +134,12 @@ sub properties_json {
     return $json ||= encode_json( \@public_properties );
 }
 
-=head2 importable_properties($project, \@properties?)
+=head2 importable_properties($inventory, \@properties?)
 
-=head2 unimportable_properties($project, \@properties?)
+=head2 unimportable_properties($inventory, \@properties?)
 
 Returns a list of property hashrefs of all properties that may [not] be imported
-into $project because it has no conflicting data.
+into the project based on its C<$inventory> hash because it has no conflicting data.
 
 Properties depending on properties that already have data are also not
 importable.
@@ -150,9 +150,7 @@ sub importable_properties   { shift->_importable_properties( 1,  @_ ) }
 sub unimportable_properties { shift->_importable_properties( '', @_ ) }
 
 sub _importable_properties {
-    my ( $self, $shall_be_importable, $project, $properties ) = @_;
-
-    my $inventory = $project->inventory;    # TODO use cached and/or provide for caching
+    my ( $self, $shall_be_importable, $inventory, $properties ) = @_;
 
     my %unimportable;
 
@@ -238,7 +236,8 @@ sub import_data {    # import() is used by 'use'
     $self->_validate_properties($properties);
 
     {
-        my @unimportable = map { $_->{key} } $self->unimportable_properties( $target, $properties );
+        my @unimportable =
+          map { $_->{key} } $self->unimportable_properties( $target->inventory, $properties );
 
         @unimportable == 0
           or croak "Cannot import properties because data already exists: " . join ",", @unimportable;

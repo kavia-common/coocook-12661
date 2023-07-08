@@ -1,8 +1,8 @@
 /******** start general settings ********/
 :root {
     --cc-primary: var(--bs-primary);
-    --cc-green-dark: #3A8E3D;
-    --cc-green-light: #6CBF6F;
+    --cc-green-dark: #3a8e3d;
+    --cc-green-light: #6cbf6f;
 }
 
 body {
@@ -18,7 +18,7 @@ textarea {
 }
 
 .btn-sm.btn-quad {
-    padding: .25rem;
+    padding: 0.25rem;
 }
 
 /*** 24px + .5rem per button, 1rem td padding, .5rem space ***/
@@ -34,7 +34,7 @@ textarea {
     width: calc(72px + 3.5rem);
 }
 
-.table colgroup+thead {
+.table colgroup + thead {
     border-top: none !important;
 }
 
@@ -73,7 +73,6 @@ i.material-icons-outlined {
     font-size: 36px;
 }
 
-
 /*===========================================================================
   markdown preview
   ===========================================================================*/
@@ -105,7 +104,6 @@ footer a:focus {
 
 /******** end general settings ********/
 
-
 /******** start header part ********/
 /*** general part ***/
 
@@ -124,7 +122,7 @@ header nav input[name="logout"]:hover,
 header nav input[name="logout"] {
     border: 0;
     font-family: inherit;
-    font-size:   inherit;
+    font-size: inherit;
     cursor: pointer;
 }
 
@@ -132,15 +130,24 @@ header nav input[name="logout"] {
  * stop Firefox adding 2px to the submit button's height
  * see https://stackoverflow.com/questions/12288175/firefox-adds-2px-padding-in-a-submit-button
  */
-header nav input[name="logout"]::-moz-focus-inner { border:0; padding:0 }
+header nav input[name="logout"]::-moz-focus-inner {
+    border: 0;
+    padding: 0;
+}
 
 header h1 {
     font-size: 2.5em;
 }
 
 /*** project nav ***/
-#project_nav .nav-link {
+#project_nav .nav-link:not(.disabled-import) {
     color: var(--bs-light);
+}
+
+.nav-link.disabled-import {
+    color: #6c757d;
+    user-select: none;
+    cursor: pointer;
 }
 
 #project_nav a:hover,
@@ -160,9 +167,9 @@ header h1 {
 .login-logout-btn {
     background-color: transparent;
     border: 0px;
-    -webkit-box-shadow: 0px 0px 0px rgba(255, 255, 255, 0.0) !important;
-    -moz-box-shadow: 0px 0px 0px rgba(255, 255, 255, 0.0) !important;
-    box-shadow: 0px 0px 0px rgba(255, 255, 255, 0.0) !important;
+    -webkit-box-shadow: 0px 0px 0px rgba(255, 255, 255, 0) !important;
+    -moz-box-shadow: 0px 0px 0px rgba(255, 255, 255, 0) !important;
+    box-shadow: 0px 0px 0px rgba(255, 255, 255, 0) !important;
 }
 
 .login-logout-btn:active,
@@ -173,32 +180,31 @@ header h1 {
 
 /******** end header part ********/
 
-
 /******** start content part ********/
 .btn-primary,
 .btn-primary:active,
 .btn-primary:hover,
 .btn-primary:focus {
-    color: var(--bs-light)
+    color: var(--bs-light);
 }
 
 .btn-outline-primary:active,
 .btn-outline-primary:hover,
 .btn-outline-primary:focus {
-    color: var(--bs-light)
+    color: var(--bs-light);
 }
 
 .btn-secondary,
 .btn-secondary:active,
 .btn-secondary:hover,
 .btn-secondary:focus {
-    color: var(--bs-light)
+    color: var(--bs-light);
 }
 
 .btn-outline-secondary:active,
 .btn-outline-secondary:hover,
 .btn-outline-secondary:focus {
-    color: var(--bs-light)
+    color: var(--bs-light);
 }
 
 .anchor {
@@ -254,7 +260,7 @@ table td input[type="checkbox"]:first-child:last-child {
 }
 
 table td.right-align {
-    text-align: right
+    text-align: right;
 }
 
 fieldset {
@@ -262,15 +268,15 @@ fieldset {
 }
 
 legend {
-    color: #4CAF50;
+    color: #4caf50;
     font-size: 1.5em;
 }
 
-fieldset>fieldset {
+fieldset > fieldset {
     margin: 1em 0 1em 0;
 }
 
-fieldset>fieldset>legend {
+fieldset > fieldset > legend {
     font-size: 1em;
 }
 
@@ -289,11 +295,13 @@ ul {
                        * see https://stackoverflow.com/a/710264/498634 */
 }
 
-a.dark-link, button.dark-link {
+a.dark-link,
+button.dark-link {
     color: var(--bs-light) !important;
 }
 
-a.dark-link:hover, button.dark-link:hover {
+a.dark-link:hover,
+button.dark-link:hover {
     color: var(--bs-primary) !important;
 }
 
@@ -310,7 +318,7 @@ a.dark-link:hover, button.dark-link:hover {
     height: 56px;
     padding: 1rem;
     border-radius: 1rem;
-    overflow: hidden; 
+    overflow: hidden;
     text-decoration: none;
 }
 
@@ -321,7 +329,7 @@ a.dark-link:hover, button.dark-link:hover {
 .btn:focus,
 .btn-close:focus,
 select:focus,
-input:focus, 
+input:focus,
 textarea:focus {
     box-shadow: none !important;
 }
