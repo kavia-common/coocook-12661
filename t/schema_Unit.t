@@ -3,7 +3,7 @@ use Test2::V0;
 use lib 't/lib';
 use TestDB;
 
-plan(7);
+plan(4);
 
 subtest "ResultSet::Unit->in_use()" => sub {
     my $db = TestDB->new;
@@ -31,9 +31,8 @@ my $db = TestDB->new;
 
 my $kg = $db->resultset('Unit')->find( { short_name => 'kg' } );
 
-is $kg->convertible_into->count => $_, "is convertible into $_ units" for 2;
-
-ok $kg->is_quantity_default, "unit is quantity default";
+is join( ',', sort map { $_->short_name } $kg->convertible_into ) => 'g,t',
+  "is convertible_into g and t";
 
 like dies { $kg->delete }, qr/FOREIGN KEY constraint failed/, "fails while rows reference unit";
 
@@ -45,12 +44,6 @@ $db->resultset($_)->delete for qw<
   ArticleUnit
 >;
 
-like dies { $kg->delete }, qr/FOREIGN KEY constraint failed/, "fails when kg is default unit";
+$kg->conversions->count > 0 or die "no conversions";
 
-note "deleting all other units ...";
-$kg->other_units_of_same_quantity->delete;
-
-ok $kg->delete, "default unit can be deleted if last remaining unit";
-
-is $db->resultset('Quantity')->find( { name => 'Mass' } )->default_unit => undef,
-  "default unit of quantity changed to NULL";
+ok $kg->delete, "delete unit that has conversions";

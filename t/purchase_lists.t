@@ -35,7 +35,7 @@ article_has_items $flour => "1000g 1kg";
 
 {
     my $liters = $db->resultset('Unit')->find( { short_name => 'l' } );
-    like dies { $item->convert($liters) }, qr/quantity/;
+    like dies { $item->convert($liters) }, qr/conversion does not exist/i;
 }
 
 my $grams = $db->resultset('Unit')->find( { short_name => 'g' } );

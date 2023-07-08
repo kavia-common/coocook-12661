@@ -22,10 +22,11 @@ is $sections => array {
         field name       => "bakery products";
         field items      => array {
             item hash {
-                field value       => 1000;
-                field unit        => hash { field short_name => "g";     etc() };
-                field article     => hash { field name       => "flour"; etc() };
-                field ingredients => array {
+                field value            => 1000;
+                field unit             => hash { field short_name => "g";     etc() };
+                field article          => hash { field name       => "flour"; etc() };
+                field convertible_into => [ hash { field short_name => 'kg'; etc } ];
+                field ingredients      => array {
                     item hash {
                         field id   => 1;
                         field dish => hash {
@@ -48,10 +49,11 @@ is $sections => array {
                 etc();
             };
             item hash {
-                field value       => 37.5;
-                field unit        => hash { field short_name => "g";    etc() };
-                field article     => hash { field name       => "salt"; etc() };
-                field ingredients => array {
+                field value            => 37.5;
+                field unit             => hash { field short_name => "g";    etc() };
+                field article          => hash { field name       => "salt"; etc() };
+                field convertible_into => [];
+                field ingredients      => array {
                     item hash { field id => 6; etc() };
                     item hash { field id => 8; etc() };
                 };

@@ -103,35 +103,50 @@ sub BUILD {
     }
 
     {    # add convertible_into units to each item
-        my $articles_units = $list->articles->search_related(
-            'articles_units',
-            {
-                'unit.to_quantity_default' => { '!=' => undef },    # w/o conversion factor no conversion possible
-            },
-            {
-                distinct => 1,        # otherwise sometimes returns (article_id, unit_id) twice
-                join     => 'unit',
+        my %conversions;
+        {
+            my $conversions = $project->unit_conversions->hri;
+
+            # possible performance gains:
+            # - use arrayref inflator
+            # - set to undef instead of 1 and check with exists()
+
+            while ( my $conversion = $conversions->next ) {
+                $conversions{ $conversion->{unit1_id} }{ $conversion->{unit2_id} } = 1;
+                $conversions{ $conversion->{unit2_id} }{ $conversion->{unit1_id} } = 1;
             }
-        )->hri;
+        }
 
-        my %convertible_units;    # units by article, quantity
+        my %units_per_article;    # all units linked to article (may be in use or not)
 
-        while ( my $article_unit = $articles_units->next ) {
-            my $article = $articles{ $article_unit->{article_id} } || die $article_unit->{article_id};
-            my $unit    = $units{ $article_unit->{unit_id} }       || die $article_unit->{unit_id};
+        {
+            my $articles_units = $list->articles->search_related(
+                'articles_units',
+                undef,
+                {
+                    distinct => 1,        # otherwise sometimes returns (article_id, unit_id) twice
+                    join     => 'unit',
+                }
+            )->hri;
 
-            push @{ $convertible_units{ $article->{id} }{ $unit->{quantity_id} } }, $unit;
+            while ( my $article_unit = $articles_units->next ) {
+                push @{ $units_per_article{ $article_unit->{article_id} } }, $article_unit->{unit_id};
+            }
+        }
+
+        my %convertible_units;    # possible target units by article, source unit
+
+        while ( my ( $article_id => $unit_ids ) = each %units_per_article ) {
+            for my $source_unit_id (@$unit_ids) {
+                $convertible_units{$article_id}{$source_unit_id} = [
+                    map  { $units{$_} || die "invalid unit ID" }
+                    grep { $conversions{$source_unit_id}{$_} } @$unit_ids
+                ];
+            }
         }
 
         for my $item ( values %items ) {
-            my $units = $convertible_units{ $item->{article}{id} }{ $item->{unit}{quantity_id} };
-
-            if ( $units and @$units > 1 ) {
-                $item->{convertible_into} = [ grep { $_->{id} != $item->{unit}{id} } @$units ];
-            }
-            else {
-                $item->{convertible_into} = [];
-            }
+            $item->{convertible_into} = $convertible_units{ $item->{article}{id} }{ $item->{unit}{id} };
         }
     }
 
@@ -157,9 +172,8 @@ sub BUILD {
 
         # https://en.wikipedia.org/wiki/Schwartzian_transform
         @$items = sort {    # sort by
-            $a->{article}{name} cmp $b->{article}{name}                                 # 1. article name
-              or $a->{unit}{to_quantity_default} <=> $b->{unit}{to_quantity_default}    # 2. conversion factor
-              or $a->{unit}{id}                  <=> $b->{unit}{id}                     # 3. unit ID
+            $a->{article}{name} cmp $b->{article}{name}    # 1. article name
+              or $a->{unit}{id} <=> $b->{unit}{id}         # 2. unit ID
         } @$items;
     }
 

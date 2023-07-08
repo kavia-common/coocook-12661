@@ -91,7 +91,6 @@ sub base : Chained('/base') PathPart('project') CaptureArgs(2) {
             print            => $c->project_uri('/print/index'),
             shop_sections    => $c->project_uri('/shop_section/index'),
             units            => $c->project_uri('/unit/index'),
-            quantities       => $c->project_uri('/quantity/index'),
             import           => $c->project_uri('/project/get_import'),
             archive          => $c->project_uri('/project/archive'),
             unarchive        => $c->project_uri('/project/unarchive'),
@@ -263,7 +262,7 @@ sub exportable_projects : Private {
     my ( $self, $c ) = @_;
 
     return [ grep { $c->has_capability( export_from_project => { source_project => $_ } ) }
-          $c->project->other_projects->all ];
+          $c->project->other_projects->sorted->all ];
 }
 
 sub get_import : GET HEAD Chained('base') PathPart('import') Args(0) Does('~HasCSS') Does('~HasJS')

@@ -51,9 +51,7 @@ sub index : GET HEAD Chained('/project/base') PathPart('articles') Args(0)
         }
     }
 
-    # all units of all quantities
-    my @units = map { $_->units->all } @{ $c->stash->{quantities} };
-    my %units = map { $_->id => $_ } @units;
+    my %units = map { $_->{id} => $_ } $c->project->units->hri->all;
 
     my $articles_units = $c->project->articles->search_related('articles_units')->hri;
 
@@ -148,23 +146,13 @@ sub delete : POST Chained('base') Args(0) RequiresCapability('edit_project') {
 sub fetch_project_data : Private {
     my ( $self, $c ) = @_;
 
-    my $quantities = $c->project->quantities;
-    $quantities = $quantities->search(
-        undef,
-        {
-            prefetch => 'units',
-            order_by => [ $quantities->me('name'), 'units.short_name' ],
-        }
-    );
-
-    my $shop_sections = $c->project->shop_sections->sorted;
-
     $c->stash(
         default_shelf_life_days   => 7,
         default_preorder_servings => 10,
         default_preorder_workdays => 3,
-        shop_sections             => [ $shop_sections->all ],
-        quantities                => [ $quantities->all ],
+        shop_sections             => [ $c->project->shop_sections->sorted->all ],
+        units                     => [ $c->project->units->sorted->all ],
+
     );
 }
 

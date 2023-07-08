@@ -21,13 +21,11 @@ our $SQLITE_NOTORIOUS_EMPTY_STRING_COLUMNS = {
     DishIngredient   => [ 'prepare',   'value' ],
     RecipeIngredient => [ 'prepare',   'value' ],
     Item             => [ 'purchased', 'value' ],
-    Unit             => 'space',
 };
 our $SQLITE_NUMERIC_COLUMNS = {
     DishIngredient   => 'value',
     RecipeIngredient => 'value',
     Item             => [ 'offset', 'value' ],
-    Quantity         => 'to_default_quantity',
 };
 
 sub run {
@@ -35,7 +33,10 @@ sub run {
 
     $self->check_schema();
     $self->check_relationships();
-    $self->check_values();
+    $self->check_sqlite_numeric_values();
+    $self->check_fc_values();
+    $self->check_url_name_values();
+    $self->check_unit_conversions_values();
 }
 
 sub check_schema {
@@ -44,7 +45,7 @@ sub check_schema {
     my $live_schema = $self->_schema;
 
     $live_schema->storage->sqlt_type eq 'SQLite'
-      or die "Only implemented for SQLite!";
+      or return;    # only implemented for SQLite
 
     my $code_schema = Coocook::Schema->connect('dbi:SQLite::memory:');
     $code_schema->deploy();
@@ -106,7 +107,6 @@ sub check_relationships {
         { RecipeIngredient => [qw< recipe article unit >] },
         { RecipeTag        => [qw< recipe tag >] },
         { Tag              => [qw< me tag_group >] },
-        { Unit             => [qw< me quantity >] },
     );
 
     for (@m_n_tables) {
@@ -161,57 +161,63 @@ sub check_relationships {
     }
 }
 
-sub check_values {
+sub check_sqlite_numeric_values {
     my $self = shift;
 
-    my $schema = $self->_schema;
+    # only SQLite has weak typing
+    $self->_schema->storage->sqlt_type eq 'SQLite'
+      or return;
 
-    if ( $schema->storage->sqlt_type eq 'SQLite' ) {    # only SQLite has weak typing
-        for my $rs ( sort keys %$SQLITE_NOTORIOUS_EMPTY_STRING_COLUMNS ) {
-            my @cols = map { ref ? @$_ : $_ } $SQLITE_NOTORIOUS_EMPTY_STRING_COLUMNS->{$rs};
+    for my $rs ( sort keys %$SQLITE_NOTORIOUS_EMPTY_STRING_COLUMNS ) {
+        my @cols = map { ref ? @$_ : $_ } $SQLITE_NOTORIOUS_EMPTY_STRING_COLUMNS->{$rs};
 
-            for my $col (@cols) {
-                my $count = $schema->resultset($rs)->search( { $col => '' } );
+        for my $col (@cols) {
+            my $count = $self->_schema->resultset($rs)->search( { $col => '' } );
 
-                $count > 0
-                  and warn "Found $count rows with column '$col' being empty string '' in table $rs\n";
-            }
-        }
-
-        for my $rs ( sort keys %$SQLITE_NUMERIC_COLUMNS ) {
-            my @cols = map { ref ? @$_ : $_ } $SQLITE_NUMERIC_COLUMNS->{$rs};
-
-            for my $col (@cols) {
-                my $rows = $schema->resultset($rs)->search( { $col => { -like => '%,%' } } );
-
-                while ( my $row = $rows->next ) {
-                    warn sprintf "$rs ID %i has invalid number format $col='%s'\n", $row->id, $row->$col;
-                }
-            }
+            $count > 0
+              and warn "Found $count rows with column '$col' being empty string '' in table $rs\n";
         }
     }
 
-    {
-        my $organizations = $schema->resultset('Organization');
-        my $usernames_fc  = $schema->resultset('User')->get_column('name_fc');
+    for my $rs ( sort keys %$SQLITE_NUMERIC_COLUMNS ) {
+        my @cols = map { ref ? @$_ : $_ } $SQLITE_NUMERIC_COLUMNS->{$rs};
 
-        my $duplicates = $organizations->search( { name_fc => { -in => $usernames_fc->as_query } } )->hri;
+        for my $col (@cols) {
+            my $rows = $self->_schema->resultset($rs)->search( { $col => { -like => '%,%' } } );
 
-        while ( my $duplicate = $duplicates->next ) {
-            warn sprintf "Duplicate organization/user name '%s'\n", $duplicate->{name};
+            while ( my $row = $rows->next ) {
+                warn sprintf "$rs ID %i has invalid number format $col='%s'\n", $row->id, $row->$col;
+            }
         }
+    }
+}
+
+sub check_fc_values {
+    my $self = shift;
+
+    my $organizations = $self->_schema->resultset('Organization');
+    my $usernames_fc  = $self->_schema->resultset('User')->get_column('name_fc');
+
+    my $duplicates = $organizations->search( { name_fc => { -in => $usernames_fc->as_query } } )->hri;
+
+    while ( my $duplicate = $duplicates->next ) {
+        warn sprintf "Duplicate organization/user name '%s'\n", $duplicate->{name};
     }
 
     for my $table (qw< Organization User >) {
-        my $rs = $schema->resultset($table);
+        my $rs = $self->_schema->resultset($table);
 
         while ( my $row = $rs->next ) {
             $row->name_fc eq fc( $row->name )
               or warn sprintf( "Incorrect name_fc for $table '%s': '%s'\n", $row->name, $row->name_fc );
         }
     }
+}
 
-    my $projects = $schema->resultset('Project');
+sub check_url_name_values {
+    my $self = shift;
+
+    my $projects = $self->_schema->resultset('Project');
 
     while ( my $project = $projects->next ) {
         $project->url_name eq Coocook::Util::url_name( $project->name )
@@ -220,6 +226,20 @@ sub check_values {
         $project->url_name_fc eq Coocook::Util::url_name( fc $project->name )
           or warn sprintf "Incorrect url_name_fc for project '%s': '%s'\n", $project->name,
           $project->url_name_fc;
+    }
+}
+
+sub check_unit_conversions_values {
+    my $self = shift;
+
+    my $count = $self->_schema->resultset('UnitConversion')->count(
+        {
+            unit1_id => { '>' => { -ident => 'unit2_id' } },
+        }
+    );
+
+    if ( $count > 0 ) {
+        warn sprintf "%i rows in unit_conversions not normalized: unit1_id > unit2_id\n", $count;
     }
 }
 

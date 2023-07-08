@@ -1,44 +1,65 @@
-[% title = "Units" %]
+[% title = "Units";
 
-<table>
-<tr>
-<th>Quantity</th>
-<th>Unit</th>
-<th colspan="2">Conversion</th>
-<th colspan="2">Actions</th>
-</tr>
-[% FOR unit IN units;
-    quantity = unit.quantity;
-    default_unit = quantity.default_unit %]
-<tr>
-<td>[% quantity.name | html %]</td>
-<td>
-    <a href="[% unit.url %]">
-    [%~ '<strong>'  IF unit.is_quantity_default ~%]
-    [% unit.short_name | html %] ([% unit.long_name | html %])
-    [%~ '</strong>' IF unit.is_quantity_default ~%]
-    </a>
-</td>
-[% IF unit.to_quantity_default AND NOT unit.is_quantity_default %]
-    <td>[% display_value_unit(1, unit, {html=>1}) %] = [% display_value_unit(unit.to_quantity_default, default_unit, {html=>1}) %]</td>
-    <td style="text-align:right">[% display_value_unit(unit.from_quantity_default, unit, {html=>1}) %] = [% display_value_unit(1, default_unit, {html=>1}) %]</td>
-[% ELSE; '<td></td><td></td>'; END %]
-    <td>
-[% IF unit.make_quantity_default_url %]
-        <form action="[% unit.make_quantity_default_url %]" method="post" class="inline">
-            <input type="submit" value="Make quantity’s default">
-        </form>
-[% END %]
-    </td>
-    <td>
-[% IF unit.delete_url %]
-        <form action="[% unit.delete_url %]" method="post" class="inline">
-            <input type="submit" value="Delete">
-        </form>
-[% END %]
-    </td>
-</tr>
-[% END %]
+USE NiceNumber %]
+
+<table class="table">
+    <tr>
+        <th>Unit</th>
+        <th colspan="2">Conversions</th>
+        <th>Actions</th>
+    </tr>
+    [% FOR unit IN units;
+        conversions = unit.conversions || [undef];
+
+        FOR conversion IN conversions;
+            IF loop.first %]
+            <tr>
+                <td rowspan="[% unit.conversions.size %]" style="vertical-align: middle;">
+                    <a href="[% unit.url %]">[% unit.short_name | html %] ([% unit.long_name | html %])</a>
+                </td>
+            [% END;
+
+            IF conversion %]
+                <td style="vertical-align: middle;">
+                    [% display_value_unit(1, unit, {html=>1}) %]
+                    =
+                    [% display_value_unit(conversion.factor, conversion.unit, {html=>1}) %]
+                </td>
+                <td style="vertical-align: middle;">
+                    [% display_value_unit(1, conversion.unit, {html=>1}) %]
+                    =
+                    [% display_value_unit(1 / conversion.factor, unit, {html=>1}) %]
+                </td>
+            [% ELSE %]
+                <td></td>
+                <td></td>
+            [% END;
+
+            IF loop.first %]
+                <td rowspan="[% unit.conversions.size %]" style="vertical-align: middle;">
+                    [% IF unit.delete_url %]
+                    <form action="[% unit.delete_url %]" method="post" class="d-inline">
+                        <button class="btn btn-outline-danger btn-sm" type="submit" value="Delete">
+                            <i class="material-icons">delete_forever</i>
+                        </button>
+                    </form>
+                    [% END %]
+                </td>
+            [% END %]
+            </tr>
+        [% END;
+    END %]
 </table>
 
-<p><strong>strong</strong> = default for quantity</p>
+<div class="card">
+    <div class="card-header">
+        <h3 class="m-0">Add Unit</h3>
+    </div>
+    <div class="card-body">
+        <form method="post" action="[% create_url %]" class="d-flex gap-2">
+            <input id="short_name" type="text" name="short_name" placeholder="Short name" class="form-control" required>
+            <input id="long_name" type="text" name="long_name" class="form-control" placeholder="Long name" required>
+            <input class="btn btn-primary" type="submit" value="Save">
+        </form>
+    </div>
+</div>

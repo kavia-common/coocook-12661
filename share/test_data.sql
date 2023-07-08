@@ -55,21 +55,18 @@ INSERT INTO "meals"
 ( 3,          1, 1,        '2000-01-03',     'dinner',                     ''),
 ( 9,          2, 1,        '2000-01-01', 'other meal',                     '');
 
-INSERT INTO "quantities"
-(id, project_id,       name, default_unit_id) VALUES
-( 1,          1,     'Mass',            NULL),
-( 2,          1,   'Volume',            NULL);
-
 INSERT INTO "units"
-(id, project_id, quantity_id, to_quantity_default, space,   short_name,    long_name) VALUES
-( 1,          1,           1,               0.001, FALSE,          'g',      'grams'),
-( 2,          1,           1,                 1.0, FALSE,         'kg',  'kilograms'),
-( 3,          1,           2,                 1.0, FALSE,          'l',     'liters'),
-( 4,          1,           1,                1000, FALSE,          't',       'tons'),
-( 5,          1,           1,                NULL, FALSE,          'p',      'pinch'); -- no conversion, (in German: Prise)
+(id, project_id, short_name,    long_name) VALUES
+( 1,          1,        'g',      'grams'),
+( 2,          1,       'kg',  'kilograms'),
+( 3,          1,        'l',     'liters'),
+( 4,          1,        't',       'tons'),
+( 5,          1,        'p',      'pinch'); -- no conversion, (in German: Prise)
 
-UPDATE "quantities" SET default_unit_id = 2 WHERE id = 1; -- added later to pass FK check
-UPDATE "quantities" SET default_unit_id = 3 WHERE id = 2;
+INSERT INTO "unit_conversions"
+(unit1_id, factor, unit2_id) VALUES
+(       1,  0.001,        2), --  g to kg
+(       2,  0.001,        4); -- kg to t
 
 INSERT INTO "articles_units"
 (article_id, unit_id) VALUES

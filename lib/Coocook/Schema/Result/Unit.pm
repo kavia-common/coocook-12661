@@ -8,13 +8,10 @@ extends 'Coocook::Schema::Result';
 __PACKAGE__->table('units');
 
 __PACKAGE__->add_columns(
-    id                  => { data_type => 'integer', is_auto_increment => 1 },
-    project_id          => { data_type => 'integer' },
-    quantity_id         => { data_type => 'integer', is_nullable => 0 },
-    to_quantity_default => { data_type => 'real',    is_nullable => 1 },
-    space               => { data_type => 'boolean' },
-    short_name          => { data_type => 'text' },
-    long_name           => { data_type => 'text' },
+    id         => { data_type => 'integer', is_auto_increment => 1 },
+    project_id => { data_type => 'integer' },
+    short_name => { data_type => 'text' },
+    long_name  => { data_type => 'text' },
 );
 
 __PACKAGE__->set_primary_key('id');
@@ -23,32 +20,37 @@ __PACKAGE__->add_unique_constraints( [ 'project_id', 'long_name' ] );
 
 __PACKAGE__->belongs_to( project => 'Coocook::Schema::Result::Project', 'project_id' );
 
-__PACKAGE__->belongs_to( quantity => 'Coocook::Schema::Result::Quantity', 'quantity_id' );
-
-# returns other convertible units of same quantity but not $self,
 # for doc see https://metacpan.org/pod/DBIx::Class::Relationship::Base#Custom-join-conditions
 __PACKAGE__->has_many(
-    convertible_into => 'Coocook::Schema::Result::Unit',
-    sub {
+    conversions => 'Coocook::Schema::Result::UnitConversion',
+    sub {    # custom relationship constraint required for OR condition
         my $args = shift;
 
-        return {
-            "$args->{foreign_alias}.id"          => { '!='   => { -ident => "$args->{self_alias}.id" } },
-            "$args->{foreign_alias}.quantity_id" => { -ident => "$args->{self_alias}.quantity_id" },
-            "$args->{foreign_alias}.to_quantity_default" => { '!=' => undef },
-        };
+        return [    # OR
+            "$args->{foreign_alias}.unit1_id" => { -ident => "$args->{self_alias}.id" },
+            "$args->{foreign_alias}.unit2_id" => { -ident => "$args->{self_alias}.id" },
+        ];
     }
 );
 
-# returns other units of same quantity except $self--regardless if convertible or not
 __PACKAGE__->has_many(
-    other_units_of_same_quantity => 'Coocook::Schema::Result::Unit',
+    conversions_from => 'Coocook::Schema::Result::UnitConversion',
+    'unit1_id', { cascade_delete => 1 }
+);
+
+__PACKAGE__->has_many(
+    conversions_to => 'Coocook::Schema::Result::UnitConversion',
+    'unit2_id', { cascade_delete => 1 }
+);
+
+__PACKAGE__->has_many(
+    other_units => 'Coocook::Schema::Result::Unit',
     sub {
         my $args = shift;
 
         return {
-            "$args->{foreign_alias}.id"          => { '!='   => { -ident => "$args->{self_alias}.id" } },
-            "$args->{foreign_alias}.quantity_id" => { -ident => "$args->{self_alias}.quantity_id" },
+            "$args->{foreign_alias}.id"         => { '!='   => { -ident => "$args->{self_alias}.id" } },
+            "$args->{foreign_alias}.project_id" => { -ident => "$args->{self_alias}.project_id" },
         };
     }
 );
@@ -88,86 +90,39 @@ __PACKAGE__->has_many(
     }
 );
 
-# before deleting a single unit
-# we need to unset default_unit for the quantity if it's the last unit
-# because then the quantitiy's default unit cannot be switched to any other unit
-before delete => sub {
-    my $self = shift;
-
-    if ( $self->is_quantity_default ) {
-        $self->other_units_of_same_quantity->results_exist
-          or $self->quantity->update( { default_unit_id => undef } );
-    }
-};
-
 __PACKAGE__->meta->make_immutable;
 
-sub can_be_quantity_default {
+# looks like a many_to_many() relationship shortcut
+# but needs to be implemented by hand because other unit can be unit1 or unit2
+sub convertible_into {
     my $self = shift;
 
-    $self->quantity_id             or return;
-    $self->get_to_quantity_default or return;
-
-    return 1;
-}
-
-=head2 is_quantity_default()
-
-Always returns a single scalar with a boolean value.
-
-=cut
-
-sub is_quantity_default {
-    my $self = shift;
-
-    my $default_unit_id = $self->quantity->default_unit_id // return '';
-
-    return ( $self->id == $default_unit_id );
-}
-
-# marks this unit as its quantity's default and adjusts conversion factors of all units
-sub make_quantity_default {
-    my $self = shift;
-
-    my $quantity = $self->quantity            or die "No quantity";
-    my $factor   = $self->to_quantity_default or die "No to_quantity_default";
-    my $orig     = $quantity->default_unit;
-
-    if ( not $orig ) {    # no previous default->just select this unit
-        return $quantity->update( { default_unit_id => $self->id } );
-    }
-
-    $orig->id == $self->id and return 1;    # already default
-
-    $orig->to_quantity_default == 1
-      or die "Original default unit needs factor 1";
-
-    # collect convertible units of this quantity except $self and $orig
-    my $others = $quantity->units->search(
+    return $self->other_units->search(
+        [    # OR
+            'conversions.unit1_id' => $self->id,
+            'conversions.unit2_id' => $self->id,
+        ],
         {
-            id                  => { -not_in => [ $self->id, $orig->id ] },
-            to_quantity_default => { '!='    => undef },                      # IS NOT NULL
+            join => 'conversions',
         }
-    );
+    )->all;
+}
 
-    $self->txn_do(
-        sub {
-            for my $unit ( $others->all ) {
-                $unit->update(
-                    {
-                        to_quantity_default => $unit->to_quantity_default / $factor
-                    }
-                );
+sub find_conversion_into {
+    my ( $self, $unit_id ) = @_;
+
+    return $self->result_source->schema->resultset('UnitConversion')->search(
+        [    # OR
+            {
+                unit1_id => $self->id,
+                unit2_id => $unit_id,
+            },
+            {
+                unit1_id => $unit_id,
+                unit2_id => $self->id,
             }
-
-            $orig->update( { to_quantity_default => 1 / $factor } );
-            $self->update( { to_quantity_default => 1 } );
-
-            $quantity->update( { default_unit_id => $self->id } );
-        }
-    );
-
-    return 1;
+        ]
+    )->single;
 }
 
 1;

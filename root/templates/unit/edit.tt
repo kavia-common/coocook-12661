@@ -1,39 +1,87 @@
-[% escape_title( 'Unit', unit.long_name ) %]
+[% IF unit.id;
+    escape_title( 'Unit', unit.long_name );
+END %]
 
-<form method="post" action="[% update_url %]">
-    <p>
-        <label for="short_name">Short name:</label>
-        <input  id="short_name" type="text" name="short_name" value="[% unit.short_name | html %]">
-    </p>
+<form method="post" action="[% update_url %]" class="mb-3">
+    <div class="d-flex gap-2 mb-3">
+        <div class="form-floating flex-grow-1">
+            <input id="short_name" type="text" name="short_name" value="[% unit.short_name | html %]" placeholder="short name" class="form-control">
+            <label for="short_name">Short name</label>
+        </div>
+        <div class="form-floating flex-grow-1">
+            <input id="long_name" type="text" name="long_name" value="[% unit.long_name | html %]" class="form-control" placeholder="long name">
+            <label for="long_name">Long name</label>
+        </div>
+    </div>
 
-    <p>
-        <label for="long_name">Long name:</label>
-        <input  id="long_name" type="text" name="long_name" value="[% unit.long_name | html %]">
-    </p>
-
-    <p>
-        <label for="to_quantity_default">Factor to quantity’s default unit:</label>
-[% IF unit.is_quantity_default %]
-        <strong>is quantity’s default unit</strong>
-[% ELSE %]
-        [% display_value_unit(1, unit, {html=>1}) %] =
-        <input  id="to_quantity_default" type="text" name="to_quantity_default" value="[% unit.to_quantity_default %]">
-        [% display_unit(unit.quantity.default_unit, {html=>1}) %]
-[% END %]
-    </p>
-
-    <p>Quantity: [% unit.quantity.name %]</p>
-
-    <p>
-        <input type="checkbox" name="space" id="space" [% 'checked' IF unit.space %]>
-        <label for="space">prepend space (example: <quote>1␣[% unit.short_name | html %]</quote>)</label>
-    </p>
-
-    <p>
-        <input type="submit" value="Save">
-    </p>
+    <input class="btn btn-primary" type="submit" value="Update">
 </form>
 
+<h2>Conversions</h2>
+
+<p>Here are your already added conversions listed.</p>
+
+<div class="container">
+    <form action="[% add_conversion_url %]" method="post">
+        <div class="row border-top border-bottom p-3 bg-light">
+            <div class="d-flex justify-content-between">
+                <div class="d-flex gap-2 align-items-center" style="width: fit-content;">
+                    <input type="number" name="value1" value="1" step="any" class="form-control form-control-sm" style="width: 150px;">
+                    <i>[% unit.long_name | html %]</i>
+                    <span class="text-nowrap">is equal to</span>
+                    <input type="number" name="value2" value="1" step="any" class="form-control form-control-sm" style="width: 150px;">
+                    <select class="form-select form-select-sm" style="width: 200px;" name="unit2" required>
+                        <option value="">Select unit</option>
+                        [% FOR group IN grouped_units %]
+                            [% FOR u IN group %]
+                                <option value="[% u.id %]">[% u.long_name | html %]</option>
+                            [% END %]
+                        [% END %]
+                    </select>
+                </div>
+                <div class="d-flex align-items-center" style="width: fit-content;">
+                    <input type="submit" value="Add" class="btn btn-primary btn-sm">
+                </div>
+            </div>
+        </div>
+    </form>
+
+[% FOR conversion IN conversions %]
+    <div class="row border-top d-flex justify-content-between p-3">
+        <div class="d-flex gap-2 align-items-center" style="width: fit-content;">
+    [% IF conversion.factor %]
+            <div class="text-nowrap">1&thinsp;<i>[% unit.long_name | html %]</i> is equal to</div>
+
+        [% IF conversion.update_url %]
+            <form action="[% conversion.update_url %]" method="post" id="update_conversion_to_unit[% conversion.id %]">
+                <input type="number" name="factor" value="[% conversion.factor %]" step="any" class="form-control form-control-sm" style="width: 150px;">
+            </form>
+        [% ELSE;
+                conversion.factor;
+        END %]
+            <i><a href="[% conversion.url %]">[% conversion.long_name | html %]</a></i>
+        </div>
+        <div class="d-flex align-items-center gap-2" style="width: fit-content;">
+        [% IF conversion.update_url %]
+            <button type="submit" form="update_conversion_to_unit[% conversion.id %]" class="btn btn-primary btn-sm">Update</button>
+        [% END %]
+
+        [% IF conversion.delete_url %]
+            <form action="[% conversion.delete_url %]" method="post">
+                <button type="submit" class="btn btn-danger btn-sm">Delete</button>
+            </form>
+        [% END %]
+    [% ELSE %]
+            <div>
+                <i>[% unit.long_name | html %]</i> can be converted into <a href="[% conversion.url %]"><i>[% conversion.long_name | html %]</i></a> in several steps
+            </div>
+    [% END %]
+        </div>
+    </div>
+[% END %]
+</div>
+
+[% IF articles.exists %]
 <h2>Where Unit <em>[% unit.long_name | html %]</em> is used ([% articles.size %] articles)</h2>
 
 <ul>
@@ -41,3 +89,4 @@
     <li><a href="[% article.url %]">[% article.name | html %]</a></li>
 [% END %]
 </ul>
+[% END %]

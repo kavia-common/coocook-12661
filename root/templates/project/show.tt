@@ -13,17 +13,13 @@
 [% ELSIF can_edit %]
 <div class="alert alert-success">
     <p class="m-0">
-    [% IF inventory.quantities == 0
-        AND inventory.articles == 0
+    [% IF inventory.articles == 0
         AND inventory.meals == 0
         AND inventory.shop_sections == 0
         AND inventory.tags == 0 %]
         This is a fresh project without any data.
         You can <a class="alert-link" href="[% project_urls.import %]">import data</a> from other projects
-        or start from scratch, e.g. by <a class="alert-link" href="[% project_urls.quantities %]">creating quantities</a>.
-    [% ELSIF inventory.quantities == 0 %]
-        This project lacks any quantities. You can <a class="alert-link" href="[% project_urls.import %]">import them</a>
-        or <a class="alert-link" href="[% project_urls.quantities %]">create some</a> from scratch.
+        or start from scratch, e.g. by <a class="alert-link" href="[% project_urls.recipes %]">creating recipe</a>.
     [% ELSIF inventory.units == 0 %]
         This project lacks any units. You can <a class="alert-link" href="[% project_urls.units %]">create some</a>.
     [% ELSIF inventory.articles == 0 %]

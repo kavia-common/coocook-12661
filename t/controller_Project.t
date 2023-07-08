@@ -5,7 +5,7 @@ use DateTime;
 use lib 't/lib';
 use Test::Coocook;
 
-plan(40);
+plan(38);
 
 my $t = Test::Coocook->new();
 
@@ -149,18 +149,14 @@ message_contains('fresh project');
     my $meal =
       $project->create_related( meals => { date => '1970-01-01', name => 'breakfast', comment => '' } );
 
-    message_like(qr/ lacks .+ quantities /x);
+    message_like(qr/ lacks .+ units /x);
     $meal->delete();
 }
 
 $project->create_related( tags => { name => 'foo' } );
-message_like(qr/ lacks .+ quantities /x);
-
-my $quantity = $project->create_related( quantities => { name => 'weight' } );
 message_like(qr/ lacks .+ units /x);
 
-my $unit = $quantity->create_related(
-    units => { project_id => $project->id, short_name => 'kg', long_name => 'kilograms', space => 0 } );
+my $unit = $project->create_related( units => { short_name => 'kg', long_name => 'kilograms' } );
 message_like(qr/ lacks .+ articles /x);
 
 my $article = $project->create_related(
