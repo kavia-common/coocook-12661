@@ -15,7 +15,7 @@ use Test::Coocook;
 
 my $FIRST_PGSQL_SCHEMA_VERSION = 21;
 
-plan tests => 2 + 3 * ( $Coocook::Schema::VERSION - $FIRST_PGSQL_SCHEMA_VERSION ) + 7;
+plan tests => 2 + 3 * ( $Coocook::Schema::VERSION - $FIRST_PGSQL_SCHEMA_VERSION ) + 8;
 
 my $psql = Test::PostgreSQL->new();
 my $dbh  = DBI->connect( $psql->dsn );
@@ -194,6 +194,41 @@ subtest "timestamps are stored in UTC" => sub {
     $t->submit_form_ok( { with_fields => { archive => 'on' } } );
     my $project = $schema->resultset('Project')->find( { name => 'Project UTC' } ) || die;
     like( $project->get_column($_) => $utc_regex, "column '$_' is in UTC" ) for qw< created archived >;
+};
+
+subtest "issue #266 order of meals/dishes" => sub {
+    $dbh->do('CREATE DATABASE issue266');
+    my $schema = Coocook::Schema->connect( $psql->dsn( dbname => 'issue266' ) );
+    install_ok( $schema, 24 );
+
+    my $user = $schema->resultset('User')
+      ->create( { name => '', password_hash => '', display_name => '', email_fc => '' } );
+
+    my $project = $user->create_related( owned_projects => { name => '', description => '' } );
+
+    $schema->storage->dbh_do(
+        sub {
+            my ( undef, $dbh ) = @_;
+
+            $dbh->do(<<~SQL) for qw( b c a );    # irregular order
+            INSERT INTO meals (project_id,date,name,comment) VALUES (1,'2000-01-01', '$_','')
+            SQL
+
+            $dbh->do(<<~SQL) for qw( b c a );    # irregular order
+            INSERT INTO dishes (meal_id,servings,preparation,description,name,comment) VALUES (1,42,'','', '$_','')
+            SQL
+        }
+    );
+    upgrade_ok( $schema, 25 );
+    is [
+        $schema->resultset('Meal')->search( undef, { order_by => 'position' } )->get_column('name')->all ]
+      => [qw( a b c )],
+      "alphabetical order of meals";
+
+    is [
+        $schema->resultset('Dish')->search( undef, { order_by => 'position' } )->get_column('name')->all ]
+      => [qw( b c a )],
+      "dishes in order of insertion into database";
 };
 
 # explicitly destroy DBIC objects before Pg.

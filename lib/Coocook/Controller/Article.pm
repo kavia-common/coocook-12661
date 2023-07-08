@@ -180,7 +180,17 @@ sub dishes_recipes : Private {
     my $article = $c->stash->{article};
 
     my $dishes = $article->dishes;
-    $dishes = $dishes->search( undef, { order_by => $dishes->me('name'), prefetch => 'meal' } );
+    $dishes = $dishes->search(
+        undef,
+        {
+            prefetch => 'meal',
+            order_by => [
+                'meal.date',    #perltidy
+                'meal.position',
+                $dishes->me('position'),
+            ],
+        }
+    );
 
     my $recipes = $article->recipes->sorted->hri;
     my @recipes = map +{ recipe => $_, dishes => [] }, $recipes->all;    # sorted hashrefs

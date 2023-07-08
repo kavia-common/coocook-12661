@@ -13,6 +13,7 @@ ALTER TABLE "dish_ingredients" DROP CONSTRAINT "dish_ingredients_fk_dish_id";
 CREATE TEMPORARY TABLE dishes_tmp (
   id INTEGER PRIMARY KEY NOT NULL,
   meal_id integer NOT NULL,
+  position integer NOT NULL,
   from_recipe_id integer,
   name text NOT NULL,
   servings integer NOT NULL,
@@ -22,7 +23,22 @@ CREATE TEMPORARY TABLE dishes_tmp (
   comment text NOT NULL
 );
 
-INSERT INTO dishes_tmp SELECT * FROM dishes;
+INSERT INTO dishes_tmp
+    SELECT
+        id,
+        meal_id,
+        ROW_NUMBER () OVER (
+            PARTITION BY meal_id
+        ) "position",
+        from_recipe_id,
+        name,
+        servings,
+        prepare_at_meal_id,
+        preparation,
+        description,
+        comment
+    FROM dishes;
+
 DROP TABLE dishes;
 
 CREATE TABLE dishes (
@@ -41,22 +57,7 @@ CREATE TABLE dishes (
   FOREIGN KEY (from_recipe_id) REFERENCES recipes(id)
 );
 
-INSERT INTO dishes
-    SELECT
-        id,
-        meal_id,
-        ROW_NUMBER () OVER (
-            PARTITION BY meal_id
-            ORDER BY name ASC
-        ) "position",
-        from_recipe_id,
-        name,
-        servings,
-        prepare_at_meal_id,
-        preparation,
-        description,
-        comment
-    FROM dishes_tmp;
+INSERT INTO dishes SELECT * FROM dishes_tmp;
 
 CREATE INDEX dishes_idx_meal_id ON dishes (meal_id);
 CREATE INDEX dishes_idx_prepare_at_meal_id ON dishes (prepare_at_meal_id);

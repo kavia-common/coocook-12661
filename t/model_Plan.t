@@ -8,6 +8,8 @@ use Test::MockObject;
 use lib 't/lib';
 use TestDB;
 
+plan(9);
+
 my $db = TestDB->new;
 
 my $project = $db->resultset('Project')->find(1);
@@ -145,7 +147,7 @@ is my $project_plan = $plan->project($project) => array {
             item hash {
                 field id         => 2;
                 field project_id => 1;
-                field position   => 2;
+                field position   => 1;
                 field date       => string '2000-01-02T00:00:00';
                 field name       => 'lunch';
                 field comment    => '';
@@ -192,7 +194,7 @@ is my $project_plan = $plan->project($project) => array {
             item hash {
                 field id              => 3;
                 field project_id      => 1;
-                field position        => 3;
+                field position        => 1;
                 field date            => string '2000-01-03T00:00:00';
                 field name            => 'dinner';
                 field deletable       => F();
@@ -216,4 +218,50 @@ subtest deletable => sub {
     ok $plan->project($project)->[1]{meals}[0]{deletable};
 };
 
-done_testing;
+subtest "order of meals from day() and project()" => sub {
+    my $meals = $project->meals;
+    my $lunch = $meals->find(2);
+
+    $lunch->copy( { position => 1, name => "before lunch" } );
+    $lunch->update( { position => 2 } );
+    $lunch->copy( { position => 3, name => "after lunch" } );
+
+    my $day = $plan->day( $project, DateTime->new( year => 2000, month => 1, day => 2 ) );
+
+    is $day => array {
+        item hash { field name => "before lunch"; etc() };
+        item hash { field name => "lunch";        etc() };
+        item hash { field name => "after lunch";  etc() };
+        end();
+    };
+
+    is $plan->project($project) => array {
+        item hash {
+            field date  => string '2000-01-01T00:00:00';
+            field meals => array {
+                item hash { field name => "breakfast"; etc() };
+                end();
+            };
+            end();
+        };
+        item hash {
+            field date  => string '2000-01-02T00:00:00';
+            field meals => array {
+                item hash { field name => "before lunch"; etc() };
+                item hash { field name => "lunch";        etc() };
+                item hash { field name => "after lunch";  etc() };
+                end()
+            };
+            end();
+        };
+        item hash {
+            field date  => string '2000-01-03T00:00:00';
+            field meals => array {
+                item hash { field name => "dinner"; etc() };
+                end()
+            };
+            end();
+        };
+        end();
+    };
+};

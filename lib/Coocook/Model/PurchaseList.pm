@@ -83,6 +83,25 @@ sub BUILD {
         }
     }
 
+    # sort ingredients per item
+    for my $item ( values %items ) {
+        my $ingredients = $item->{ingredients};
+
+        @$ingredients = sort {
+            if ( $a->{dish_id} == $b->{dish_id} ) {    # items of same dish
+                $b->{prepare} <=> $a->{prepare}            # 1. prepared first
+                  or $a->{position} <=> $b->{position};    # 2. position inside list
+            }
+            elsif ( $a->{dish}{meal_id} == $b->{dish}{meal_id} ) {    # items of same meal
+                $a->{dish}{position} <=> $b->{dish}{position};
+            }
+            else {                                                    # unrelated items
+                $a->{dish}{meal}{date} <=> $b->{dish}{meal}{date}
+                  or $a->{dish}{meal}{position} <=> $b->{dish}{meal}{position};
+            }
+        } @$ingredients;
+    }
+
     {    # add convertible_into units to each item
         my $articles_units = $list->articles->search_related(
             'articles_units',
