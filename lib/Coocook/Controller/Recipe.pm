@@ -4,8 +4,8 @@ use Moose;
 use MooseX::MarkAsMethods autoclean => 1;
 
 use Coocook::Util;
-use JSON::MaybeXS;
-use Scalar::Util qw(looks_like_number);
+use JSON::MaybeXS qw/to_json/;
+use Scalar::Util  qw(looks_like_number);
 
 BEGIN { extends 'Coocook::Controller' }
 
@@ -116,8 +116,9 @@ sub edit : GET HEAD Chained('base') PathPart('') Args(0) RequiresCapability('vie
         import_url => $c->uri_for_action( '/browse/recipe/import', [ $recipe->id, $recipe->url_name ] ) );
 
     push @{ $c->stash->{css} },
-      '/lib/web-js-components/ingredients-editor/ingredients-editor_index.css';
-    push @{ $c->stash->{js} }, '/lib/web-js-components/ingredients-editor/ingredients-editor.es.js';
+      '/lib/coocook-web-components/dist/ingredients-editor/ingredients-editor_index.css';
+    push @{ $c->stash->{js} },
+      '/lib/coocook-web-components/dist/ingredients-editor/ingredients-editor.es.js';
 }
 
 sub new_recipe : GET HEAD Chained('submenu') PathPart('recipes/new')
