@@ -9,7 +9,6 @@ use strict;
 
 use Cwd qw/abs_path getcwd/;
 use File::Basename;
-use File::Copy::Recursive qw/rmove/;
 use File::Fetch;
 use File::Path qw/rmtree make_path/;
 use Term::ANSIColor;
@@ -21,7 +20,7 @@ if ( not( $dir =~ m{ ^ .* /coocook $ }x ) ) {
 }
 
 my @dependencies =
-  map { Package->new($_) } @{ YAML::XS::LoadFile('web-dependencies.yaml')->{dependencies} };
+  map { WebDependency->new($_) } @{ YAML::XS::LoadFile('web-dependencies.yaml')->{dependencies} };
 
 say colored( '=== downloading coocook web dependencies ===', 'cyan' );
 download( \@dependencies );
@@ -61,20 +60,19 @@ sub install {
         make_path 'root/static/lib/' . $pkg->name;
 
         $pkg->print_command('installing');
-        $pkg->unpack();
+        $pkg->extract();
         $pkg->print_status('SUCCESS');
     }
 }
 
-package Package {
+package WebDependency {
     use Term::ANSIColor;
+    use File::Copy::Recursive qw/rmove/;
 
     sub new {
         my $class = shift;
         my ($pkg_hash) = @_;
-        if ( not defined $pkg_hash->{extract_paths} ) {
-            $pkg_hash->{extract_paths} = [];
-        }
+        $pkg_hash->{extract_paths} ||= [];
         my $self = {
             name          => $pkg_hash->{name},
             url           => $pkg_hash->{url},
@@ -95,37 +93,12 @@ package Package {
         return bless $self, $class;
     }
 
-    sub name {
-        return shift->{name};
-    }
-
-    sub url {
-        return shift->{url};
-    }
-
-    sub version {
-        return shift->{version};
-    }
-
-    sub ff {
-        return shift->{ff};
-    }
-
-    sub extract_paths {
-        return shift->{extract_paths};
-    }
-
-    sub archive_name {
-        my $self = shift;
-        return $self->ff->output_file;
-    }
-
-    sub download {
-        my $self = shift;
-        my %args = @_;
-        $self->ff->fetch( to => $args{dest_dir} )
-          or error( $self->ff->error(1) );
-    }
+    sub name          { shift->{name} }
+    sub url           { shift->{url} }
+    sub version       { shift->{version} }
+    sub ff            { shift->{ff} }
+    sub extract_paths { shift->{extract_paths} }
+    sub archive_name  { shift->ff->output_file }
 
     sub print_command {
         my $self = shift;
@@ -161,7 +134,14 @@ package Package {
         }
     }
 
-    sub unpack {
+    sub download {
+        my $self = shift;
+        my %args = @_;
+        $self->ff->fetch( to => $args{dest_dir} )
+          or error( $self->ff->error(1) );
+    }
+
+    sub extract {
         my $self         = shift;
         my $archive_name = $self->archive_name;
         my $tmp_dir      = File::Temp->newdir();
@@ -205,8 +185,7 @@ package Package {
         if ( $self->extract_paths->@* ) {
             for my $mapping ( $self->extract_paths->@* ) {
                 if ( $mapping->[1] ) {
-                    File::Copy::Recursive::rmove( $tmp_dir->dirname . "/$mapping->[0]",
-                        'root/static/lib/' . $self->name . "/$mapping->[1]" );
+                    rmove( $tmp_dir->dirname . "/$mapping->[0]", 'root/static/lib/' . $self->name . "/$mapping->[1]" );
                 }
             }
         }
