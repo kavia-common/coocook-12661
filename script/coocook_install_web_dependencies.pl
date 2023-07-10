@@ -70,8 +70,8 @@ package WebDependency {
     use File::Copy::Recursive qw/rmove/;
 
     sub new {
-        my $class = shift;
-        my ($pkg_hash) = @_;
+        my ( $class, $pkg_hash ) = @_;
+
         $pkg_hash->{extract_paths} ||= [];
         my $self = {
             name          => $pkg_hash->{name},
@@ -101,8 +101,7 @@ package WebDependency {
     sub archive_name  { shift->ff->output_file }
 
     sub print_command {
-        my $self = shift;
-        my ($command) = @_;
+        my ( $self, $command ) = @_;
 
         my $pkg_id         = $self->name . '@' . $self->version;
         my $status_width   = length "SUCCESS";
@@ -135,14 +134,15 @@ package WebDependency {
     }
 
     sub download {
-        my $self = shift;
-        my %args = @_;
+        my ( $self, %args ) = @_;
+
         $self->ff->fetch( to => $args{dest_dir} )
           or error( $self->ff->error(1) );
     }
 
     sub extract {
-        my $self         = shift;
+        my $self = shift;
+
         my $archive_name = $self->archive_name;
         my $tmp_dir      = File::Temp->newdir();
 
@@ -193,8 +193,8 @@ package WebDependency {
 }
 
 sub error {
-    my $msg              = shift;
-    my $cleanup_callback = shift;
+    my ( $msg, $cleanup_callback ) = @_;
+
     say '';
     say colored( $msg, 'red' );
     if ( defined $cleanup_callback ) {
