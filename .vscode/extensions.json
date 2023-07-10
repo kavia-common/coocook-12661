@@ -1,0 +1,8 @@
+{
+    "recommendations": [
+        "sfodje.perltidy",
+        "esbenp.prettier-vscode",
+        "samosad.tt"
+    ],
+    "unwantedRecommendations": []
+}
