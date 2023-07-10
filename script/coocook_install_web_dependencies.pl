@@ -193,12 +193,8 @@ package WebDependency {
 }
 
 sub error {
-    my ( $msg, $cleanup_callback ) = @_;
+    my ($msg) = @_;
 
     say '';
-    say colored( $msg, 'red' );
-    if ( defined $cleanup_callback ) {
-        $cleanup_callback->();
-    }
-    exit 1;
+    die colored( $msg, 'red' ) . "\n";
 }
