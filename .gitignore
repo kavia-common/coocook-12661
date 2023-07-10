@@ -32,9 +32,6 @@
 
 ### cache files from file managers or editors ###
 
-# VSCode
-.vscode/
-
 # Mac OS
 .DS_Store
 
