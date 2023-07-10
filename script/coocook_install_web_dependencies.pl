@@ -7,20 +7,20 @@ use utf8;
 use warnings;
 use strict;
 
-use Cwd qw/abs_path getcwd/;
 use File::Basename;
 use File::Fetch;
 use File::Path qw/rmtree make_path/;
 use Term::ANSIColor;
 use YAML::XS;
 
-my $dir = abs_path( getcwd() );
-if ( not( $dir =~ m{ ^ .* /coocook $ }x ) ) {
+my $YAML_FILENAME = 'web-dependencies.yaml';
+
+if ( not -f $YAML_FILENAME ) {
     error('This script can only be executed in the top-level coocook repository');
 }
 
-my @dependencies =
-  map { WebDependency->new($_) } @{ YAML::XS::LoadFile('web-dependencies.yaml')->{dependencies} };
+my $yaml         = YAML::XS::LoadFile($YAML_FILENAME);
+my @dependencies = map { WebDependency->new($_) } $yaml->{dependencies}->@*;
 
 say colored( '=== downloading coocook web dependencies ===', 'cyan' );
 download( \@dependencies );
