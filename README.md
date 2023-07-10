@@ -68,7 +68,6 @@ $ sudo apt-get install build-essential
 $ sudo apt-get install libssl-dev zlib1g-dev             # for Net::SSLeay
 $ sudo apt-get install libexpat1-dev                     # for XML::Parser
 $ sudo apt-get install libncurses-dev libreadline-dev    # for Term::ReadLine::Gnu for development mode
-$ sudo apt-get install libsqlite3-dev                    # for DBD::SQLite
 $ sudo apt-get install libpq-dev                         # for DBD::Pg
 ```
 
