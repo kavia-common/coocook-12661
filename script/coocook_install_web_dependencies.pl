@@ -7,20 +7,21 @@ use utf8;
 use warnings;
 use strict;
 
-use Cwd qw/abs_path getcwd/;
 use File::Basename;
 use File::Fetch;
 use File::Path qw/rmtree make_path/;
 use Term::ANSIColor;
+use Term::Size::Any;
 use YAML::XS;
 
-my $dir = abs_path( getcwd() );
-if ( not( $dir =~ m{ ^ .* /coocook $ }x ) ) {
+my $YAML_FILENAME = 'web-dependencies.yaml';
+
+if ( not -f $YAML_FILENAME ) {
     error('This script can only be executed in the top-level coocook repository');
 }
 
-my @dependencies =
-  map { WebDependency->new($_) } @{ YAML::XS::LoadFile('web-dependencies.yaml')->{dependencies} };
+my $yaml         = YAML::XS::LoadFile($YAML_FILENAME);
+my @dependencies = map { WebDependency->new($_) } $yaml->{dependencies}->@*;
 
 say colored( '=== downloading coocook web dependencies ===', 'cyan' );
 download( \@dependencies );
@@ -70,8 +71,8 @@ package WebDependency {
     use File::Copy::Recursive qw/rmove/;
 
     sub new {
-        my $class = shift;
-        my ($pkg_hash) = @_;
+        my ( $class, $pkg_hash ) = @_;
+
         $pkg_hash->{extract_paths} ||= [];
         my $self = {
             name          => $pkg_hash->{name},
@@ -101,12 +102,11 @@ package WebDependency {
     sub archive_name  { shift->ff->output_file }
 
     sub print_command {
-        my $self = shift;
-        my ($command) = @_;
+        my ( $self, $command ) = @_;
 
         my $pkg_id         = $self->name . '@' . $self->version;
         my $status_width   = length "SUCCESS";
-        my $terminal_width = `tput cols`;
+        my $terminal_width = Term::Size::Any::chars() || die "Can't determine terminal width";
         my $command_width  = length "$command ";
         my $right_margin   = 1;
         my $status_margin  = 1;
@@ -135,20 +135,21 @@ package WebDependency {
     }
 
     sub download {
-        my $self = shift;
-        my %args = @_;
+        my ( $self, %args ) = @_;
+
         $self->ff->fetch( to => $args{dest_dir} )
           or error( $self->ff->error(1) );
     }
 
     sub extract {
-        my $self         = shift;
+        my $self = shift;
+
         my $archive_name = $self->archive_name;
         my $tmp_dir      = File::Temp->newdir();
 
         # compression formats supported by tar
         # see https://en.wikipedia.org/wiki/Tar_(computing)#Suffixes_for_compressed_files
-        if ( $archive_name =~ /^ .* \. tar \. (bz2|gz|lz|lzma|lzo|xz|Z|zst) $/x ) {
+        if ( $archive_name =~ / \. tar \. (bz2|gz|lz|lzma|lzo|xz|Z|zst) $/x ) {
             my @tar_args = ( 'tar', '--extract', '--file' => ".cache/$archive_name" );
             if ( $self->extract_paths->@* ) {
                 push @tar_args, ( '--directory' => $tmp_dir->dirname );
@@ -161,15 +162,15 @@ package WebDependency {
             }
             system(@tar_args);
         }
-        elsif ( $archive_name =~ /^ .* \. zip $/x ) {
+        elsif ( $archive_name =~ / \. zip $/x ) {
             my @unzip_args = ( 'unzip', '-q', ".cache/$archive_name" );
             if ( $self->extract_paths->@* ) {
                 for my $mapping ( $self->extract_paths->@* ) {
-                    if ( $mapping->[0] =~ m{^.* / $}x ) {
-                        push @unzip_args, "$mapping->[0]*";
+                    if ( $mapping->[0] =~ m{ / $ }x ) {
+                        push @unzip_args, $mapping->[0] . "*";
                     }
                     else {
-                        push @unzip_args, "$mapping->[0]";
+                        push @unzip_args, $mapping->[0];
                     }
                 }
                 push @unzip_args, ( '-d' => $tmp_dir->dirname );
@@ -193,12 +194,8 @@ package WebDependency {
 }
 
 sub error {
-    my $msg              = shift;
-    my $cleanup_callback = shift;
+    my ($msg) = @_;
+
     say '';
-    say colored( $msg, 'red' );
-    if ( defined $cleanup_callback ) {
-        $cleanup_callback->();
-    }
-    exit 1;
+    die colored( $msg, 'red' ) . "\n";
 }
