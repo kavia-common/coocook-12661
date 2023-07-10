@@ -1,37 +1,6 @@
 "use strict";
 
 (() => {
-
-    // reduce options of <select> inputs for unit to units applicable to selected article
-    const articleElems = document.getElementsByName('article');
-    Array.from(articleElems).forEach(articleElem => {
-        const unitElem = articleElem.closest('form').querySelector('select[name=unit]');
-
-        if( unitElem.type == "select-one" ) {
-            const unitOptionElems = unitElem.options;
-
-            // event handler
-            articleElem.onchange = () => {
-                let data_units = articleElem.options[articleElem.selectedIndex].getAttribute('data-units');
-
-                let units = data_units.split(',');
-                let units_hash = {};
-                units.forEach(function(unit) { units_hash[unit] = true } );
-
-                Array.from(unitOptionElems).forEach(unitOptionElem => {
-                    if( Boolean( units_hash[ unitOptionElem.value ] ) ) {
-                        unitOptionElem.disabled = false; // if option was disabled, it must be enabled
-                        unitOptionElem.style.display = "block";
-                        unitOptionElem.selected = true;
-                    } else {
-                        unitOptionElem.style.display = "none";
-                        unitOptionElem.disabled = true; // unable option for selection
-                    }
-                });
-            }
-        }
-    });
-
     // show Markdown preview right of <textarea> inputs with class .with-markdown-preview
     const syncScrolling = (e, linkedElem) => {
         let height = e.currentTarget.clientHeight;
@@ -118,3 +87,15 @@ window.addEventListener('beforeunload', (e) => {
         e.returnValue = '';
     }
 });
+
+function decodeHtml(html) {
+    var txt = document.createElement("textarea");
+    txt.innerHTML = html;
+    return txt.value;
+}
+
+function getJsonData(id) {
+    const html = document.getElementById(id)?.innerText || "";
+    const text = decodeHtml(html)
+    return JSON.parse(text);
+}

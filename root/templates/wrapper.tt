@@ -65,8 +65,14 @@
                                     <li class="nav-item"><a class="nav-link" href="[% project_urls.tags %]">Tags</a><span class="badge rounded-pill bg-primary text-light">[% inventory.tags %]</span></li>
                                     <li class="nav-item"><a class="nav-link" href="[% project_urls.purchase_lists %]">Purchase Lists</a><span class="badge rounded-pill bg-primary text-light">[% inventory.purchase_lists %]</span></li>
                                     <li class="nav-item"><a class="nav-link" href="[% project_urls.units %]">Units</a><span class="badge rounded-pill bg-primary text-light">[% inventory.units %]</span></li>
-                                    [% IF user # TODO should check existence of import URL %]
-                                    <li class="nav-item"><a class="nav-link" href="[% project_urls.import %]">Import</a></li>
+                                    [% IF user %]
+                                        <li class="nav-item">
+                                        [% IF project_urls.import %]
+                                            <a class="nav-link" href="[% project_urls.import %]">Import</a>
+                                        [% ELSE %]
+                                            <span class="nav-link disabled-import" data-bs-placement="bottom" data-bs-toggle="tooltip" data-bs-title="Nothing can be imported because there already is data in all categories">Import</span>
+                                        [% END %]
+                                        </li>
                                     [% END %]
                                 [% END %]
 

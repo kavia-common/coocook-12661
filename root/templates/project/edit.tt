@@ -1,19 +1,5 @@
 [% title = project.name %]
 
-<script id="meals-dishes-editor-data" type="application/json">
-{
-    "projectId": [% project.id %],
-    "projectName": "[% project.name %]",
-    "getProjectPlanURL": "[% get_project_plan_url %]",
-    "getAllRecipesURL": "[% get_all_recipes_url %]",
-    "moveMealDishURL": "[% move_meal_dish_url %]",
-    "createMealURL": "[% meal_create_url %]",
-    "createDishURL": "[% dish_create_url %]",
-    "dishFromRecipeURL": "[% dish_from_recipe_url %]",
-    "updateMealURL": "[% meal.update_url %]",
-    "projectPlan": [% days_json_string | json_script %],
-    "recipes": [% recipes_json_string | json_script %]
-}
-</script>
+<script id="meals-dishes-editor-data" type="application/json">[% meals_dishes_editor_json | html %]</script>
 
-<div id="meals-dishes-editor"></div>
+<div class="meals-dishes-editor" data-meals-dishes-editor-json-id="meals-dishes-editor-data"></div>

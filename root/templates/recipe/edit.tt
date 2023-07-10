@@ -81,14 +81,8 @@
 </div>
 </form>
 
-<script>
-const ingredientsEditorData = {
-    project_id: [% recipe.project.id %],
-    project_name: "[% recipe.project.url_name %]",
-    recipe_id: [% recipe.id %],
-};
-</script>
+<script id="ingredients-editor-data" type="application/json">[% recipe_json | html %]</script>
 
-<div id="ingredients-editor"
+<div class="ingredients-editor" data-ingredients-editor-json-id="ingredients-editor-data"
 class="col-sm-12 py-3">
 </div>

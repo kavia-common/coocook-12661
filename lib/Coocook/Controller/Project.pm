@@ -91,14 +91,21 @@ sub base : Chained('/base') PathPart('project') CaptureArgs(2) {
             print            => $c->project_uri('/print/index'),
             shop_sections    => $c->project_uri('/shop_section/index'),
             units            => $c->project_uri('/unit/index'),
-            import           => $c->project_uri('/project/get_import'),
             archive          => $c->project_uri('/project/archive'),
             unarchive        => $c->project_uri('/project/unarchive'),
         },
     );
 
     if ( $c->request->method eq "GET" or $c->request->method eq "HEAD" ) {
-        $c->stash( inventory => $c->project->inventory );
+        my $importer  = $c->model('ProjectImporter');
+        my $inventory = $c->project->inventory;
+
+        $c->stash( inventory => $inventory );
+
+        $c->stash->{project_urls}{import} =
+            $importer->importable_properties($inventory) > 0
+          ? $c->project_uri('/project/get_import')
+          : undef;
     }
 }
 
@@ -157,15 +164,21 @@ sub edit : GET HEAD Chained('submenu') PathPart('edit') Args(0) RequiresCapabili
     }
 
     $c->stash(
-        default_date         => $default_date,
-        recipes_json_string  => to_json( [ $c->project->recipes->sorted->hri->all ] ),
-        days_json_string     => to_json($days),
-        get_project_plan_url => $c->project_uri('/project/get_project_plan_ajax'),
-        get_all_recipes_url  => $c->project_uri('/recipe/get_all_ajax'),
-        move_meal_dish_url   => $c->project_uri('/project/move_meal_or_dish_ajax'),
-        dish_create_url      => $c->project_uri('/dish/create'),
-        dish_from_recipe_url => $c->project_uri('/dish/from_recipe'),
-        meal_create_url      => $c->project_uri('/meal/create'),
+        meals_dishes_editor_json => to_json(
+            {
+                projectPlan       => $days,
+                projectId         => $c->project->id,
+                projectName       => $c->project->name,
+                recipes           => [ $c->project->recipes->sorted->hri->all ],
+                getProjectPlanURL => $c->project_uri('/project/get_project_plan_ajax')->as_string,
+                getAllRecipesURL  => $c->project_uri('/recipe/get_all_ajax')->as_string,
+                moveMealDishURL   => $c->project_uri('/project/move_meal_or_dish_ajax')->as_string,
+                createMealURL     => $c->project_uri('/meal/create')->as_string,
+                createDishURL     => $c->project_uri('/dish/create')->as_string,
+                dishFromRecipeURL => $c->project_uri('/dish/from_recipe')->as_string,
+                updateMealURL     => $c->project_uri('/meal/create')->as_string,
+            }
+        ),
     );
 
     push @{ $c->stash->{js} },
@@ -276,7 +289,7 @@ sub get_import : GET HEAD Chained('base') PathPart('import') Args(0) Does('~HasC
     my $properties = $importer->properties;
     my %properties = map { $_->{key} => $_ } @$properties;
 
-    for my $property ( $importer->unimportable_properties( $c->project ) ) {
+    for my $property ( $importer->unimportable_properties($inventory) ) {
         $properties{ $property->{key} }->{disabled} = 1;
     }
 

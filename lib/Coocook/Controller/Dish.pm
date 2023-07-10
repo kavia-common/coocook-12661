@@ -2,7 +2,7 @@ package Coocook::Controller::Dish;
 
 use Moose;
 use MooseX::MarkAsMethods autoclean => 1;
-use JSON::MaybeXS;
+use JSON::MaybeXS qw/to_json/;
 
 BEGIN { extends 'Coocook::Controller' }
 
@@ -49,6 +49,13 @@ sub edit : GET HEAD Chained('base') PathPart('') Args(0) RequiresCapability('vie
         { order_by => 'date' } );
 
     $c->stash(
+        dish_json => to_json(
+            {
+                project_id   => $c->project->id,
+                project_name => $c->project->url_name,
+                dish_id      => $dish->id,
+            }
+        ),
         dish => {
             project => {
                 id       => $c->project->id,

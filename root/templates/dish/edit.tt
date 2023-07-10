@@ -7,7 +7,7 @@
 			<p class="m-0">from recipe <a href="[% dish.recipe.url %]">[% dish.recipe.name | html %]</a></p>
 		[% END %]
 	</div>
-	
+
 	<div class="offset-sm-1 col-sm-5 text-left">
 		<div class="d-flex justify-content-end">
 			<form method="post" action="[% delete_url %]">
@@ -16,7 +16,7 @@
 				</button>
 			</form>
 		</div>
-		
+
 	</div>
 </div>
 
@@ -78,15 +78,9 @@
 </div>
 </form>
 
-<script>
-const ingredientsEditorData = {
-    project_id: [% dish.project.id %],
-    project_name: "[% dish.project.url_name %]",
-    dish_id: [% dish.id %],
-};
-</script>
+<script id="ingredients-editor-data" type="application/json">[% dish_json | html %]</script>
 
-<div id="ingredients-editor"
+<div class="ingredients-editor" data-ingredients-editor-json-id="ingredients-editor-data"
 class="col-sm-12 py-3">
 </div>
 

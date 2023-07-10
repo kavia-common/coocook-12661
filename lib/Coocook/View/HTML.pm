@@ -4,17 +4,10 @@ package Coocook::View::HTML;
 
 use Moose;
 
-use HTML::Entities 'encode_entities';
 use MooseX::MarkAsMethods autoclean => 1;
 use MooseX::NonMoose;
 
 extends 'Catalyst::View::TT';
-
-sub json_script_filter {
-    my $json = shift;
-    $json =~ s/<\/script>/<\\\\2F script>/g;
-    return $json;
-}
 
 __PACKAGE__->meta->make_immutable;
 
@@ -24,9 +17,6 @@ __PACKAGE__->config(
     PRE_PROCESS        => 'macros.tt',
     TEMPLATE_EXTENSION => '.tt',
     WRAPPER            => 'wrapper.tt',
-    FILTERS            => {
-        json_script => \&json_script_filter,
-    },
 
     expose_methods => ['escape_title'],
     render_die     => 1,
@@ -46,10 +36,12 @@ Set C<< $stash->{title} >> and C<< $stash->{html_title} >> in 1 step.
 sub escape_title {
     my ( $self, $c, $title, $text ) = @_;
 
+    my $html_filter = $self->template->context->filter('html');
+
     $self->template->context->stash->update(
         {
             title      => qq($title "$text"),
-            html_title => "$title <em>" . encode_entities($text) . "</em>",
+            html_title => "$title <em>" . $html_filter->($text) . "</em>",
         }
     );
 
