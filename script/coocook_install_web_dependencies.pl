@@ -166,10 +166,10 @@ package WebDependency {
             if ( $self->extract_paths->@* ) {
                 for my $mapping ( $self->extract_paths->@* ) {
                     if ( $mapping->[0] =~ m{ / $ }x ) {
-                        push @unzip_args, "$mapping->[0]*";
+                        push @unzip_args, $mapping->[0] . "*";
                     }
                     else {
-                        push @unzip_args, "$mapping->[0]";
+                        push @unzip_args, $mapping->[0];
                     }
                 }
                 push @unzip_args, ( '-d' => $tmp_dir->dirname );
