@@ -148,7 +148,7 @@ package WebDependency {
 
         # compression formats supported by tar
         # see https://en.wikipedia.org/wiki/Tar_(computing)#Suffixes_for_compressed_files
-        if ( $archive_name =~ /^ .* \. tar \. (bz2|gz|lz|lzma|lzo|xz|Z|zst) $/x ) {
+        if ( $archive_name =~ / \. tar \. (bz2|gz|lz|lzma|lzo|xz|Z|zst) $/x ) {
             my @tar_args = ( 'tar', '--extract', '--file' => ".cache/$archive_name" );
             if ( $self->extract_paths->@* ) {
                 push @tar_args, ( '--directory' => $tmp_dir->dirname );
@@ -161,11 +161,11 @@ package WebDependency {
             }
             system(@tar_args);
         }
-        elsif ( $archive_name =~ /^ .* \. zip $/x ) {
+        elsif ( $archive_name =~ / \. zip $/x ) {
             my @unzip_args = ( 'unzip', '-q', ".cache/$archive_name" );
             if ( $self->extract_paths->@* ) {
                 for my $mapping ( $self->extract_paths->@* ) {
-                    if ( $mapping->[0] =~ m{^.* / $}x ) {
+                    if ( $mapping->[0] =~ m{ / $ }x ) {
                         push @unzip_args, "$mapping->[0]*";
                     }
                     else {
