@@ -11,6 +11,7 @@ use File::Basename;
 use File::Fetch;
 use File::Path qw/rmtree make_path/;
 use Term::ANSIColor;
+use Term::Size::Any;
 use YAML::XS;
 
 my $YAML_FILENAME = 'web-dependencies.yaml';
@@ -105,7 +106,7 @@ package WebDependency {
 
         my $pkg_id         = $self->name . '@' . $self->version;
         my $status_width   = length "SUCCESS";
-        my $terminal_width = `tput cols`;
+        my $terminal_width = Term::Size::Any::chars() || die "Can't determine terminal width";
         my $command_width  = length "$command ";
         my $right_margin   = 1;
         my $status_margin  = 1;

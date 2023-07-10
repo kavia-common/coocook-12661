@@ -61,6 +61,7 @@ requires "Template::Plugin::Filter" => "0";
 requires "Template::Plugin::Markdown" => "0";
 requires "Term::ANSIColor" => "0";
 requires "Term::ReadKey" => "0";
+requires "Term::Size::Any" => "0";
 requires "Try::Tiny" => "0";
 requires "URI" => "0";
 requires "YAML::XS" => "0";
