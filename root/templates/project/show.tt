@@ -49,4 +49,7 @@
 
 [% INCLUDE 'print/project.tt' %]
 
-<p>Created at [% display_datetime(project.created) %] UTC</p>
+<p>Created at [% display_datetime(project.created) %] UTC.</p>
+[% IF project.archived %]
+    <p>Archived at [% display_datetime(project.archived) %] UTC.</p>
+[% END %]
