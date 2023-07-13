@@ -47,7 +47,7 @@ sub update : POST Chained('base') Does(~Ajax) Args(0) RequiresCapability('edit_p
             comment => $c->req->body_data->{comment},
         }
     );
-    $c->stash->{json_data} = $c->stash->{meal};
+    $c->stash->{json_data} = $c->stash->{meal}->for_meals_dishes_editor;
 
 }
 
