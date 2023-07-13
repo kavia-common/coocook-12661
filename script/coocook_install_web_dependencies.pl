@@ -106,18 +106,23 @@ package WebDependency {
 
         my $pkg_id         = $self->name . '@' . $self->version;
         my $status_width   = length "SUCCESS";
-        my $terminal_width = Term::Size::Any::chars() || die "Can't determine terminal width";
+        my $terminal_width = Term::Size::Any::chars() || undef;
         my $command_width  = length "$command ";
         my $right_margin   = 1;
         my $status_margin  = 1;
+        my $min_points     = 3;
+
         my $points =
-          $terminal_width -
-          $right_margin -
-          $command_width -
-          $status_width -
-          $status_margin -
-          length "$pkg_id ";
-        print "$command $pkg_id ", '.' x $points;
+          defined $terminal_width
+          ? ( $terminal_width -
+              $right_margin -
+              $command_width -
+              $status_width -
+              $status_margin -
+              length "$pkg_id " )
+          : $min_points;
+
+        print "$command $pkg_id ", '.' x ( $points < $min_points ? $min_points : $points );
     }
 
     sub print_status {
