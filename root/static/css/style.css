@@ -352,6 +352,21 @@ cc-autocomplete {
     display: none;
 }
 
+.comment {
+    color: DarkGrey;
+    font-style: italic;
+}
+
+.article,
+.extra-col {
+    /* width: 100px; /* TODO how to make column minimal with without arbitrary fixed value? */
+}
+
+.extra-col button {
+    font-weight: bold;
+    padding: 1px;
+}
+
 .print {
     display: none;
 }

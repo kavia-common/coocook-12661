@@ -56,20 +56,21 @@ sub day {
 
         while ( my $dish = $dishes->next ) {
             my %dish = (
-                id          => $dish->id,
-                name        => $dish->name,
-                comment     => $dish->comment,
-                servings    => $dish->servings,
-                preparation => $dish->preparation,
-                description => $dish->description,
-                ingredients => [],
+                id                       => $dish->id,
+                name                     => $dish->name,
+                comment                  => $dish->comment,
+                servings                 => $dish->servings,
+                preparation              => $dish->preparation,
+                description              => $dish->description,
+                has_prepared_ingredients => 0,
+                ingredients              => [],
             );
 
             $dishes{ $dish->id } = \%dish;
 
             if ( exists $meals{ $dish->meal_id } ) {    # is a dish on this day
                 if ( my $meal = $dish->prepare_at_meal ) {
-                    $dish{prepare_at_meal_id} = {
+                    $dish{prepare_at_meal} = {
                         date => $dish->prepare_at_meal->date,
                         name => $dish->prepare_at_meal->name,
                     };
@@ -123,6 +124,8 @@ sub day {
                 },
                 comment => $ingredient->comment,
               };
+
+            $ingredient->prepare and $dishes{ $ingredient->dish_id }{has_prepared_ingredients} = 1;
         }
     }
 

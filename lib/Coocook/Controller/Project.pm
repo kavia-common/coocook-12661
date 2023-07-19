@@ -88,7 +88,6 @@ sub base : Chained('/base') PathPart('project') CaptureArgs(2) {
             tags             => $c->project_uri('/tag/index'),
             unassigned_items => $c->project_uri('/item/unassigned'),
             purchase_lists   => $c->project_uri('/purchase_list/index'),
-            print            => $c->project_uri('/print/index'),
             shop_sections    => $c->project_uri('/shop_section/index'),
             units            => $c->project_uri('/unit/index'),
             archive          => $c->project_uri('/project/archive'),
@@ -122,7 +121,8 @@ sub submenu : Chained('base') PathPart('') CaptureArgs(0) {
     );
 }
 
-sub show : GET HEAD Chained('submenu') PathPart('') Args(0) RequiresCapability('view_project') {
+sub show : GET HEAD Chained('submenu') PathPart('') Args(0) RequiresCapability('view_project')
+  Does('~HasJS') {
     my ( $self, $c ) = @_;
 
     my $days = $c->model('Plan')->project( $c->project );
@@ -133,6 +133,9 @@ sub show : GET HEAD Chained('submenu') PathPart('') Args(0) RequiresCapability('
                 $dish->{url} = $c->project_uri( '/dish/edit', $dish->{id} );
             }
         }
+
+        my $date = $day->{date};
+        $day->{url} = $c->project_uri( '/print/day', $date->year, $date->month, $date->day );
     }
 
     $c->stash(
@@ -140,6 +143,8 @@ sub show : GET HEAD Chained('submenu') PathPart('') Args(0) RequiresCapability('
         can_unarchive => !!$c->has_capability('unarchive_project'),
         days          => $days,
     );
+
+    push @{ $c->stash->{css} }, '/css/print.css';
 }
 
 sub edit : GET HEAD Chained('submenu') PathPart('edit') Args(0) RequiresCapability('edit_project') {

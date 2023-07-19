@@ -29,56 +29,6 @@ sub auto : Private {
     push @{ $c->stash->{css} }, '/css/print.css';
 }
 
-sub index : GET HEAD Chained('/purchase_list/submenu') PathPart('print') Args(0)
-  RequiresCapability('view_project') {
-    my ( $self, $c ) = @_;
-
-    # TODO find a way to exclude this method when adding '/css/print.css' (5 lines above)
-    my $css = $c->stash->{css};
-    @$css = grep { $_ ne '/css/print.css' } @$css;    # remove '/css/print.css' again :-/
-
-    my $project = $c->stash->{project} || die;
-
-    my @days;
-    {
-        # can't use get_column(date) here because only $meal->date() inflates DateTime object
-        my @dates =
-          map { $_->date }
-          $project->meals->search( undef, { columns => 'date', distinct => 1, order_by => 'date' } )->all;
-
-        for my $date (@dates) {
-            push @days,
-              {
-                date => $date,
-                url  => $c->project_uri( '/print/day', $date->year, $date->month, $date->day ),
-              };
-        }
-    }
-
-    my @lists;
-    {
-        my $lists = $project->purchase_lists->search( undef, { order_by => 'date' } );
-
-        while ( my $list = $lists->next ) {
-            push @lists,
-              {
-                date => $list->date,
-                name => $list->name,
-                url  => $c->project_uri( '/print/purchase_list', $list->id ),
-              };
-        }
-    }
-
-    my @projects = $c->model('DB::Project')->all;
-
-    $c->stash(
-        days        => \@days,
-        lists       => \@lists,
-        projects    => \@projects,
-        project_url => $c->project_uri('/print/project'),
-    );
-}
-
 sub day : GET HEAD Chained('/purchase_list/submenu') PathPart('print/day') Args(3)
   RequiresCapability('view_project') {
     my ( $self, $c, $year, $month, $day ) = @_;
@@ -114,34 +64,7 @@ sub day : GET HEAD Chained('/purchase_list/submenu') PathPart('print/day') Args(
         day        => $dt,
         meals      => $meals,
         title      => "Print " . $dt->strftime( $c->stash->{date_format_short} ),
-        html_title => "Print " . $dt->strftime( $c->stash->{date_format_long} ),
-    );
-}
-
-sub project : GET HEAD Chained('/purchase_list/submenu') PathPart('print/project') Args(0)
-  RequiresCapability('view_project') {
-    my ( $self, $c, $id ) = @_;
-
-    my @extra_columns = grep { defined and length } $c->req->params->get_all('extra_column');
-
-    $c->stash(
-        days          => $c->model('Plan')->project( $c->project ),
-        extra_columns => \@extra_columns,
-    );
-}
-
-sub purchase_list : GET HEAD Chained('/purchase_list/submenu') PathPart('print/purchase_list')
-  Args(1) RequiresCapability('view_project') {
-    my ( $self, $c, $id ) = @_;
-
-    my $list = $c->stash->{list} = $c->project->purchase_lists->find($id)
-      or $c->detach('/error/not_found');
-
-    my $model_list = $c->model('PurchaseList')->new( list => $c->stash->{list} );
-
-    $c->stash(
-        sections => $model_list->shop_sections,
-        units    => $model_list->units,
+        html_title => $dt->strftime( $c->stash->{date_format_long} ),
     );
 }
 

@@ -49,19 +49,19 @@ INSERT INTO "articles"
 ( 6,          2,               9,            NULL,              NULL,              NULL, 'other article',      '');
 
 INSERT INTO "meals"
-(id, project_id, position,         date,         name,                comment) VALUES
-( 1,          1, 1,        '2000-01-01',  'breakfast','Best meal of the day!'),
-( 2,          1, 1,        '2000-01-02',      'lunch',                     ''),
-( 3,          1, 1,        '2000-01-03',     'dinner',                     ''),
-( 9,          2, 1,        '2000-01-01', 'other meal',                     '');
+(id, project_id, position,         date,         name,                 comment) VALUES
+( 1,          1,        1, '2000-01-01',  'breakfast', 'Best meal of the day!'),
+( 2,          1,        1, '2000-01-02',      'lunch',                      ''),
+( 3,          1,        1, '2000-01-03',     'dinner',                      ''),
+( 9,          2,        1, '2000-01-01', 'other meal',                      '');
 
 INSERT INTO "units"
-(id, project_id, short_name,    long_name) VALUES
-( 1,          1,        'g',      'grams'),
-( 2,          1,       'kg',  'kilograms'),
-( 3,          1,        'l',     'liters'),
-( 4,          1,        't',       'tons'),
-( 5,          1,        'p',      'pinch'); -- no conversion, (in German: Prise)
+(id, project_id, short_name,   long_name) VALUES
+( 1,          1,        'g',     'grams'),
+( 2,          1,       'kg', 'kilograms'),
+( 3,          1,        'l',    'liters'),
+( 4,          1,        't',      'tons'),
+( 5,          1,        'p',     'pinch'); -- no conversion, (in German: Prise)
 
 INSERT INTO "unit_conversions"
 (unit1_id, factor, unit2_id) VALUES
@@ -91,28 +91,28 @@ INSERT INTO "recipe_ingredients"
 
 
 INSERT INTO "dishes"
-(id, meal_id, position, from_recipe_id,         name, servings, prepare_at_meal_id,    preparation,                 description, comment) VALUES
-( 1,       1,        1,           NULL,   'pancakes',        4,               NULL,             '',   'Make them really sweet!',      ''),
-( 2,       2,        2,              1,      'pizza',        2,               NULL,             '',                          '',      ''),
-( 3,       3,        3,           NULL,      'bread',        4,                  2,  'Bake bread!',                          '',      '');
+(id, meal_id, position, from_recipe_id,       name, servings, prepare_at_meal_id,   preparation,               description, comment) VALUES
+( 1,       1,        1,           NULL, 'pancakes',        4,               NULL,            '', 'Make them really sweet!',      ''),
+( 2,       2,        2,              1,    'pizza',        2,               NULL,            '',                        '',      ''),
+( 3,       3,        3,           NULL,    'bread',        4,                  2, 'Bake bread!',                        '',      '');
 
 INSERT INTO "dish_ingredients"
 (id, position, dish_id, prepare, article_id, unit_id,  value, comment, item_id) VALUES
-( 1,        1,       1, FALSE,            1,       1,  500.0,      '',    NULL),
-( 2,        2,       1, FALSE,            2,       1,    5.0,      '',    NULL),
-( 3,        3,       1, FALSE,            3,       3,    0.5,      '',    NULL),
-( 4,        1,       2, FALSE,            1,       2,    0.5,      '',    NULL),
-( 5,        2,       2, FALSE,            3,       3,   0.25,      '',    NULL),
-( 6,        3,       2, FALSE,            2,       1,   12.5,      '',    NULL),
-( 7,        1,       3, FALSE,            1,       2,    1.0,      '',    NULL),
-( 8,        2,       3, FALSE,            2,       1,   25.0,      '',    NULL),
-( 9,        3,       3, FALSE,            3,       3,    1.0,      '',    NULL),
-(10,        4,       3, FALSE,            4,       1,  500.0,      '',    NULL),
-(11,        5,       3, FALSE,            1,       2,   12.5,      '',    NULL);
+( 1,        1,       1,   FALSE,          1,       1,  500.0,      '',    NULL),
+( 2,        2,       1,   FALSE,          2,       1,    5.0,      '',    NULL),
+( 3,        3,       1,   FALSE,          3,       3,    0.5,      '',    NULL),
+( 4,        1,       2,   FALSE,          1,       2,    0.5,      '',    NULL),
+( 5,        2,       2,   FALSE,          3,       3,   0.25,      '',    NULL),
+( 6,        3,       2,   FALSE,          2,       1,   12.5,      '',    NULL),
+( 7,        1,       3,    TRUE,          1,       2,    1.0,      '',    NULL),
+( 8,        2,       3,    TRUE,          2,       1,   25.0,      '',    NULL),
+( 9,        3,       3,    TRUE,          3,       3,    1.0,      '',    NULL),
+(10,        4,       3,   FALSE,          4,       1,  500.0,      '',    NULL),
+(11,        5,       3,   FALSE,          1,       2,   12.5,      '',    NULL);
 
 INSERT INTO "purchase_lists"
-(id, project_id,         name,        date) VALUES
-( 1,          1,'all at once','1999-12-31');
+(id, project_id,          name,         date) VALUES
+( 1,          1, 'all at once', '1999-12-31');
 
 INSERT INTO "items"
 (id, purchase_list_id, value, "offset", unit_id, article_id, purchased, comment) VALUES

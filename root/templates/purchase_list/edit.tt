@@ -6,9 +6,13 @@ html_title = html_title _ ' for ' _ display_date(list.date, {html=>1});
 
 <button class="btn btn-primary my-3 material-icons" onclick="print()" title="Print">print</button>
 
+[% IF sections.size == 0 %]
+<p>Currently no items assigned</p>
+[% END %]
+
 [% FOREACH section IN sections %]
-<div class="row my-3">
-	<div class="col-12 mb-2">
+<div class="my-3 no-break-inside">
+	<div class="mb-2">
 		<h3 class="shop-section text-primary">[% section.name || "No shop section" | html FILTER ucfirst %]</h3>
 
 	[% UNLESS section.name %]
@@ -16,7 +20,7 @@ html_title = html_title _ ' for ' _ display_date(list.date, {html=>1});
 	[% END %]
 	</div>
 	
-	<div class="col-12 mb-2 table-responsive">
+	<div class="mb-2 table-responsive">
 		<table class="table align-middle pl-editor">
 			<colgroup>
 				<col style="width:25%">
@@ -40,7 +44,7 @@ html_title = html_title _ ' for ' _ display_date(list.date, {html=>1});
 			<tbody>
 				<tr>
 					[% rowspan = item.ingredients.size;
-					IF item.offset;
+					IF item.offset !=0;
 					rowspan = rowspan + 1;
 					END;
 					 %]

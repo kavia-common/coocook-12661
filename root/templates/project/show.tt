@@ -1,5 +1,5 @@
 [% IF project.archived %]
-<div class="alert alert-success">
+<div class="alert alert-success no-print">
     [% IF can_unarchive %]
     <form id="unarchive" method="post" action="[% project_urls.unarchive %]"></form>
     <p class="m-0">
@@ -11,7 +11,7 @@
     [% END %]
 </div>
 [% ELSIF can_edit %]
-<div class="alert alert-success">
+<div class="alert alert-success no-print">
     <p class="m-0">
     [% IF inventory.articles == 0
         AND inventory.meals == 0
@@ -42,14 +42,125 @@
             You can <button class="alert-link" type="submit">📁 archive this project</button>
         </form>
     [% ELSE %]
-        Once you’ve finished this project you can <a class="alert-link" href="[% project_urls.print %]">print documents</a> to take action.
+        Once you’ve finished this project you can print <a class="alert-link" href="[% project_urls.purchase_lists %]">your purchase lists</a> to take action.
     [% END %]
 </div>
 [% END %]
 
-[% INCLUDE 'print/project.tt' %]
+<h2 class="display-3">[% project.name | html %]</h2>
 
-<p>Created at [% display_datetime(project.created) %] UTC.</p>
+<button class="btn btn-primary my-3 material-icons" onclick="print()" title="Print">print</button>
+
+<div class="mb-3">
+    [% USE Markdown;
+    project.description | markdown %]
+</div>
+
+<table id="overview" class="table">
+<thead>
+    <tr>
+        <th scope="col">Day</th>
+        <th scope="col">Meal</th>
+        <th scope="col">Dishes</th>
+        <th class="no-print">
+            <div class="d-grid">
+                <button class="btn btn-outline-primary btn-sm btn-quad material-icons" title="Add extra column" data-bs-focus="" data-bs-toggle="modal" data-bs-target="#addCol">add</button>
+            </div>
+        </th>
+    </tr>
+</thead>
+<tbody>
+[% FOREACH day IN days;
+    FOREACH meal IN day.meals %]
+    <tr>
+        [% IF loop.first %]
+        <td rowspan="[% day.meals.size %]"><a href="[% day.url %]">[% display_date(day.date, {html=>1}) %]</a></td>
+        [% END %]
+        <td>
+            [% meal.name | html %]
+            <br>
+            <span class="comment">[% meal.comment | html %]</span>
+        </td>
+        <td><ul>
+        [% FOREACH dish IN meal.dishes %]
+            <li>
+            [% IF dish.url %]
+                <a href="[% dish.url %]">[% dish.name | html %]</a>
+            [% ELSE;
+                dish.name | html;
+            END %]
+                ([% numerus(dish.servings, 'serving', 'servings') %])
+                <br>
+                <span class="comment">[% dish.comment | html %]</span>
+            </li>
+        [% END %]
+        [% FOREACH dish IN meal.prepared_dishes %]
+            <li>
+                prepare
+            [% IF dish.url %]
+                <a href="[% dish.url %]">[% dish.name | html %]</a>
+            [% ELSE;
+                dish.name | html;
+            END %]
+                for [% dish.meal.name | html %]
+                on [% display_date(dish.meal.date, {html=>1}) %]
+            </li>
+        [% END %]
+        </ul></td>
+        <td class="no-print">&nbsp;</td>
+    </tr>
+    [% END;
+END %]
+</tbody>
+</table>
+
+<p class="no-print">Created at [% display_datetime(project.created) %] UTC</p>
 [% IF project.archived %]
-    <p>Archived at [% display_datetime(project.archived) %] UTC.</p>
+    <p class="no-print">Archived at [% display_datetime(project.archived) %] UTC.</p>
 [% END %]
+
+<form id="addColForm">
+    <div class="modal fade" id="addCol" tabindex="-1" aria-labelledby="addColLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="addColLabel">Add extra column</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="mb-3">
+                        <label for="col-name" class="form-label">Name</label>
+                        <input id="col-name" class="form-control" type="text" name="name" required>
+                        <div class="d-flex align-items-center mt-3"><span class="material-icons">info</span> <span class="ms-1">Extra columns are <b>not</b> saved permanently.</span></div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="submit" class="btn btn-primary">Add column</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>
+
+<form id="editColForm">
+    <div class="modal fade" id="editCol" tabindex="-1" aria-labelledby="editColLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="editColLabel">Edit extra column</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="mb-3">
+                        <label for="col-edit-name" class="form-label">Name</label>
+                        <input id="col-edit-name" class="form-control" type="text" name="name" required>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="submit" class="btn btn-primary">Save column</button>
+                    <button type="button" id="delColBtn" class="btn btn-danger">Delete column</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>

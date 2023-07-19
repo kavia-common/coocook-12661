@@ -24,13 +24,14 @@ is $day => [
         prepared_dishes => [],
         dishes          => [
             {
-                'id'          => 1,
-                'name'        => 'pancakes',
-                'comment'     => '',
-                'servings'    => 4,
-                'preparation' => '',
-                'description' => 'Make them really sweet!',
-                'ingredients' => [
+                'id'                       => 1,
+                'name'                     => 'pancakes',
+                'comment'                  => '',
+                'servings'                 => 4,
+                'preparation'              => '',
+                'description'              => 'Make them really sweet!',
+                'has_prepared_ingredients' => F(),
+                'ingredients'              => [
                     {
                         'article' => {
                             'comment' => '',
@@ -94,6 +95,7 @@ is $day2 => array {
                     field name => 'dinner';
                     etc();
                 };
+                field has_prepared_ingredients => T();
                 etc();
             };
         };
