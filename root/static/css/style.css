@@ -359,7 +359,7 @@ cc-autocomplete {
 
 .article,
 .extra-col {
-    width: 100px;
+    /* width: 100px; /* TODO how to make column minimal with without arbitrary fixed value? */
 }
 
 .extra-col button {
