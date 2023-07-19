@@ -93,10 +93,10 @@ sub edit : GET HEAD Chained('base') PathPart('') Args(0) Does('~HasJS') Does('~H
         units    => $list->units,
     );
 
+    push @{ $c->stash->{css} }, '/css/print.css';
+
     $c->has_capability('edit_project')
       or return;
-
-    push @{ $c->stash->{css} }, '/css/print.css';
 
     for my $sections ( @{ $c->stash->{sections} } ) {
         for my $item ( @{ $sections->{items} } ) {
