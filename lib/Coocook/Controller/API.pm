@@ -1,7 +1,7 @@
 package Coocook::Controller::API;
 
 use Moose;
-use MooseX::MarkAsMethods autoclean => 1;
+use namespace::autoclean;
 
 # BEGIN-block necessary to make method attributes work
 BEGIN { extends 'Coocook::Controller' }

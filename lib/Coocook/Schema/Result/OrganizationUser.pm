@@ -1,7 +1,7 @@
 package Coocook::Schema::Result::OrganizationUser;
 
 use Moose;
-use MooseX::MarkAsMethods autoclean => 1;
+use namespace::autoclean;
 
 extends 'Coocook::Schema::Result';
 

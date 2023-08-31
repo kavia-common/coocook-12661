@@ -3,7 +3,7 @@ package Coocook::Script::Passwd;
 # ABSTRACT: script for setting a new password for a user
 
 use Moose;
-use MooseX::MarkAsMethods autoclean => 1;
+use namespace::autoclean;
 
 use Coocook::Schema;
 use Term::ReadKey;

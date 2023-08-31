@@ -1,8 +1,8 @@
 package Coocook::Controller::Recipe::Import;
 
 use Moose;
+use namespace::autoclean;
 
-use MooseX::MarkAsMethods autoclean => 1;
 use JSON::MaybeXS ();
 
 BEGIN { extends 'Coocook::Controller' }

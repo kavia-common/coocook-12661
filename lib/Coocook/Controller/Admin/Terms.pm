@@ -1,7 +1,7 @@
 package Coocook::Controller::Admin::Terms;
 
 use Moose;
-use MooseX::MarkAsMethods autoclean => 1;
+use namespace::autoclean;
 use DateTime;
 
 BEGIN { extends 'Coocook::Controller' }

@@ -3,8 +3,8 @@ package Coocook::Schema::Result;
 # ABSTRACT: base class for all Result classes
 
 use Moose;
-use MooseX::MarkAsMethods autoclean => 1;
 use MooseX::NonMoose;
+use namespace::autoclean;
 
 extends 'DBIx::Class::Core';
 

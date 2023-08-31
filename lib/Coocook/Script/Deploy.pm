@@ -3,7 +3,7 @@ package Coocook::Script::Deploy;
 # ABSTRACT: script for database maintance based on App::DH
 
 use Moose;
-use MooseX::MarkAsMethods autoclean => 1;
+use namespace::autoclean;
 
 # TODO upgrade fails on Perl 5.26 because .pl file can't be found
 # can be fixed by setting PERL_USE_UNSAFE_INC

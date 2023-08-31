@@ -4,7 +4,7 @@ package Coocook::ActionRole::RequiresCapability;
 
 use Coocook::Model::Authorization;
 use Moose::Role;
-use MooseX::MarkAsMethods autoclean => 1;
+use namespace::autoclean;
 
 after BUILD => sub {
     my ( $class, $args ) = @_;

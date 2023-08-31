@@ -1,7 +1,7 @@
 package Coocook::Controller::Browse::Project;
 
 use Moose;
-use MooseX::MarkAsMethods autoclean => 1;
+use namespace::autoclean;
 
 BEGIN { extends 'Coocook::Controller' }
 

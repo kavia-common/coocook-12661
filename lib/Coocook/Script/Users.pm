@@ -3,7 +3,7 @@ package Coocook::Script::Users;
 # ABSTRACT: script for exporting a list of users
 
 use Moose;
-use MooseX::MarkAsMethods autoclean => 1;
+use namespace::autoclean;
 
 use feature 'say';
 use open OUT => ':locale';    # respect locale setting of STDOUT (terminal)

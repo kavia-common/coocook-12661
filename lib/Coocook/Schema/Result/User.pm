@@ -1,10 +1,11 @@
 package Coocook::Schema::Result::User;
 
+use Moose;
+use namespace::autoclean;
+
 use Carp;
 use Coocook::Model::Token;
 use DateTime;
-use Moose;
-use MooseX::MarkAsMethods autoclean => 1;
 
 use feature 'fc';    # Perl v5.16
 

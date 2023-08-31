@@ -4,7 +4,7 @@ package Coocook::Script::Cron;
 
 use open ':locale';
 use Moose;
-use MooseX::MarkAsMethods autoclean => 1;
+use namespace::autoclean;
 
 with 'Coocook::Script::Role::HasDebug';
 with 'Coocook::Script::Role::HasSchema';

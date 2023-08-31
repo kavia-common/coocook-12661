@@ -3,8 +3,9 @@ package Coocook::Schema::ResultSet;
 # ABSTRACT: base class for all ResultSet classes
 
 use Moose;
-use MooseX::MarkAsMethods autoclean => 1;
 use MooseX::NonMoose;
+use namespace::autoclean;
+
 use Carp;
 
 our @CARP_NOT;

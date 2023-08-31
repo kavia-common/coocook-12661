@@ -1,7 +1,7 @@
 package Coocook::Schema::ResultSet::Project;
 
 use Moose;
-use MooseX::MarkAsMethods autoclean => 1;
+use namespace::autoclean;
 
 use DateTime;
 

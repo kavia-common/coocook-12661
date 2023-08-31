@@ -1,7 +1,7 @@
 package Coocook::Controller::Ajax::IngredientsEditor;
 
 use Moose;
-use MooseX::MarkAsMethods autoclean => 1;
+use namespace::autoclean;
 use JSON::MaybeXS;
 
 BEGIN { extends 'Coocook::Controller::Ajax' }

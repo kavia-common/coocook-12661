@@ -2,7 +2,7 @@ package Coocook::Controller::Project;
 
 use DateTime;
 use Moose;
-use MooseX::MarkAsMethods autoclean => 1;
+use namespace::autoclean;
 use JSON::MaybeXS qw/to_json/;
 
 BEGIN { extends 'Coocook::Controller' }

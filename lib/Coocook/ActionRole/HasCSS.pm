@@ -3,7 +3,7 @@ package Coocook::ActionRole::HasCSS;
 # ABSTRACT: role for controller actions to add page-specific CSS file
 
 use Moose::Role;
-use MooseX::MarkAsMethods autoclean => 1;
+use namespace::autoclean;
 
 has css_path => (
     is  => 'rw',

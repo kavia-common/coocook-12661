@@ -3,8 +3,8 @@ package Coocook::View::Email;
 # ABSTRACT: create emails with TT templates and Email::Stuffer
 
 use Moose;
-use MooseX::MarkAsMethods autoclean => 1;
 use MooseX::NonMoose;
+use namespace::autoclean;
 
 use Email::Stuffer;
 

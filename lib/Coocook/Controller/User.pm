@@ -3,11 +3,12 @@ package Coocook::Controller::User;
 use feature 'fc';
 use utf8;
 
+use Moose;
+use namespace::autoclean;
+
 use Coocook::Util;
 use Data::Validate::Email 'is_email';
 use DateTime;
-use Moose;
-use MooseX::MarkAsMethods autoclean => 1;
 
 BEGIN { extends 'Coocook::Controller' }
 

@@ -1,7 +1,7 @@
 package Coocook::Controller::Admin::User;
 
 use Moose;
-use MooseX::MarkAsMethods autoclean => 1;
+use namespace::autoclean;
 
 use feature 'fc';    # Perl v5.16
 

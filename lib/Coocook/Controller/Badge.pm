@@ -2,7 +2,7 @@ package Coocook::Controller::Badge;
 
 use DateTime;
 use Moose;
-use MooseX::MarkAsMethods autoclean => 1;
+use namespace::autoclean;
 
 BEGIN { extends 'Coocook::Controller' }
 

@@ -2,10 +2,11 @@ package Coocook::Schema;
 
 # ABSTRACT: DBIx::Class-based SQL database representation
 
+use Moose;
+use namespace::autoclean;
+
 use Carp;
 use Clone;    # indirect dependency required for connection()
-use Moose;
-use MooseX::MarkAsMethods autoclean => 1;
 use DateTime;
 use DBIx::Class::Helpers::Util qw< normalize_connect_info >;
 

@@ -5,7 +5,7 @@ package Coocook::Script::Dbck;
 use feature 'fc';    # Perl 5.16
 use open ':locale';
 use Moose;
-use MooseX::MarkAsMethods autoclean => 1;
+use namespace::autoclean;
 
 use Coocook::Schema;
 use Coocook::Util;

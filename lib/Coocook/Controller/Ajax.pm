@@ -4,7 +4,7 @@ package Coocook::Controller::Ajax;
 
 use Carp;
 use Moose;
-use MooseX::MarkAsMethods autoclean => 1;
+use namespace::autoclean;
 
 BEGIN { extends 'Catalyst::Controller' }
 

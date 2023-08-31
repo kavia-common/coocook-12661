@@ -1,8 +1,9 @@
 package Coocook::Schema::ResultSet::Terms;
 
-use DateTime;
 use Moose;
-use MooseX::MarkAsMethods autoclean => 1;
+use namespace::autoclean;
+
+use DateTime;
 
 extends 'Coocook::Schema::ResultSet';
 

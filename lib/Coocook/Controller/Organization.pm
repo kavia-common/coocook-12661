@@ -4,7 +4,7 @@ use utf8;
 
 use Coocook::Util;
 use Moose;
-use MooseX::MarkAsMethods autoclean => 1;
+use namespace::autoclean;
 use PerlX::Maybe;
 
 BEGIN { extends 'Coocook::Controller' }

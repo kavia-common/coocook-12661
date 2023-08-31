@@ -1,7 +1,7 @@
 package Coocook::Controller::Root;
 
 use Moose;
-use MooseX::MarkAsMethods autoclean => 1;
+use namespace::autoclean;
 
 use HTML::Meta::Robots;
 

@@ -3,8 +3,8 @@ package Coocook::View::Email::TT;
 # ABSTRACT: helper view for Coocook::View::Email to render TT templates
 
 use Moose;
-use MooseX::MarkAsMethods autoclean => 1;
 use MooseX::NonMoose;
+use namespace::autoclean;
 
 extends 'Catalyst::View::TT';
 

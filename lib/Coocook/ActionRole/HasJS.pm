@@ -3,7 +3,7 @@ package Coocook::ActionRole::HasJS;
 # ABSTRACT: role for controller actions to add page-specific JavaScript file
 
 use Moose::Role;
-use MooseX::MarkAsMethods autoclean => 1;
+use namespace::autoclean;
 
 has js_path => (
     is  => 'rw',

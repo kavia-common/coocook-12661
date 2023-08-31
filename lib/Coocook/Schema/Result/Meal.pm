@@ -1,7 +1,7 @@
 package Coocook::Schema::Result::Meal;
 
 use Moose;
-use MooseX::MarkAsMethods autoclean => 1;
+use namespace::autoclean;
 use JSON::MaybeXS;
 
 extends 'Coocook::Schema::Result';

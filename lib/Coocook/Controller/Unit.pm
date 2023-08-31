@@ -3,7 +3,7 @@ package Coocook::Controller::Unit;
 use utf8;
 
 use Moose;
-use MooseX::MarkAsMethods autoclean => 1;
+use namespace::autoclean;
 use Scalar::Util qw( looks_like_number weaken );
 
 BEGIN { extends 'Coocook::Controller' }

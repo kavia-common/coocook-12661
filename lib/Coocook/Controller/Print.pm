@@ -2,7 +2,7 @@ package Coocook::Controller::Print;
 
 use DateTime;
 use Moose;
-use MooseX::MarkAsMethods autoclean => 1;
+use namespace::autoclean;
 use utf8;
 
 BEGIN { extends 'Coocook::Controller' }

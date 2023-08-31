@@ -1,7 +1,7 @@
 package Coocook::Controller::Recipe;
 
 use Moose;
-use MooseX::MarkAsMethods autoclean => 1;
+use namespace::autoclean;
 
 use Coocook::Util;
 use JSON::MaybeXS qw/to_json/;

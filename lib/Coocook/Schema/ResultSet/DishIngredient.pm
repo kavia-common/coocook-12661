@@ -1,7 +1,7 @@
 package Coocook::Schema::ResultSet::DishIngredient;
 
 use Moose;
-use MooseX::MarkAsMethods autoclean => 1;
+use namespace::autoclean;
 
 extends 'Coocook::Schema::ResultSet';
 

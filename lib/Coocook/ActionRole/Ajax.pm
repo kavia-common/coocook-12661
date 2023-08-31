@@ -3,7 +3,7 @@ package Coocook::ActionRole::Ajax;
 # ABSTRACT: role for controller actions that respond with JSON and require a Session
 
 use Moose::Role;
-use MooseX::MarkAsMethods autoclean => 1;
+use namespace::autoclean;
 
 before execute => sub {
     my ( $self, $controller, $c ) = @_;

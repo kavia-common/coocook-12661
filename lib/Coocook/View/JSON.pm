@@ -4,8 +4,8 @@ package Coocook::View::JSON;
 
 use Moose;
 
-use MooseX::MarkAsMethods autoclean => 1;
 use MooseX::NonMoose;
+use namespace::autoclean;
 
 extends 'Catalyst::View::JSON';
 

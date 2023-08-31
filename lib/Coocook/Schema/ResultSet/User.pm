@@ -2,9 +2,10 @@ package Coocook::Schema::ResultSet::User;
 
 use feature 'fc';
 
-use Data::Validate::Email 'is_email';
 use Moose;
-use MooseX::MarkAsMethods autoclean => 1;
+use namespace::autoclean;
+
+use Data::Validate::Email 'is_email';
 
 extends 'Coocook::Schema::ResultSet';
 
