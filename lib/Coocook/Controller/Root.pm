@@ -198,12 +198,23 @@ sub homepage : Private {
 
     my $max_recipes = 10;
 
-    my @public_recipes = $c->model('DB::Recipe')->public->search(
+    my $recipes        = $c->model('DB::Recipe');
+    my @public_recipes = $recipes->public->search(
         undef,
         {
-            join     => 'project',
-            order_by => { -desc => 'project.created' },
             rows     => $max_recipes,
+            join     => 'project',
+            order_by => {
+                -desc => [
+
+                    # sort recipes without 'created' timestamp last
+                    # https://stackoverflow.com/a/7622046/
+                    \( '(' . $recipes->me('created') . ' IS NOT NULL)' ),    #perltidy
+
+                    $recipes->me('created'),
+                    'project.created',
+                ]
+            },
         }
     )->all;
 
