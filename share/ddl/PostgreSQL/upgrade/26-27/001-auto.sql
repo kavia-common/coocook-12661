@@ -3,8 +3,11 @@
 ;
 BEGIN;
 
-;
-ALTER TABLE recipes ADD COLUMN created timestamp without time zone DEFAULT CURRENT_TIMESTAMP;
+-- create table with NULL as default
+ALTER TABLE recipes ADD COLUMN created timestamp without time zone;
+
+-- set default value for future rows
+ALTER TABLE recipes ALTER COLUMN created SET DEFAULT CURRENT_TIMESTAMP;
 
 ;
 
