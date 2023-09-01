@@ -1,8 +1,19 @@
 This file documents the revision history for Coocook.
 
-0.04  NEXT
+0.05  NEXT
+
+0.04  2023-07-19 Codename "Nachtwache"
     - add recipe(s) of the day
     - drop config for custom texts, use custom templates instead
+    - allow users to change their email address
+    - don't send password reset emails to inexistent accounts
+    - hide user profile from search engines and anonymous users
+    - modernize user interface with Bootstrap framework
+    - add interactive drag & drop editor for meals & dishes and for dish/recipe ingredients
+    - allow free ordering of meals and dishes by drag & drop
+    - move code, issue tracker, etc. from GitHub.com to GitLab.com
+    - remove concept of quantities #118
+    - remove dedicated print page but improve print layout of normal web pages like print overview
 
 0.03  2020-12-28 Codename "Krippenspiel"
     - user interface based on Bootstrap framework
