@@ -10,7 +10,7 @@ use Clone;    # indirect dependency required for connection()
 use DateTime;
 use DBIx::Class::Helpers::Util qw< normalize_connect_info >;
 
-our $VERSION = 26;    # version of schema definition, not software version!
+our $VERSION = 27;    # version of schema definition, not software version!
 
 extends 'DBIx::Class::Schema::Config';
 
