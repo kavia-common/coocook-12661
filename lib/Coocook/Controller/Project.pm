@@ -284,7 +284,7 @@ sub exportable_projects : Private {
           $c->project->other_projects->sorted->all ];
 }
 
-sub get_import : GET HEAD Chained('base') PathPart('import') Args(0) Does('~HasCSS') Does('~HasJS')
+sub get_import : GET HEAD Chained('base') PathPart('import') Args(0) Does('~HasJS')
   RequiresCapability('import_into_project') {    # import() already used by 'use'
     my ( $self, $c ) = @_;
 
