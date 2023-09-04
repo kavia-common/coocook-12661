@@ -1,4 +1,4 @@
-[% load_page_specific_js();
+[% js_push_template_path();
 
 IF article; escape_title( 'Article', article.name ); ELSE; title="New Article"; END %]
 

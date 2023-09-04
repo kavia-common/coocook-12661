@@ -1,4 +1,4 @@
-[% load_page_specific_js();
+[% js_push_template_path();
 css.push('/css/print.css');
 
 IF project.archived %]

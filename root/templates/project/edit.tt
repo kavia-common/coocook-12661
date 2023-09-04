@@ -1,6 +1,6 @@
 [% title = project.name;
 
-load_page_specific_css();
+css_push_template_path();
 js.push('/lib/coocook-web-components/dist/meals-dishes-editor/meals-dishes-editor.es.js');
 %]
 

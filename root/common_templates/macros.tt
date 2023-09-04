@@ -1,8 +1,8 @@
-[%~ MACRO load_page_specific_css BLOCK;
+[%~ MACRO css_push_template_path BLOCK;
     css.push( '/css/' _ template.name.replace('\.tt$', '.css') );
 END;
 
-MACRO load_page_specific_js BLOCK;
+MACRO js_push_template_path BLOCK;
     js.push( '/js/' _ template.name.replace('\.tt$', '.js') );
 END;
 

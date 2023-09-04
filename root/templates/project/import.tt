@@ -1,6 +1,6 @@
 [% title = "Import";
 
-load_page_specific_js();
+js_push_template_path();
 
 no_import = 1;
 FOR p IN properties;

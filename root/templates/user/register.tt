@@ -1,7 +1,7 @@
 [% window_title = "Sign up";
 
-load_page_specific_css();
-load_page_specific_js();
+css_push_template_path();
+js_push_template_path();
 js.push('/lib/zxcvbn.js');
 %]
 
