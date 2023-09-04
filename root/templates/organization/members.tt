@@ -1,4 +1,7 @@
 [% escape_title( 'Organization members of', organization.display_name );
+
+js.push('/lib/coocook-web-components/dist/autocomplete/autocomplete.es.js');
+
 has_admin = 0 %]
 
 <div class="row my-3">

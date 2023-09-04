@@ -23,12 +23,6 @@ Catalyst Controller.
 
 =cut
 
-sub auto : Private {
-    my ( $self, $c ) = @_;
-
-    push @{ $c->stash->{css} }, '/css/print.css';
-}
-
 sub day : GET HEAD Chained('/purchase_list/submenu') PathPart('print/day') Args(3)
   RequiresCapability('view_project') {
     my ( $self, $c, $year, $month, $day ) = @_;

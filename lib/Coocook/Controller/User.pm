@@ -89,8 +89,6 @@ sub register : GET HEAD Chained('/base') Args(0) Public {
         else                           { $$_ = time }
     }
 
-    push @{ $c->stash->{js} }, '/lib/zxcvbn.js';
-
     if ( my $terms = $c->model('DB::Terms')->valid_today ) {
         $c->stash(
             terms => $terms->as_hashref( url => $c->uri_for_action( '/terms/show', [ $terms->id ] ) ) );

@@ -3,6 +3,7 @@
 title      =      title _ ' for ' _ display_date(list.date, {short=>1});
 html_title = html_title _ ' for ' _ display_date(list.date, {html=>1});
 
+css.push('/css/print.css');
 load_page_specific_css();
 load_page_specific_js();
 %]

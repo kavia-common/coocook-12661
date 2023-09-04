@@ -92,8 +92,6 @@ sub edit : GET HEAD Chained('base') PathPart('') Args(0) RequiresCapability('vie
         units    => $list->units,
     );
 
-    push @{ $c->stash->{css} }, '/css/print.css';
-
     $c->has_capability('edit_project')
       or return;
 

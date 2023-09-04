@@ -1,4 +1,7 @@
 [% title = "Permissions";
+
+js.push('/lib/coocook-web-components/dist/autocomplete/autocomplete.es.js');
+
 has_admin = 0 %]
 
 <table class="table">

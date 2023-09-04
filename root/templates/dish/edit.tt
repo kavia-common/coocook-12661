@@ -1,4 +1,8 @@
-[% escape_title( 'Dish', dish.name ) %]
+[% escape_title( 'Dish', dish.name );
+
+css.push('/lib/coocook-web-components/dist/ingredients-editor/ingredients-editor_index.css');
+js.push('/lib/coocook-web-components/dist/ingredients-editor/ingredients-editor.es.js');
+%]
 
 <div class="row mb-3 mt-n3">
 	<div class="col-sm-6">

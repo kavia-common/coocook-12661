@@ -1,7 +1,9 @@
 [% window_title = "Sign up";
 
 load_page_specific_css();
-load_page_specific_js() %]
+load_page_specific_js();
+js.push('/lib/zxcvbn.js');
+%]
 
 <div class="mx-auto" style="max-width:500px;">
     <div class="content-box mb-3">

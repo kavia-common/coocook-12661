@@ -85,9 +85,6 @@ sub index : GET HEAD Chained('/project/submenu') PathPart('permissions') Args(0)
         roles       => [ grep { $_ ne 'owner' } $c->model('Authorization')->project_roles ],
         template    => 'project/permissions.tt',
     );
-
-    push @{ $c->stash->{js} }, '/lib/coocook-web-components/dist/autocomplete/autocomplete.es.js';
-
 }
 
 sub add : POST Chained('/project/base') PathPart('permissions/add') Args(0) CustomAuthz {
