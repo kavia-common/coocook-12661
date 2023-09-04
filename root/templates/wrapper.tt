@@ -37,7 +37,7 @@
 [% END %]
 
 [% FOREACH path IN css %]
-    <link rel="stylesheet" href="[% path %]">
+    <link rel="stylesheet" href="[% uri_for_static(path) %]">
 [% END %]
 </head>
 
@@ -247,7 +247,7 @@
     </div>
 
     [% FOR path IN js %]
-    <script src="[% path %]"></script>
+    <script src="[% uri_for_static(path) %]"></script>
     [% END %]
 </body>
 </html>
