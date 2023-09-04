@@ -33,9 +33,6 @@ sub preview : GET HEAD Chained('base') PathPart('') Args(0) RequiresCapability('
     my $project = $c->stash->{project};
     my $recipe  = $c->stash->{recipe};
 
-    push @{ $c->stash->{css} }, '/css/recipe/import/preview.css';
-    push @{ $c->stash->{js} },  '/js/recipe/import/preview.js';
-
     my $importer = $c->stash->{importer}->identify_candidates();
 
     {    # build 'unit_ids_joined' fast

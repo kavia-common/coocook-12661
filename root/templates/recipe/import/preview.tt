@@ -1,5 +1,10 @@
 [% title = BLOCK %]Import recipe "[% recipe.name %]"[% END;
-html_title = BLOCK %]Import recipe <a href="[% recipe_url %]"><em>[% recipe.name | html %]</em></a> from project <a href="[% source_project_url %]"><em>[% recipe.project.name | html %]</em></a>[% END %]
+
+html_title = BLOCK %]Import recipe <a href="[% recipe_url %]"><em>[% recipe.name | html %]</em></a> from project <a href="[% source_project_url %]"><em>[% recipe.project.name | html %]</em></a>[% END;
+
+load_page_specific_css();
+load_page_specific_js();
+%]
 
 <form method="post" action="[% import_url %]" id="import">
 

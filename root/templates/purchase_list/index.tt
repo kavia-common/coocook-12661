@@ -1,4 +1,6 @@
-[% title = "Purchase lists" %]
+[% title = "Purchase lists";
+
+load_page_specific_js() %]
 
 <table class="table table-striped align-middle">
     <thead>

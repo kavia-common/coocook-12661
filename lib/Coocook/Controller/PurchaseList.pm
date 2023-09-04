@@ -36,7 +36,7 @@ sub submenu : Chained('/project/base') PathPart('') CaptureArgs(0) {
 
 =cut
 
-sub index : GET HEAD Chained('submenu') PathPart('purchase_lists') Args(0) Does('~HasJS')
+sub index : GET HEAD Chained('submenu') PathPart('purchase_lists') Args(0)
   RequiresCapability('view_project') {
     my ( $self, $c ) = @_;
 
@@ -82,8 +82,7 @@ sub base : Chained('submenu') PathPart('purchase_list') CaptureArgs(1) {
     $c->stash( list  => $lists->find($id) || $c->detach('/error/not_found') );
 }
 
-sub edit : GET HEAD Chained('base') PathPart('') Args(0) Does('~HasJS') Does('~HasCSS')
-  RequiresCapability('view_project') {
+sub edit : GET HEAD Chained('base') PathPart('') Args(0) RequiresCapability('view_project') {
     my ( $self, $c ) = @_;
 
     my $list = $c->model('PurchaseList')->new( list => $c->stash->{list} );

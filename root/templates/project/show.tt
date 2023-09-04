@@ -1,4 +1,6 @@
-[% IF project.archived %]
+[% load_page_specific_js();
+
+IF project.archived %]
 <div class="alert alert-success no-print">
     [% IF can_unarchive %]
     <form id="unarchive" method="post" action="[% project_urls.unarchive %]"></form>

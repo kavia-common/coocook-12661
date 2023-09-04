@@ -2,6 +2,9 @@
 
 title      =      title _ ' for ' _ display_date(list.date, {short=>1});
 html_title = html_title _ ' for ' _ display_date(list.date, {html=>1});
+
+load_page_specific_css();
+load_page_specific_js();
 %]
 
 <button class="btn btn-primary my-3 material-icons" onclick="print()" title="Print">print</button>

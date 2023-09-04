@@ -1,4 +1,6 @@
-[% title = "Shop sections" %]
+[% title = "Shop sections";
+
+load_page_specific_js() %]
 
 <table class="table table-striped align-middle">
     <thead>

@@ -1,4 +1,12 @@
-[%~ MACRO display_date(date, opts) BLOCK;
+[%~ MACRO load_page_specific_css BLOCK;
+    css.push( '/css/' _ template.name.replace('\.tt$', '.css') );
+END;
+
+MACRO load_page_specific_js BLOCK;
+    js.push( '/js/' _ template.name.replace('\.tt$', '.js') );
+END;
+
+MACRO display_date(date, opts) BLOCK;
     IF opts.html ~%]
         <abbr title="[% date.strftime(date_format_long) %]">[% date.strftime(date_format_short) %]</abbr>
     [%~ ELSE;

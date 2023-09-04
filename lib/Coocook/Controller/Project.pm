@@ -121,8 +121,7 @@ sub submenu : Chained('base') PathPart('') CaptureArgs(0) {
     );
 }
 
-sub show : GET HEAD Chained('submenu') PathPart('') Args(0) RequiresCapability('view_project')
-  Does('~HasJS') {
+sub show : GET HEAD Chained('submenu') PathPart('') Args(0) RequiresCapability('view_project') {
     my ( $self, $c ) = @_;
 
     my $days = $c->model('Plan')->project( $c->project );
@@ -284,7 +283,7 @@ sub exportable_projects : Private {
           $c->project->other_projects->sorted->all ];
 }
 
-sub get_import : GET HEAD Chained('base') PathPart('import') Args(0) Does('~HasJS')
+sub get_import : GET HEAD Chained('base') PathPart('import') Args(0)
   RequiresCapability('import_into_project') {    # import() already used by 'use'
     my ( $self, $c ) = @_;
 

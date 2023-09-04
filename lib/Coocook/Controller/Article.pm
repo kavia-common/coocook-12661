@@ -84,8 +84,7 @@ sub base : Chained('/project/base') PathPart('article') CaptureArgs(1) {
     $c->stash( article => $c->project->articles->find($id) || $c->detach('/error/not_found') );
 }
 
-sub edit : GET HEAD Chained('base') PathPart('') Args(0) RequiresCapability('view_project')
-  Does('~HasJS') {
+sub edit : GET HEAD Chained('base') PathPart('') Args(0) RequiresCapability('view_project') {
     my ( $self, $c ) = @_;
 
     my $article = $c->stash->{article};
