@@ -1,3 +1,4 @@
+// !!! this file is also loaded on /settings/account for password change !!!
 (() => {
     document.querySelector('input[name="url"]')?.setAttribute('tabindex', -1);
 
@@ -5,10 +6,12 @@
 
     const passwordElem  = document.querySelector('input[name="password"]');
     const password2Elem = document.querySelector('input[name="password2"]');
-    const meterElem =  document.getElementById('meter');
+    const meterElem      = document.getElementById('meter');
+    const comparatorElem = document.getElementById('comparator');
 
     let html = 'strength: ' + '&#x2606;'.repeat( MAX_STARS );
     meterElem.innerHTML = html;
+    comparatorElem.innerHTML = '&nbsp;';
 
     passwordElem.addEventListener('input', () => {
         let password = passwordElem.value;
@@ -23,8 +26,6 @@
         meterElem.setAttribute( 'title', stars + ' of ' + MAX_STARS );
     });
 
-    const comparatorElem = document.getElementById('comparator');
-
     [passwordElem, password2Elem].forEach(item => {
         item.addEventListener('input', () => {
             let password  = passwordElem.value;
@@ -34,7 +35,7 @@
                 comparatorElem.innerHTML = password == password2 ? "matches" : "doesn't match";
             }
             else {
-                comparatorElem.innerHTML = '';
+                comparatorElem.innerHTML = '&nbsp;';
             }
         });
     });

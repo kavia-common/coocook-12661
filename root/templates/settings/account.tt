@@ -49,8 +49,17 @@
     <form method="post" action="[% change_password_url %]">
         <div class="mb-3" style="max-width: 300px;">
         <input type="password" name="current_password"  placeholder="current password" class="form-control mb-1">
+        </div>
+
+        <div class="mb-3" style="max-width: 300px;">
         <input type="password" name="password"  placeholder="new password" class="form-control mb-1">
+        <span id="meter"></span>
+        </div>
+
+        <div class="mb-3" style="max-width: 300px;">
         <input type="password" name="password2" placeholder="confirm new password" class="form-control">
+        <span id="comparator"></span>
+
         </div>
         <input type="submit" value="Change password" class="btn btn-primary mb-3">
     </form>
