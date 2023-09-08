@@ -9,7 +9,7 @@ IF import_url %]<form id="import"method="get" action="[% import_url %]"></form>[
     <div class="row gy-2">
         <div class="btn-group offset-xxl-3 col-xxl-3 col-md-4 col-sm-6">
             <button type="button" class="btn btn-primary dropdown-toggle[% dishes.size == 0 ? " disabled" : "" %]" data-bs-toggle="collapse" data-bs-target="#usage" aria-expanded="false" aria-controls="usage">
-    	    	Used in <span class="badge bg-light text-dark">[% dishes.size %]</span> dish[% dishes.size != 1 ? "es" : "" %]
+                Used in <span class="badge bg-light text-dark">[% dishes.size %]</span> dish[% dishes.size != 1 ? "es" : "" %]
             </button>
         </div>
         [% IF public_url %]
@@ -26,17 +26,17 @@ IF import_url %]<form id="import"method="get" action="[% import_url %]"></form>[
         [% END %]
     </div>
 
-	[% IF dishes.size > 0 %]
-		<div class="collapse mt-2" id="usage">
-			<div class="card">
-				<ul class="list-group">
-				[% FOR dish IN dishes %]
-					<li class="list-group-item">[% loop.count %]. dish <a href="[% dish.url %]">[% dish.name | html %]</a> for meal <em>[% dish.meal | html %]</em> on [% display_date(dish.date, {html=>1}) %]</li>
-				[% END %]
-				</ul>
-			</div>
-		</div>
-	[% END %]
+    [% IF dishes.size > 0 %]
+        <div class="collapse mt-2" id="usage">
+            <div class="card">
+                <ul class="list-group">
+                [% FOR dish IN dishes %]
+                    <li class="list-group-item">[% loop.count %]. dish <a href="[% dish.url %]">[% dish.name | html %]</a> for meal <em>[% dish.meal | html %]</em> on [% display_date(dish.date, {html=>1}) %]</li>
+                [% END %]
+                </ul>
+            </div>
+        </div>
+    [% END %]
 </div>
 
 <form class="confirmIfUnsavedChanges" method="post" action="[% update_url %]">

@@ -5,77 +5,77 @@ js.push('/lib/coocook-web-components/dist/ingredients-editor/ingredients-editor.
 %]
 
 <div class="row mb-3 mt-n3">
-	<div class="col-sm-6">
-		<p class="m-0">for meal <em>[% dish.meal.name | html %]</em> on [% display_date(dish.meal.date, {html=>1}) %]</p>
-		[% IF dish.recipe %]
-			<p class="m-0">from recipe <a href="[% dish.recipe.url %]">[% dish.recipe.name | html %]</a></p>
-		[% END %]
-	</div>
+    <div class="col-sm-6">
+        <p class="m-0">for meal <em>[% dish.meal.name | html %]</em> on [% display_date(dish.meal.date, {html=>1}) %]</p>
+        [% IF dish.recipe %]
+            <p class="m-0">from recipe <a href="[% dish.recipe.url %]">[% dish.recipe.name | html %]</a></p>
+        [% END %]
+    </div>
 
-	<div class="offset-sm-1 col-sm-5 text-left">
-		<div class="d-flex justify-content-end">
-			<form method="post" action="[% delete_url %]">
-				<button type="button" class="btn btn-danger" title="Delete dish" aria-expanded="false">
-					<i class="material-icons">delete_forever</i> Delete
-				</button>
-			</form>
-		</div>
+    <div class="offset-sm-1 col-sm-5 text-left">
+        <div class="d-flex justify-content-end">
+            <form method="post" action="[% delete_url %]">
+                <button type="button" class="btn btn-danger" title="Delete dish" aria-expanded="false">
+                    <i class="material-icons">delete_forever</i> Delete
+                </button>
+            </form>
+        </div>
 
-	</div>
+    </div>
 </div>
 
 <form class="confirmIfUnsavedChanges" action="[% dish.update_url %]" method="post">
 
 <div class="card">
-	<div class="card-header">
-	    <h3 id="section_general_information"><a name="add ingredients">General information</a></h3>
-	</div>
-	<div class="card-body">
-	    <div class="mb-3">
-	    	<label for="name" class="form-label">Name</label>
+    <div class="card-header">
+        <h3 id="section_general_information"><a name="add ingredients">General information</a></h3>
+    </div>
+    <div class="card-body">
+        <div class="mb-3">
+            <label for="name" class="form-label">Name</label>
             <input id="name" class="form-control" type="text" name="name" value="[% dish.name | html %]" required>
-	    </div>
-	    <div class="mb-3">
-	    	<label for="comment" class="form-label">Comment</label>
+        </div>
+        <div class="mb-3">
+            <label for="comment" class="form-label">Comment</label>
             <textarea id="comment" class="form-control" name="comment">[% dish.comment %]</textarea>
-	    </div>
-	    <div class="mb-3">
-	    	<label for="tags" class="form-label">Tags</label>
+        </div>
+        <div class="mb-3">
+            <label for="tags" class="form-label">Tags</label>
             <input id="tags" class="form-control" type="text" name="tags" value="[% dish.tags_joined %]">
-	    </div>
-	    <div class="row mb-3">
+        </div>
+        <div class="row mb-3">
             <div class="col-md">
                 <label for="servings" class="form-label">Servings</label>
                 <input id="servings" class="form-control" type="number" name="servings" value="[% dish.servings %]" min="1">
-	    		<small class="text-muted">Changing the number here <strong>does not recalculate</strong> the amounts of ingredients. For recalculating see <a href="#section_recalculate_values">the form</a> below.</small>
-	    	</div>
+                <small class="text-muted">Changing the number here <strong>does not recalculate</strong> the amounts of ingredients. For recalculating see <a href="#section_recalculate_values">the form</a> below.</small>
+            </div>
             <div class="col-md mt-3 mt-md-0">
-	    		<label for="prepare_at_meal" class="form-label">Prepare at meal</label>
+                <label for="prepare_at_meal" class="form-label">Prepare at meal</label>
                 <select id="prepare_at_meal" class="form-select" name="prepare_at_meal">
-	    		    <option value="" [% 'selected' IF NOT dish.prepare_at_meal.defined %] >(none)</option>
-	    			[% FOR meal IN prepare_meals %]
-	    				<option value="[% meal.id %]" [% 'selected' IF dish.prepare_at_meal.id == meal.id %]>[% display_date(meal.date) %]: [% meal.name | html %]</option>
-	    			[% END %]
-	    		</select>
-	    	</div>
-	    </div>
-	    <div class="mb-3">
-	    	<label for="preparation" class="form-label">Preparation</label>
+                    <option value="" [% 'selected' IF NOT dish.prepare_at_meal.defined %] >(none)</option>
+                    [% FOR meal IN prepare_meals %]
+                        <option value="[% meal.id %]" [% 'selected' IF dish.prepare_at_meal.id == meal.id %]>[% display_date(meal.date) %]: [% meal.name | html %]</option>
+                    [% END %]
+                </select>
+            </div>
+        </div>
+        <div class="mb-3">
+            <label for="preparation" class="form-label">Preparation</label>
             <div class="row">
                 <div class="col-md-6 mb-md-0 mb-2">
                     <textarea id="preparation" class="form-control with-markdown-preview" name="preparation" rows="10">[% dish.preparation | html %]</textarea>
                 </div>
-	    	</div>
-	    </div>
-	    <div class="mb-3">
-	    	<label for="description" class="form-label">Description</label>
+            </div>
+        </div>
+        <div class="mb-3">
+            <label for="description" class="form-label">Description</label>
             <div class="row">
                 <div class="col-md-6 mb-md-0 mb-2">
                     <textarea id="description" class="form-control with-markdown-preview" name="description" rows="10">[% dish.description | html %]</textarea>
                 </div>
             </div>
-	    </div>
-	    <div class="text-end">
+        </div>
+        <div class="text-end">
             <button type="submit" class="btn btn-primary">Update dish</button>
         </div>
     </div>
@@ -89,23 +89,23 @@ class="col-sm-12 py-3">
 </div>
 
 <form class="mt-3 confirmIfUnsavedChanges" method="post" action="[% dish.recalculate_url %]">
-	<div class="card">
-		<div class="card-header">
-			<h3 id="section_recalculate_values">Recalculate values</h3>
-		</div>
+    <div class="card">
+        <div class="card-header">
+            <h3 id="section_recalculate_values">Recalculate values</h3>
+        </div>
         <div class="card-body">
-			<p>Adjust the values in the <a href="#ingredients">table above</a> above by changing the number of servings</strong>
-				(currently [% dish.servings %])
-				and <strong>automatically de-/increasing the numbers</strong> in the same ratio.</p>
-		    <div class="row align-items-center">
-		    	<label for="value" class="col-sm-3 col-form-label">Servings</label>
+            <p>Adjust the values in the <a href="#ingredients">table above</a> above by changing the number of servings</strong>
+                (currently [% dish.servings %])
+                and <strong>automatically de-/increasing the numbers</strong> in the same ratio.</p>
+            <div class="row align-items-center">
+                <label for="value" class="col-sm-3 col-form-label">Servings</label>
                 <div class="col-sm-5">
-		    		<input  id="recalculate_servings" type="number" name="servings" value="[% dish.servings %]" class="form-control">
-		    	</div>
-		    	<div class="col-sm-4 mt-3 mt-sm-0 text-end">
+                    <input  id="recalculate_servings" type="number" name="servings" value="[% dish.servings %]" class="form-control">
+                </div>
+                <div class="col-sm-4 mt-3 mt-sm-0 text-end">
                     <button type="submit" class="btn btn-primary">Recalculate values</button>
                 </div>
-		    </div>
+            </div>
         </div>
-	</div>
+    </div>
 </form>
