@@ -12,6 +12,7 @@ lint:
   image:
     name: alpine/git:latest
     entrypoint: [""]    # override default entrypoint "git"
+  cache: []
   script:
     - echo "Listing any text files containing CR characters:"
     - sh -c "! git grep -IlP '\x0d'"
