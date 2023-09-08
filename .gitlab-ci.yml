@@ -1,6 +1,5 @@
 ---
 stages:
-  - lint
   - test
 
 cache:
@@ -9,7 +8,7 @@ cache:
     - perl5/
 
 lint:
-  stage: lint
+  stage: test
   image:
     name: alpine/git:latest
     entrypoint: [""]    # override default entrypoint "git"
