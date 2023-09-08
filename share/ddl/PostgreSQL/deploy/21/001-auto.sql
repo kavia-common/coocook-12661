@@ -1,7 +1,7 @@
--- 
+--
 -- Created by SQL::Translator::Producer::PostgreSQL
 -- Created on Sun Jun  7 04:34:47 2020
--- 
+--
 ;
 --
 -- Table: blacklist_emails
