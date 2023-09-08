@@ -53,7 +53,7 @@ Prerequisites:
 
   * by default [SQLite](https://www.sqlite.org/)
     with [`DBD::SQLite`](https://metacpan.org/pod/DBD::SQLite)
-  
+
   * or [PostgreSQL](https://www.postgresql.org/)
     with [`DBD::Pg`](https://metacpan.org/pod/DBD::Pg)
 
