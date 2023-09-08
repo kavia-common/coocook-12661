@@ -63,7 +63,7 @@ has_admin = 0 %]
                 </div>
             </td>
         </tr>
-[% END %]   
+[% END %]
     </tbody>
 </table>
 

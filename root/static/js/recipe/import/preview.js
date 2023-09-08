@@ -3,7 +3,7 @@
     articleElemList.forEach(articleElem => {
         articleElem.onchange = () => {
             let selectedArticleElem = articleElem.options[articleElem.options.selectedIndex];
-        
+
             let unitElem = articleElem.closest('tr').querySelector('td.unit select');
             let unitOptionElems = unitElem.options;
 
@@ -13,13 +13,13 @@
                 });
                 return;
             }
-    
+
             let unitIds = selectedArticleElem.getAttribute('data-units').split(',');
             // if select unit is not applicable to article, reset unit selector
             if( unitIds.indexOf( unitElem.value ) == -1 ) {
                 unitElem.value = '';
             }
-    
+
             // show only applicable units
             Array.from(unitOptionElems).forEach(unitOptionElem => {
                 let unitId = unitOptionElem.value;
@@ -36,7 +36,7 @@
     const nameInputElem = document.querySelector('form#import input[name="name"]');
     nameInputElem.addEventListener('input', () => {
         let name = nameInputElem.value;
-        
+
         nameInputElem.setCustomValidity( existingRecipeNames.indexOf(name) == -1 ? '' : "This recipe name already exists in this project" );
     });
 

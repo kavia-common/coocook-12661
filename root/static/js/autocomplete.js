@@ -32,19 +32,19 @@ class Autocomplete extends HTMLElement {
 
         // Create a shadow root
         const shadow = this.attachShadow({mode: "open"});
-        
+
         const addInput = () => {
             const input = document.createElement("input");
             input.required = true;
             input.name = this.getAttribute("input-name") || null;
             input.type = "hidden";
             this.input = input;
-    
+
             this.parentNode.insertBefore(input, this.nextSibling)
             this.closest("form").addEventListener("submit", e => {
                 if (!input.value) {
                     e.preventDefault();
-                    
+
                     if (this.alertFunc && this.invalid) {
                         this.alertFunc(...this.invalid);
                     }
@@ -58,24 +58,24 @@ class Autocomplete extends HTMLElement {
             input.className = "form-control";
             input.type = "search";
             shadow.append(input);
-    
+
             const container = document.createElement("div");
             container.className = "autocomplete";
             shadow.append(container);
-    
+
             const options = document.createElement("div");
             self.options = options;
             options.className = "items hide";
             container.append(options);
             self.setPosition();
-    
+
             const value = document.createElement("div");
             value.className = "value";
             shadow.append(value);
-    
+
             self.dValue = document.createElement("div");
             value.append(self.dValue);
-    
+
             const clear = document.createElement("button");
             clear.className = "close";
             clear.addEventListener("click", () => self.setInput());
@@ -96,7 +96,7 @@ class Autocomplete extends HTMLElement {
 
         // Create loader
         createLoader();
-        
+
         // Apply styles to the shadow DOM
         const linkElem = document.createElement("link");
         linkElem.setAttribute("rel", "stylesheet");
@@ -139,7 +139,7 @@ class Autocomplete extends HTMLElement {
             this.options.append(this.loader)
             this.options.classList.remove("hide");
             this.setPosition();
-            
+
             fetch(`${ep.url}?${ep.searchKey}=${val}${ep.limitKey && ep.limit ? `&${ep.limitKey}=${ep.limit}` : ""}${ep.additionalQuery ? `&${ep.additionalQuery}` : ""}`)
                 .then(res => res.json())
                 .then(data => {
@@ -150,7 +150,7 @@ class Autocomplete extends HTMLElement {
                     }
                 });
         });
-    
+
         let ticking = false;
 
         document.addEventListener("scroll", (e) => {
@@ -159,7 +159,7 @@ class Autocomplete extends HTMLElement {
                     this.setPosition();
                     ticking = false;
                 });
-            
+
                 ticking = true;
             }
         });
@@ -204,7 +204,7 @@ class Autocomplete extends HTMLElement {
             const container = elem.parentElement;
             const cBox = container.getBoundingClientRect();
             const eBox = elem.getBoundingClientRect();
-            
+
             if (cBox.bottom < eBox.bottom) {
                 container.scrollBy(0, Math.floor(eBox.bottom - cBox.bottom));
             }
@@ -218,7 +218,7 @@ class Autocomplete extends HTMLElement {
     createOption(data, value) {
         const elem = document.createElement("div");
         elem.className = "option";
-        
+
         const [display, val] = this.renderFunc(data);
         elem.innerHTML = `<span>${markSearch(display, value)}</span><input type="hidden" value="${val}">`;
         elem.addEventListener("click", () => {
@@ -252,7 +252,7 @@ class Autocomplete extends HTMLElement {
                 action = "remove";
             }
         }
-        
+
         this.options.classList[action]("top");
     }
 }
