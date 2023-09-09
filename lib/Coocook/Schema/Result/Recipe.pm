@@ -16,6 +16,12 @@ __PACKAGE__->add_columns(
     preparation => { data_type => 'text' },
     description => { data_type => 'text' },
     servings    => { data_type => 'integer' },
+    created     => {
+        data_type     => 'timestamp without time zone',
+        default_value => \'CURRENT_TIMESTAMP',
+        set_on_create => 1,
+        is_nullable   => 1,                               # for recipes created before schema v27
+    },
 );
 
 __PACKAGE__->set_primary_key('id');

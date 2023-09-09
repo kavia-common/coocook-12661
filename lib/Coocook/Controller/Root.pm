@@ -198,12 +198,23 @@ sub homepage : Private {
 
     my $max_recipes = 10;
 
-    my @public_recipes = $c->model('DB::Recipe')->public->search(
+    my $recipes        = $c->model('DB::Recipe');
+    my @public_recipes = $recipes->public->search(
         undef,
         {
-            join     => 'project',
-            order_by => { -desc => 'project.created' },
             rows     => $max_recipes,
+            join     => 'project',
+            order_by => {
+                -desc => [
+
+                    # sort recipes without 'created' timestamp last
+                    # https://stackoverflow.com/a/7622046/
+                    \( '(' . $recipes->me('created') . ' IS NOT NULL)' ),    #perltidy
+
+                    $recipes->me('created'),
+                    'project.created',
+                ]
+            },
         }
     )->all;
 
@@ -230,17 +241,16 @@ sub homepage : Private {
 sub dashboard : Private {
     my ( $self, $c ) = @_;
 
-    my $my_projects = $c->user->projects->union(
-        $c->user->organizations->search_related('organizations_projects')->search_related('project') )
-      ->not_archived;
+    my $users_projects = $c->user->projects->union(
+        $c->user->organizations->search_related('organizations_projects')->search_related('project') );
 
-    my @my_projects = $my_projects->sorted->hri->all;
+    my @my_projects = $users_projects->not_archived->sorted->hri->all;
 
     my $other_projects = $c->model('DB::Project')->not_archived->public;
 
     if ( @my_projects > 0 ) {
-        $other_projects =  # TODO for users with extremely many projects the SQL statement will be too large
-          $other_projects->search( { id => { -not_in => [ map { $_->{id} } @my_projects ] } } );
+        $other_projects =
+          $other_projects->search( { id => { -not_in => $users_projects->get_column('id')->as_query } } );
     }
 
     my @other_projects = $other_projects->sorted->hri->all;
