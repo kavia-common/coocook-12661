@@ -121,8 +121,7 @@ sub submenu : Chained('base') PathPart('') CaptureArgs(0) {
     );
 }
 
-sub show : GET HEAD Chained('submenu') PathPart('') Args(0) RequiresCapability('view_project')
-  Does('~HasJS') {
+sub show : GET HEAD Chained('submenu') PathPart('') Args(0) RequiresCapability('view_project') {
     my ( $self, $c ) = @_;
 
     my $days = $c->model('Plan')->project( $c->project );
@@ -143,8 +142,6 @@ sub show : GET HEAD Chained('submenu') PathPart('') Args(0) RequiresCapability('
         can_unarchive => !!$c->has_capability('unarchive_project'),
         days          => $days,
     );
-
-    push @{ $c->stash->{css} }, '/css/print.css';
 }
 
 sub edit : GET HEAD Chained('submenu') PathPart('edit') Args(0) RequiresCapability('edit_project') {
@@ -185,10 +182,6 @@ sub edit : GET HEAD Chained('submenu') PathPart('edit') Args(0) RequiresCapabili
             }
         ),
     );
-
-    push @{ $c->stash->{js} },
-      '/lib/coocook-web-components/dist/meals-dishes-editor/meals-dishes-editor.es.js';
-    push @{ $c->stash->{css} }, '/css/project/edit.css';
 }
 
 sub get_project_plan_ajax : GET HEAD Chained('submenu') PathPart('project_plan') Args(0)
@@ -284,7 +277,7 @@ sub exportable_projects : Private {
           $c->project->other_projects->sorted->all ];
 }
 
-sub get_import : GET HEAD Chained('base') PathPart('import') Args(0) Does('~HasCSS') Does('~HasJS')
+sub get_import : GET HEAD Chained('base') PathPart('import') Args(0)
   RequiresCapability('import_into_project') {    # import() already used by 'use'
     my ( $self, $c ) = @_;
 

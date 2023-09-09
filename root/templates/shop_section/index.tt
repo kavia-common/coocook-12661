@@ -1,4 +1,6 @@
-[% title = "Shop sections" %]
+[% title = "Shop sections";
+
+js_push_template_path() %]
 
 <table class="table table-striped align-middle">
     <thead>

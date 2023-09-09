@@ -18,7 +18,7 @@ __PACKAGE__->config(
     TEMPLATE_EXTENSION => '.tt',
     WRAPPER            => 'wrapper.tt',
 
-    expose_methods => ['escape_title'],
+    expose_methods => [ 'escape_title', 'uri_for_static' ],
     render_die     => 1,
 );
 
@@ -46,6 +46,13 @@ sub escape_title {
     );
 
     return;
+}
+
+# simple proxy
+sub uri_for_static {
+    my $self = shift;
+    my $c    = shift;
+    return $c->uri_for_static(@_);
 }
 
 1;

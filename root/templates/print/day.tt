@@ -1,3 +1,5 @@
+[% css.push('/css/print.css') %]
+
 <button class="btn btn-primary my-3 material-icons" onclick="print()" title="Print">print</button>
 
 [% FOR meal IN meals %]

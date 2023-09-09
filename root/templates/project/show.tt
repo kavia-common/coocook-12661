@@ -1,4 +1,7 @@
-[% IF project.archived %]
+[% js_push_template_path();
+css.push('/css/print.css');
+
+IF project.archived %]
 <div class="alert alert-success no-print">
     [% IF can_unarchive %]
     <form id="unarchive" method="post" action="[% project_urls.unarchive %]"></form>

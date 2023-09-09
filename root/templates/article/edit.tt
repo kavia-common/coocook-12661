@@ -1,4 +1,6 @@
-[% IF article; escape_title( 'Article', article.name ); ELSE; title="New Article"; END %]
+[% js_push_template_path();
+
+IF article; escape_title( 'Article', article.name ); ELSE; title="New Article"; END %]
 
 <form method="post" action="[% submit_url %]">
 <input type="text" name="name"    placeholder="name"    value="[% article.name | html %]">

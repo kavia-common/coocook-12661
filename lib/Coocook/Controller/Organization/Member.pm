@@ -69,8 +69,6 @@ sub index : GET HEAD Chained('/organization/base') PathPart('members') Args(0)
         roles               => [ grep { $_ ne 'owner' } $c->model('Authorization')->organization_roles ],
         template            => 'organization/members.tt',
     );
-
-    push @{ $c->stash->{js} }, '/lib/coocook-web-components/dist/autocomplete/autocomplete.es.js';
 }
 
 sub add : POST Chained('/organization/base') Args(0) CustomAuthz {

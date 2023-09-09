@@ -1,6 +1,15 @@
-[% title = "Import" %]
+[% title = "Import";
 
-[% no_import = 1; FOR p IN properties; IF !p.disabled; no_import = 0; END; END; IF no_import; %]
+js_push_template_path();
+
+no_import = 1;
+FOR p IN properties;
+    IF !p.disabled;
+        no_import = 0;
+    END;
+END;
+
+IF no_import; %]
 <p>Nothing can be imported to this project, because you already created your own stuff in all possible categories.</p>
 [% ELSE %]
 <form method="post" action="[% import_url %]" class="import">

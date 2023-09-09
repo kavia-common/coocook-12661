@@ -1,4 +1,8 @@
-[% title = "My Account settings" %]
+[% title = "My Account settings";
+
+js.push('/js/user/register.js');
+js.push('/lib/zxcvbn.js');
+%]
 
 [% IF confirm_email_change_url %]
 <div class="message message-info">

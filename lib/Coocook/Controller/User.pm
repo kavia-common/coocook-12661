@@ -66,7 +66,7 @@ sub show : GET HEAD Chained('base') PathPart('') Args(0) RequiresCapability('vie
     );
 }
 
-sub register : GET HEAD Chained('/base') Args(0) Does('~HasCSS') Does('~HasJS') Public {
+sub register : GET HEAD Chained('/base') Args(0) Public {
     my ( $self, $c ) = @_;
 
     if ( $c->user ) {    # user is already logged in, probably via other browser tab
@@ -88,8 +88,6 @@ sub register : GET HEAD Chained('/base') Args(0) Does('~HasCSS') Does('~HasJS') 
         if ( $c->stash->{last_input} ) { $$_ ||= time }
         else                           { $$_ = time }
     }
-
-    push @{ $c->stash->{js} }, '/lib/zxcvbn.js';
 
     if ( my $terms = $c->model('DB::Terms')->valid_today ) {
         $c->stash(

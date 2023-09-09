@@ -309,10 +309,6 @@ sub end : ActionClass('RenderView') {
     # remove subitems that have the 'forbidden' flag
     @{ $c->stash->{submenu_items} } = grep { not $_->{forbidden} } @{ $c->stash->{submenu_items} };
 
-    for ( @{ $c->stash->{css} }, @{ $c->stash->{js} } ) {
-        $_ = $c->uri_for_static($_);
-    }
-
     {
         my $errors = $c->stash->{errors};
         my $status = $c->res->status;
