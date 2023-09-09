@@ -5,9 +5,9 @@
                 <h3 id="ingredients"><a name="ingredients">Ingredients</a></h3>
             </div>
             <div class="card-body">
-                
+
                 <div class="form-group row">
-                
+
                     <div class="col-sm-12 py-3">
                         <table class="table">
                             <thead>
@@ -54,18 +54,17 @@
                         [% END %]
                             </tbody>
                         </table>
-                        
+
                     </div>
-                    
+
                     <div class="offset-sm-2 col-sm-10 py-3 text-end">
                         <button type="reset" class="btn btn-secondary mr-1" value="Reset">Reset</button>
                         <button type="submit" class="btn btn-primary">Update [% recipe ? 'Recipe' : 'Dish' %]</button>
                     </div>
                 </div>
-                
-                
+
             </div>[%# card-body %]
         </div>
     </div>
- 
+
 </div>

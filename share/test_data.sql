@@ -151,12 +151,12 @@ INSERT INTO "terms"
 ( 1, '1999-01-01',       'All your recipes are belong to us.'),
 ( 2, '2100-01-01', 'Just STEAL ALL THE COOKING INSTRUCTIONS!');
 
-INSERT INTO "blacklist_usernames" 
+INSERT INTO "blacklist_usernames"
 (       "comment", "username_fc", "username_type") VALUES
 ( 'test_data.sql',   '*coocook*',      'wildcard'),
 ( 'test_data.sql',       'admin',     'cleartext');
 
-INSERT INTO "blacklist_emails" 
+INSERT INTO "blacklist_emails"
 (       "comment",                                     "email_fc", "email_type") VALUES
 ( 'test_data.sql', 'eH1bfAbKCiHJZDbMfIEX5v4EbQ/X3tyujJO/wUuOXfc=', 'sha256_b64'), -- somebody@example.com
 ( 'test_data.sql',                            '*@coocook.example',   'wildcard'),

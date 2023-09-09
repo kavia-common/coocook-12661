@@ -10,7 +10,6 @@
             <textarea class="form-control with-markdown-preview" name="content_md" rows="10">[% terms.content_md | html %]</textarea>
         </div>
     </div>
-    
 
     <p><input type="submit" value="[% terms.in_storage ? 'Update' : 'Create' %]"></p>
 </form>

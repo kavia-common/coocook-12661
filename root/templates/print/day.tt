@@ -33,13 +33,13 @@
     <div>[% USE Markdown; dish.description | markdown %]</div>
 </div>
 [% END;
-  
+
 FOR dish IN meal.prepared_dishes %]
 <div class="mb-5">
     <h4><span class="display-6">Prepare for <a href="[% dish.meal.url %]">[% dish.meal.name | html %] on [% display_date(dish.meal.date) %]</a>: <a href="[% dish.url %]">[% dish.name | html %]</a></span> ([% dish.servings %] servings)</h4>
 
     [% PROCESS table prepare = 1 %]
-  
+
     <div>[% USE Markdown; dish.preparation | markdown %]</div>
 </div>
 [% END;
