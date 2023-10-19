@@ -124,8 +124,7 @@ sub import_data {    # import() used by 'use'
     my %articles = map { $_->{id} => $_ } @{ $self->target_articles };
     my %units    = map { $_->{id} => $_ } @{ $self->target_units };
 
-    my $articles_units_rs = $self->project->result_source->schema->resultset('ArticleUnit');
-    my $ingredients_rs    = $self->recipe->ingredients;
+    my $ingredients_rs = $self->recipe->ingredients;
 
     return $self->project->txn_do(
         sub {
@@ -152,9 +151,6 @@ sub import_data {    # import() used by 'use'
                 my $article = $articles{ $mapping->{article} } || croak "invalid article " . $mapping->{article};
                 my $comment = $mapping->{comment} // $ingredient->{comment};
                 my $value   = $mapping->{value}   // $ingredient->{value};
-
-                $articles_units_rs->results_exist( { article_id => $article->{id}, unit_id => $unit->{id} } )
-                  or croak "invalid combination of article and unit";
 
                 $ingredients_rs->find($ingredient_id)->copy(
                     {
