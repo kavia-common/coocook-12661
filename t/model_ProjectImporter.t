@@ -185,7 +185,8 @@ subtest "complete import" => sub {
     is $target->articles->find( { name => 'flour' } )->shop_section->name => 'bakery products',
       "article 'flour' stays in shop section 'bakery products'";
 
-    is $imported => $deleted,
+    is
+      $imported => $deleted,
       "rows imported == rows deleted"
       and return;
 

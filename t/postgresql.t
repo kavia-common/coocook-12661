@@ -288,7 +288,8 @@ sub schema_diff_like {
 
     local $Test::Builder::Level = $Test::Builder::Level + 1;
 
-    is $diff => $expected_diff,
+    is
+      $diff => $expected_diff,
       $name // "database schemas equal"
       or diag Dumper($diff);
 }

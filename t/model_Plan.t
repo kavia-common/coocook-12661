@@ -17,7 +17,8 @@ my $project = $db->resultset('Project')->find(1);
 ok my $plan = Coocook::Model::Plan->new( schema => $db );
 
 my $day = $plan->day( $project, DateTime->new( year => 2000, month => 1, day => 1 ) );
-is $day => [
+is
+  $day => [
     {
         name            => 'breakfast',
         comment         => "Best meal of the day!",

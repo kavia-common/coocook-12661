@@ -18,7 +18,8 @@ sub article_has_items {    # value + unit->short_name joined with space: "420g 4
 
     my $items = join " ", @items;
 
-    is $items => $expected,
+    is
+      $items => $expected,
       $name || sprintf( "article %i '%s' has items '%s'", $article->id, $article->name, $expected );
 }
 
