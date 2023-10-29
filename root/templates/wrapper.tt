@@ -36,6 +36,10 @@
     <link rel="apple-touch-icon-precomposed" [% IF sizes.length %]sizes="[% sizes %]"[% END %] href="[% icon_urls.$sizes %]">
 [% END %]
 
+[% IF me_url %]
+    <link rel="me" href="[% me_url %]">
+[% END %]
+
 [% FOREACH path IN css %]
     <link rel="stylesheet" href="[% uri_for_static(path) %]">
 [% END %]

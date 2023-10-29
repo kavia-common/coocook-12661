@@ -86,6 +86,7 @@ sub auto : Private {
           icon_type
           icon_url
           icon_urls
+          me_url
           >
     );
 

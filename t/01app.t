@@ -3,7 +3,7 @@ use Test2::V0;
 use lib 't/lib';
 use Test::Coocook;
 
-plan(12);
+plan(13);
 
 my $t = Test::Coocook->new( config => { enable_user_registration => 1 }, max_redirect => 0 );
 
@@ -268,9 +268,17 @@ subtest "canonical URLs" => sub {
     $t->content_lacks('canonical');
 };
 
-$t->max_redirect(0);
+subtest "me URL" => sub {
+    $t->get_ok('/');
+    $t->content_lacks(q{rel="me"});
+    my $guard = $t->local_config_guard( me_url => 'https://me.example/' );
+    $t->get_ok('/');
+    $t->content_contains(q{<link rel="me" href="https://me.example/">});
+};
 
 subtest "simply check GET for all endpoints" => sub {    # TODO could we autogenerate the URL list?
+    $t->max_redirect(0);
+
     $t->get_ok('/');
     $t->get_ok('/about');
     $t->get_ok('/admin');
