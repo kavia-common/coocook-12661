@@ -1,5 +1,6 @@
 [% escape_title( 'Organization members of', organization.display_name );
 
+js_push_template_path();
 js.push('/lib/coocook-web-components/dist/autocomplete/autocomplete.es.js');
 
 has_admin = 0 %]
@@ -92,12 +93,3 @@ has_admin = 0 %]
     [% END %]
     </div>
 </div>
-<script>
-    function renderUserOption(data) {
-        return [`👤 ${data.display_name} (${data.name})`, data.name];
-    }
-    userList = Array.from(document.querySelectorAll(".username"), elem => elem.innerText);
-    function filterUser(data) {
-        return data.filter(elem => !userList.includes(elem.name));
-    }
-</script>

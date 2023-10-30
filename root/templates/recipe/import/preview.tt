@@ -32,7 +32,7 @@ js_push_template_path();
                 [%~ '&thinsp;' ~%]
                 <label for="unit[% ingredient.id %]"><span title="[% ingredient.unit.long_name | html %]">[% ingredient.unit.short_name | html %]</span></label>
             </td>
-            <td><label for="article[% ingredient.id %]">[% ingredient.article.name | html %]</a></td>
+            <td><label for="article[% ingredient.id %]">[% ingredient.article.name | html %]</label></td>
             <td>→</td>
             <td class="value"><input id="value[% ingredient.id %]" type="number" min="0" step="any" name="value[% ingredient.id %]" value="[% ingredient.value %]" required></td>
             <td class="unit">
@@ -69,6 +69,4 @@ js_push_template_path();
 
 </form>
 
-<script>
-existingRecipeNames = [% existing_recipe_names_json %];
-</script>
+<script id="existing-recipe-names" type="application/json">[% existing_recipe_names_json | html %]</script>

@@ -221,11 +221,10 @@ sub setup_finalize {
 
     $self->config->{content_security_policy} //= sub {
         if ( my $static_uri = $self->config->{static_base_uri} ) {
-            return
-qq(default-src 'unsafe-inline' 'self' $static_uri; img-src data: $static_uri; font-src $static_uri;);
+            return qq(connect-src 'self'; img-src data: $static_uri; font-src $static_uri;);
         }
 
-        return qq(default-src 'unsafe-inline' 'self'; img-src data: 'self'; font-src 'self';);
+        return qq(connect-src 'self'; img-src data: 'self'; font-src 'self';);
       }
       ->();
 
