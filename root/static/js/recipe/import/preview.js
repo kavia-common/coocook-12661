@@ -1,4 +1,6 @@
 (() => {
+    const existingRecipeNames = getJsonData("existing-recipe-names");
+
     const articleElemList = document.querySelectorAll('form#import table td.article select');
     articleElemList.forEach(articleElem => {
         articleElem.onchange = () => {

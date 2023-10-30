@@ -130,8 +130,8 @@ subtest "static URIs" => sub {
 
 subtest content_security_policy => sub {
     $t->get('/');
-    $t->meta_http_equiv_is( 'Content-Security-Policy' =>
-          q(default-src 'unsafe-inline' 'self'; img-src data: 'self'; font-src 'self';) );
+    $t->meta_http_equiv_is(
+        'Content-Security-Policy' => q(connect-src 'self'; img-src data: 'self'; font-src 'self';) );
 
     my $guard = $t->local_config_guard;    # undo changes at end of block
 
@@ -141,7 +141,7 @@ subtest content_security_policy => sub {
     );
     $t->get('/');
     $t->meta_http_equiv_is( 'Content-Security-Policy' =>
-q(default-src 'unsafe-inline' 'self' https://coocook-cdn.example/; img-src data: https://coocook-cdn.example/; font-src https://coocook-cdn.example/;)
+q(connect-src 'self'; img-src data: https://coocook-cdn.example/; font-src https://coocook-cdn.example/;)
     );
 
     $t->reload_config( content_security_policy => '' );    # defined but false

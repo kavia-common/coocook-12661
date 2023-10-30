@@ -1,5 +1,6 @@
 [% title = "Permissions";
 
+js_push_template_path();
 js.push('/lib/coocook-web-components/dist/autocomplete/autocomplete.es.js');
 
 has_admin = 0 %]
@@ -101,14 +102,4 @@ has_admin = 0 %]
     [% END %]
     </div>
 </div>
-<script>
-    function renderUserOrgOption(data) {
-        return [`${data.type === "user" ? "👤" : "👥"} ${data.display_name} (${data.name})`, data.name];
-    }
-    userList = Array.from(document.querySelectorAll(".username"), elem => elem.innerText);
-    orgList = Array.from(document.querySelectorAll(".organization"), elem => elem.innerText);
-    function filterUserOrg(data) {
-        return data.filter(elem => !userList.includes(elem.name)).filter(elem => !orgList.includes(elem.name)).sort((a, b) => a.display_name > b.display_name);
-    }
-</script>
 [% END %]

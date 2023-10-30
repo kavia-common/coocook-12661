@@ -69,6 +69,4 @@ js_push_template_path();
 
 </form>
 
-<script>
-existingRecipeNames = [% existing_recipe_names_json %];
-</script>
+<script id="existing-recipe-names" type="application/json">[% existing_recipe_names_json | html %]</script>
