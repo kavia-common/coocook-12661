@@ -102,6 +102,10 @@ __PACKAGE__->config(
             url   => 'https://lists.coocook.org/',
         },
         {
+            title => "Mastodon",
+            url   => 'https://floss.social/@coocook',
+        },
+        {
             title => "Report issues",
             url   => 'https://gitlab.com/coocook/coocook/-/issues',
         },
