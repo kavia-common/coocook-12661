@@ -72,3 +72,24 @@ MACRO numerus(number, singular, plural, opts) BLOCK; # apply correct grammatical
     opts.infix _ ' ' IF opts.infix;
     number == 1 ? singular : plural;
 END ~%]
+
+[%~ MACRO round(number, opts) BLOCK;
+    IF opts.nice_number;
+        IF number > 1000000;
+            number = number / 1000000;
+            USE NiceNumber;
+            number | $NiceNumber;
+            'M';
+        ELSIF number > 1000;
+            number = number / 1000;
+            USE NiceNumber;
+            number | $NiceNumber;
+            'K';
+        ELSE;
+            USE NiceNumber;
+            number | $NiceNumber;
+        END;
+    ELSE;
+        number;
+    END;
+END ~%]

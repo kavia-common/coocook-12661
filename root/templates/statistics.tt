@@ -1,10 +1,62 @@
 [% title = "Statistics" %]
 
-<ul class="non-intended">
-    <li><span class="badge bg-primary">approx. [% numerus(statistics.dishes_served,  'dish', 'dishes', { nice_number => 1 } ) %]</span> served until today</li>
-    <li><span class="badge bg-primary">approx. [% numerus(statistics.dishes_planned, 'dish', 'dishes', { nice_number => 1 } ) %]</span> planned to be served</li>
-    <li><span class="badge bg-primary">approx. [% numerus(statistics.recipes, 'recipe', 'different recipes', { nice_number => 1 } ) %]</span></li>
-    <li><span class="badge bg-primary">[% numerus(statistics.public_projects, 'project', 'projects', { infix => 'public' } ) %]</span></li>
-    <li><span class="badge bg-primary">[% numerus(statistics.users, 'user', 'users') %]</span></li>
-    <li><span class="badge bg-primary">[% numerus(statistics.organizations, 'organization', 'organizations') %]</span></li>
-</ul>
+<div class="w-100">
+
+    <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3">
+        <div class="p-2">
+            <div class="col content-box d-flex h-100 m-0">
+                <div class="fs-1 fw-bolder border-end pe-3 me-3">[% round(statistics.dishes_served, { nice_number => 1 }) %]</div>
+                <div class="d-flex flex-column">
+                    <b class="mb-1">[% statistics.dishes_served == 1 ? "serving" : "servings" %] cooked until today</b>
+                    <i>Sum of all servings cooked with [% name %] until today.</i>
+                </div>
+            </div>
+        </div>
+        <div class="p-2">
+            <div class="col content-box d-flex h-100 m-0">
+                <div class="fs-1 fw-bolder border-end pe-3 me-3">[% round(statistics.dishes_planned, { nice_number => 1 }) %]</div>
+                <div class="d-flex flex-column">
+                    <b class="mb-1">[% statistics.dishes_planned == 1 ? "serving" : "servings" %] planned to be served</b>
+                    <i>Sum of all servings planned with [% name %].</i>
+                </div>
+            </div>
+        </div>
+        <div class="p-2">
+            <div class="col content-box d-flex h-100 m-0">
+                <div class="fs-1 fw-bolder border-end pe-3 me-3">[% round(statistics.recipes, { nice_number => 1 }) %]</div>
+                <div class="d-flex flex-column">
+                    <b class="mb-1">[% statistics.recipes == 1 ? "recipe" : "different recipes" %]</b>
+                    <i>Number of all different recipes on [% name %].</i>
+                </div>
+            </div>
+        </div>
+        <div class="p-2">
+            <div class="col content-box d-flex h-100 m-0">
+                <div class="fs-1 fw-bolder border-end pe-3 me-3">[% round(statistics.public_projects, { nice_number => 1 }) %]</div>
+                <div class="d-flex flex-column">
+                    <b class="mb-1">public [% statistics.public_projects == 1 ? "project" : "projects" %]</b>
+                    <i>Number of all public projects on [% name %].</i>
+                </div>
+            </div>
+        </div>
+        <div class="p-2">
+            <div class="col content-box d-flex h-100 m-0">
+                <div class="fs-1 fw-bolder border-end pe-3 me-3">[% round(statistics.users, { nice_number => 1 }) %]</div>
+                <div class="d-flex flex-column">
+                    <b class="mb-1">[% statistics.users == 1 ? "user" : "users" %]</b>
+                    <i>Number of all registered users on [% name %].</i>
+                </div>
+            </div>
+        </div>
+        <div class="p-2">
+            <div class="col content-box d-flex h-100 m-0">
+                <div class="fs-1 fw-bolder border-end pe-3 me-3">[% round(statistics.organizations, { nice_number => 1 }) %]</div>
+                <div class="d-flex flex-column">
+                    <b class="mb-1">[% statistics.organizations == 1 ? "organization" : "organizations" %]</b>
+                    <i>Number of all organizations on [% name %].</i>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
