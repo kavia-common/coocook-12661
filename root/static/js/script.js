@@ -29,6 +29,7 @@
 
             elem.addEventListener("input", (e) => {
                 preview.innerHTML = marked.parse(e.target.value);
+                decorateExternalLinks();
             });
 
             elem.dispatchEvent(new Event("input"));
@@ -130,6 +131,17 @@ window.addEventListener("beforeunload", (e) => {
     });
     resizeObserver.observe(document.body);
 })();
+
+function decorateExternalLinks() {
+    const externalLinks = document.querySelectorAll(
+        `a[href*="://"]:not([href*="${window.location.origin}"])`
+    );
+    const externalIcon = '<i class="material-icons" style="font-size:90%;">open_in_new</i>';
+    for (const link of externalLinks) {
+        if(!link.innerHTML.includes(externalIcon)) link.innerHTML += `&nbsp;${externalIcon}`;
+    }
+}
+decorateExternalLinks();
 
 function decodeHtml(html) {
     var txt = document.createElement("textarea");
