@@ -90,8 +90,6 @@ sub auto : Private {
           >
     );
 
-    $c->stash( meta_content_security_policy => $c->config->{content_security_policy} );
-
     $c->stash(
         css => [    # this comment makes perltidy not merge these lines
             '/lib/themed-bootstrap/themed' . ( $c->debug ? '.css' : '.min.css' ),
@@ -327,6 +325,13 @@ sub end : ActionClass('RenderView') {
         if ( ref $errors eq 'ARRAY' ? @$errors > 0 : $errors or $status =~ m/^[45]..$/ ) {
             $c->stash->{robots}->archive(0);
             $c->stash->{robots}->index(0);
+        }
+    }
+
+    # TODO this method is pointless in general for Ajax requests->improve controller flow for Ajax
+    if ( ( $c->stash->{current_view} // '' ) ne 'JSON' ) {
+        if ( my $csp = $c->config->{content_security_policy} ) {
+            $c->response->header( 'Content-Security-Policy' => $csp );
         }
     }
 

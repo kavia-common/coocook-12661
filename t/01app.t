@@ -130,8 +130,18 @@ subtest "static URIs" => sub {
 
 subtest content_security_policy => sub {
     $t->get('/');
-    $t->meta_http_equiv_is(
+    $t->header_is(
         'Content-Security-Policy' => q(connect-src 'self'; img-src data: 'self'; font-src 'self';) );
+
+    $t->get('/foobar');
+    $t->status_is(404);
+    $t->header_exists_ok( 'Content-Security-Policy', "CSP for error pages" );
+
+    $t->get_ok('/static/js/script.js');
+    $t->lacks_header_ok( 'Content-Security-Policy', "no CSP for static files" );
+
+    $t->get_ok('/project/1/Test-Project/project_plan');
+    $t->lacks_header_ok( 'Content-Security-Policy', "no CSP for Ajax responses" );
 
     my $guard = $t->local_config_guard;    # undo changes at end of block
 
@@ -140,18 +150,18 @@ subtest content_security_policy => sub {
         content_security_policy => undef,                            # reset
     );
     $t->get('/');
-    $t->meta_http_equiv_is( 'Content-Security-Policy' =>
+    $t->header_is( 'Content-Security-Policy' =>
 q(connect-src 'self'; img-src data: https://coocook-cdn.example/; font-src https://coocook-cdn.example/;)
     );
 
     $t->reload_config( content_security_policy => '' );    # defined but false
     $t->get('/');
-    $t->content_lacks('Content-Security-Policy');
+    $t->lacks_header_ok('Content-Security-Policy');
 
     my $csp = 'csp' . __FILE__ . __LINE__;
     $t->reload_config( content_security_policy => $csp );
     $t->get('/');
-    $t->meta_http_equiv_is( 'Content-Security-Policy' => $csp );
+    $t->header_is( 'Content-Security-Policy' => $csp );
 };
 
 subtest "robots meta tag" => sub {
