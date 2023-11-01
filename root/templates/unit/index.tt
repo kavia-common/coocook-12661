@@ -1,6 +1,7 @@
 [% title = "Units";
 
-USE NiceNumber %]
+# TODO This seems not to be used here. Obsolete?
+USE SignificantDigits %]
 
 <table class="table">
     <tr class="sticky-top bg-white" style="z-index:1011;">

@@ -1,12 +1,12 @@
 use Test2::V0;
 
-use Coocook::Filter::NiceNumber;
+use Coocook::Filter::SignificantDigits;
 use Test::Builder;
 use Test2::API qw(context);
 
 plan(15);
 
-ok my $filter = Coocook::Filter::NiceNumber->new();
+ok my $filter = Coocook::Filter::SignificantDigits->new();
 
 isa_ok $filter, 'Template::Plugin::Filter';
 
