@@ -1,12 +1,12 @@
 use Test2::V0;
 
-use Coocook::Filter::NiceNumber;
+use Coocook::Filter::NumberSuffix;
 use Test::Builder;
 use Test2::API qw(context);
 
-plan(15);
+plan(16);
 
-ok my $filter = Coocook::Filter::NiceNumber->new();
+ok my $filter = Coocook::Filter::NumberSuffix->new();
 
 isa_ok $filter, 'Template::Plugin::Filter';
 
@@ -15,20 +15,17 @@ like dies { $filter->filter("foo") }, qr/isn't numeric/, "exception for non-nume
 t( undef() => undef, "undef" );
 t( ""      => "",    "empty string" );
 
-# 3 significant digits
-t( 123        => "123" );
-t( 1.23       => "1.23" );
-t( 1.234567   => "1.23" );
-t( 12345.6789 => "12300" );
-t( 1 / 3      => "0.333" );
-t( 0.999999   => "1" );
-t( 123456789  => "123000000" );
-t( 0.0101     => "0.0101" );
-t( 0.000001   => "0.000001" );
-
-todo 'sprintf("%f") cuts digits off this string--how to fix that?' => sub {
-    t( 0.0000012345 => "0.00000123" );
-};
+t( 1          => "1" );
+t( 1.23456789 => "1.23456789" );
+t( 12.3456789 => "12.3456789" );
+t( 123.456789 => "123.456789" );
+t( 1234.56789 => "1.23K" );
+t( 12345.6789 => "12.3K" );
+t( 123456.789 => "123K" );
+t( 1234567.89 => "1.23M" );
+t( 12345678.9 => "12.3M" );
+t( 123456789  => "123M" );
+t( 1234567890 => "1234M" );
 
 sub t {
     my ( $input, $expected, $name ) = @_;

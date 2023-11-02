@@ -97,7 +97,7 @@ END;
 BLOCK table_row %]
 <tr>
     <td class="article">
-        [% USE NiceNumber; ingredient.value | $NiceNumber %]&nbsp;[% ingredient.unit.long_name | html %]
+        [% USE SignificantDigits; ingredient.value | $SignificantDigits %]&nbsp;[% ingredient.unit.long_name | html %]
     </td>
     <td>
         [% ingredient.article.name | html;

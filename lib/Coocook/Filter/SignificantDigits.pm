@@ -1,6 +1,6 @@
-package Coocook::Filter::NiceNumber;
+package Coocook::Filter::SignificantDigits;
 
-# ABSTRACT: Filter module for Template Toolkit to display numbers nicely
+# ABSTRACT: TT filter module to display numbers with 3 most significant digits
 
 use strict;
 use warnings;
