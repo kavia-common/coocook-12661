@@ -18,9 +18,7 @@
 [% END %]
 </p>
 
-<div class="mt-2 alert alert-light border p-2">
-    <p class="m-0 text-center">
-        <i class="material-icons">info</i> A <b>tag</b> is a keyword which can be attached to <b>recipes</b>, <b>dishes</b> and <b>articles</b> to filter them when your search a specific item out of these categories.
-        A <b>tag group</b> can be used to organize similar <b>tags</b> together.
-    </p>
-</div>
+[% WRAPPER includes/infobox.tt %]
+    A <b>tag</b> is a keyword which can be attached to <b>recipes</b>, <b>dishes</b> and <b>articles</b> to filter them when your search a specific item out of these categories.
+    A <b>tag group</b> can be used to organize similar <b>tags</b> together.
+[% END %]
