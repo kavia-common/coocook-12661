@@ -109,3 +109,5 @@ BLOCK table_row %]
         [% END %]
 </tr>
 [% END %]
+
+[% INCLUDE includes/infobox_donate.tt %]

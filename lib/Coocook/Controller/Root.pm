@@ -82,6 +82,7 @@ sub auto : Private {
           date_format_long
           datetime_format_short
           datetime_format_long
+          donate_url
           help_links
           icon_type
           icon_url

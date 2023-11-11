@@ -1,7 +1,10 @@
 [% js_push_template_path();
 css.push('/css/print.css');
 
-IF project.archived %]
+show_donate_infobox = 0;
+
+IF project.archived;
+    show_donate_infobox = 1 %]
 <div class="alert alert-success no-print">
     [% IF can_unarchive %]
     <form id="unarchive" method="post" action="[% project_urls.unarchive %]"></form>
@@ -39,12 +42,14 @@ IF project.archived %]
     [% ELSIF inventory.unassigned_items > 0 %]
         There are some ingredient items not yet assigned to a purchase list.
         You can <a class="alert-link" href="[% project_urls.unassigned_items %]">assign items to purchase lists</a> now.
-    [% ELSIF project.is_stale %]
+    [% ELSIF project.is_stale;
+        show_donate_infobox = 1 %]
         <form class="d-inline" method="post" action="[% project_urls.archive %]">
             This project is stale (all meals and purchase lists in are in the past).
             You can <button class="alert-link" type="submit">📁 archive this project</button>
         </form>
-    [% ELSE %]
+    [% ELSE;
+        show_donate_infobox = 1 %]
         Once you’ve finished this project you can print <a class="alert-link" href="[% project_urls.purchase_lists %]">your purchase lists</a> to take action.
     [% END %]
 </div>
@@ -167,3 +172,7 @@ END %]
         </div>
     </div>
 </form>
+
+[% IF show_donate_infobox;
+    INCLUDE includes/infobox_donate.tt;
+END %]
