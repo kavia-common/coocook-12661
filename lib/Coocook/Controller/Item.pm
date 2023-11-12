@@ -36,6 +36,10 @@ sub unassigned : GET HEAD Chained('/purchase_list/submenu') PathPart('items/unas
         my %dishes =
           map { $_->id => $_ } $ingredients->search_related( dish => undef, { prefetch => 'meal' } )->all;
 
+        for my $dish ( values %dishes ) {
+            $dish->{url} = $c->project_uri( '/dish/edit', $dish->id );
+        }
+
         @ingredients = $ingredients->search(
             undef,
             {

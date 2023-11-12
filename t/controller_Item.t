@@ -3,16 +3,17 @@ use Test2::V0;
 use lib 't/lib';
 use Test::Coocook;
 
-plan(4);
+plan(6);
 
 my $t = Test::Coocook->new();
 
 $t->get('/');
 $t->login_ok( 'john_doe', 'P@ssw0rd' );
 
-subtest "send invalid list ID" => sub {
-    $t->get_ok('/project/1/Test-Project/items/unassigned');
+$t->get_ok('/project/1/Test-Project/items/unassigned');
+$t->content_contains('https://localhost/project/1/Test-Project/dish/1');
 
+subtest "send invalid list ID" => sub {
     $t->submit_form_fails(
         {
             with_fields => {
