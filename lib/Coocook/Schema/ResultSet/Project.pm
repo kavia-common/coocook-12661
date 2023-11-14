@@ -47,7 +47,7 @@ sub stale {    # TODO maybe other name? "completed"? then also edit Result->is_s
     );
 
     return $self->search(
-        { -not_bool => [ map { -exists => $_->search( undef, { select => [ \1 ] } )->as_query } @rs ], } );
+        { -not_bool => [ map { -exists => $_->search( undef, { select => [ \1 ] } )->as_query } @rs ] } );
 }
 
 1;

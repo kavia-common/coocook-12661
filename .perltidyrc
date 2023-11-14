@@ -5,3 +5,6 @@
 --character-encoding=utf8
 --variable-maximum-line-length
 --maximum-line-length=100
+
+--delete-trailing-commas
+--want-trailing-commas=b

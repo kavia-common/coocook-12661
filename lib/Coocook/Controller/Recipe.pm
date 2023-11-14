@@ -290,7 +290,7 @@ sub check_name : Private {
 }
 
 sub check_value : Private {
-    my ( $self, $c, ) = @_;
+    my ( $self, $c ) = @_;
 }
 
 sub get_all_ajax : GET HEAD PathPart('ajax') Does(~Ajax) Chained('recipes')

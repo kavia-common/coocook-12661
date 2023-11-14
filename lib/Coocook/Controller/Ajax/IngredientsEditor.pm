@@ -27,7 +27,7 @@ sub project_base : Chained('/project/base') PathPart('') CaptureArgs(2)
 
     my $plural = $dish_or_recipe eq 'dish' ? 'dishes' : 'recipes';
     $c->stash( dish_or_recipe => $c->project->$plural->find($dish_or_recipe_id)
-          || $c->detach('/error/not_found'), );
+          || $c->detach('/error/not_found') );
 }
 
 sub get_all_ingredients : GET PathPart('ingredients') HEAD Chained('project_base')
