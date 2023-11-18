@@ -19,8 +19,10 @@ Web application for collecting recipes and making food plans
 
 Get source code:
 
-    $ git clone https://gitlab.com/coocook/coocook.git
-    $ cd coocook/
+```console
+$ git clone https://gitlab.com/coocook/coocook.git
+$ cd coocook/
+```
 
 ### Configuration
 
@@ -29,7 +31,9 @@ It’s recommended to configure (possibly multiple) connections in `dbic.yaml` i
 
 You can copy the example file [`share/examples/dbic.yaml`](share/examples/dbic.yaml) to the project root directory:
 
-    $ cp share/examples/dbic.yaml .
+```console
+$ cp share/examples/dbic.yaml ./
+```
 
 By default Coocook will connect to the connection in `dbic.yaml` with key `development`.
 The example file defines a local SQLite file `coocook.sqlite`.
@@ -38,7 +42,9 @@ The selected connection key and other settings can be configured in a config fil
 You can copy the example file [`share/examples/coocook.yaml`](share/examples/coocook.yaml)
 with the most common settings to the project root directory:
 
-    $ cp share/examples/coocook.yaml .
+```console
+$ cp share/examples/coocook.yaml ./
+```
 
 For other possible settings see the default values defined in [`lib/Coocook.pm`](lib/Coocook.pm).
 
@@ -59,7 +65,9 @@ Prerequisites:
 
 With Ubuntu or Debian Linux:
 
-    $ sudo apt-get install cpanminus sqlite3
+```console
+$ sudo apt-get install cpanminus sqlite3
+```
 
 To install Perl distributions that include C code you’ll probably need a C toolchain and some libraries:
 
@@ -73,18 +81,24 @@ $ sudo apt-get install libpq-dev                         # for DBD::Pg
 
 Install Perl5 dependencies required for running the application:
 
-    $ cpanm --installdeps .
+```console
+$ cpanm --installdeps .
+```
 
 There are a few additional dependencies for *development* as well *recommended* and *suggested* dependencies. To install these as well run:
 
-    $ cpanm --installdeps --with-develop --with-recommends --with-suggests .
+```console
+$ cpanm --installdeps --with-develop --with-recommends --with-suggests .
+```
 
 Install the database schema into a connection from your `dbic.yaml` (see above) and start development server in debug mode:
 
-    $ script/coocook_deploy.pl --connection_name 'development' install
-    $ script/coocook_server.pl --debug
-    ...
-    HTTP::Server::PSGI: Accepting connections at http://0:3000/
+```console
+$ script/coocook_deploy.pl --connection_name 'development' install
+$ script/coocook_server.pl --debug
+...
+HTTP::Server::PSGI: Accepting connections at http://0:3000/
+```
 
 Hint: With the `--restart` option the development server restarts automatically when files in `lib/` are changed.
 This requires [`Catalyst::Restarter`](https://metacpan.org/pod/Catalyst::Restarter).
