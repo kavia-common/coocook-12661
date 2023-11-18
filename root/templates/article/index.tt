@@ -42,7 +42,12 @@
 [% new %]
 
 [% WRAPPER includes/infobox.tt %]
-    An <em>article</em> is an actual item with a defined <em>unit</em>, which can be bought in a supermarket/store.
-    It can be used as ingredient in <em>recipes</em> and <em>dishes</em>.
-    An article may also contain information about shelf life and availability.
+    <em>Articles</em> are everything that can be sourced for preparing food.
+    They might be products like apples, materials like water or tools like a whisk.
+</p>
+
+<p>
+    <i class="material-icons">lightbulb</i> Pro tip:
+    Optional details like preferred units, known shelf life or shop section
+    are helpful when using articles in recipes/dishes and purchase lists.
 [% END %]

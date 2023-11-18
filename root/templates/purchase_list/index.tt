@@ -64,8 +64,14 @@ js_push_template_path() %]
 </form>
 
 [% WRAPPER includes/infobox.tt %]
-    To plan when you need to buy which <em>article</em> for which <em>meal/dish</em> and where, you can use <em>purchase lists</em>.
-    Inside a <em>purchase list</em> the articles can be grouped into <em>shop sections</em> like vegetables, meat or dairy products.
+    <em>Purchase lists</em> contain all articles that need to be sourced to prepare the planned meals.
+    Sort them into multiple lists for different purchase dates or stores.
+</p>
+
+<p>
+    <i class="material-icons">lightbulb</i> Pro tip:
+    Get well-structured lists by assigning articles their shop section.
+    Also items for the same article can be merged by converting them to the same unit.
 [% END %]
 
 <form method="post" action="[% create_url %]">

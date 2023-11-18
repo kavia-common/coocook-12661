@@ -1,5 +1,10 @@
 [% title = "Tags" %]
 
+<div class="alert alert-warning">
+    <i class="material-icons">warning</i>
+    Support for tags is still <strong>work in progress</strong>.
+</div>
+
 [% FOR group IN groups %]
 <h3>Tag Group [% group.name | html %]</h3>
 
@@ -19,6 +24,10 @@
 </p>
 
 [% WRAPPER includes/infobox.tt %]
-    A <em>tag</em> is a keyword which can be attached to <em>recipes</em>, <em>dishes</em> and <em>articles</em> to filter them when your search a specific item out of these categories.
-    A <em>tag group</em> can be used to organize similar <em>tags</em> together.
+    <em>Tags</em> are keywords that can be attached to recipes, dishes and articles.
+    They can be used to filter them during search or to highlight important aspects.
+</p>
+
+<p>
+    <em>Tag groups</em> can be used to organize similar tags together.
 [% END %]

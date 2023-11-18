@@ -9,6 +9,15 @@ js.push('/lib/coocook-web-components/dist/meals-dishes-editor/meals-dishes-edito
 <div class="meals-dishes-editor" data-meals-dishes-editor-json-id="meals-dishes-editor-data"></div>
 
 [% WRAPPER includes/infobox.tt %]
-    A <em>meal</em> is an occasion when food is eaten (e.g. breakfast, lunch, dinner). It consists of one or more <em>dishes</em>.
-    A <em>dish</em> is part of a <em>meal</em>, is derived from a <em>recipe</em> and may contain deviations from the recipe.
+    <em>Meals</em> are occasions when food will be served, e.g. breakfast, lunch and dinner,
+    and may contain any number of dishes.
+    <br>
+    <em>Dishes</em> might represent different courses like appetizer and dessert
+    or regard different tastes or intolerances.
+</p>
+
+<p>
+    <i class="material-icons">lightbulb</i> Pro tip:
+    Create recipes for different food components like pasta and sauces
+    and add them as dishes in ever changing combinations!
 [% END %]

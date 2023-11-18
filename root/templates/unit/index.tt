@@ -67,6 +67,9 @@ USE SignificantDigits %]
 </div>
 
 [% WRAPPER includes/infobox.tt %]
-    A <em>unit</em> is a measurement quantity for an amount of an <em>article</em>.
-    Units can be converted into other units by specifying a conversion factor between these.
+    <em>Units</em> are measurement quantities used to declare
+    how much of an article is required in a recipe/dish ingredient.
+    <br>
+    Ingredients and purchase list items can be converted from one unit to another
+    if a <em>conversion factor</em> is defined between the units.
 [% END %]

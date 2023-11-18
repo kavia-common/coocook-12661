@@ -50,19 +50,12 @@ IF no_import; %]
 <script  id="properties-data" type="application/json">[% no_import ? '[]' : properties_json | html %]</script>
 
 [% WRAPPER includes/infobox.tt %]
-    <span class="d-inline-block mb-2">
-        A <em>unit</em> is a measurement quantity for an amount of an <em>article</em>. Units can be converted into other units by specifying a
-        conversion factor between these.
-    </span>
-    <span class="d-inline-block mb-2"><em>Shop sections</em> can be used on purchase lists to group similar articles.</span>
-    <span class="d-inline-block mb-2">
-        An <em>article</em> is an actual item with a defined <em>unit</em>, which can be bought in a supermarket/store. It can be used as ingredient in <em>recipes</em>
-        and <em>dishes</em>. An article may also contain information about shelf life and availability.
-    </span>
-    <span class="d-inline-block mb-2">A <em>recipe</em> is a set of instructions how to prepare and cook a certain <em>dish</em>, including a list of ingredients (<em>articles</em>).</span>
-    <span class="d-inline-block mb-2"><em>Shop sections</em> can be used on purchase lists to group similar articles.</span>
-    <span class="d-inline-block mb-2">
-        A <em>tag</em> is a keyword which can be attached to <em>recipes</em>, <em>dishes</em> and <em>articles</em> to filter them when your search a specific item out of these categories.
-        A <em>tag group</em> can be used to organize similar <em>tags</em> together.
-    </span>
+    Complete your project faster or get more detailed information
+    by importing data from existing projects.
+</p>
+
+<p>
+    If you skip this step now, you can do it later.
+    Only if you create some kind of data, for example articles or units,
+    you can’t import this kind anymore.
 [% END %]
