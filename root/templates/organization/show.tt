@@ -60,3 +60,9 @@
     <input type="submit" value="Delete organization">
 </form>
 [% END %]
+
+[% WRAPPER includes/infobox.tt %]
+    Organization profiles are visible to every user logged in on [% name %].
+    <br>
+    Users outside of an organization won’t see names of its private projects that they have no permission for.
+[% END %]

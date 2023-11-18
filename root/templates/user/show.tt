@@ -29,3 +29,8 @@
     <li>[% link_organization(organization, organization.url) %]</li>
 [% END %]
 </ul>
+
+[% WRAPPER includes/infobox.tt %]
+    User profiles are visible to every user logged in on [% name %].
+    Other users won’t see names of private projects that they have no permission for.
+[% END %]
