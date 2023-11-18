@@ -85,17 +85,27 @@ sub show : GET HEAD Chained('base') PathPart('') Args(0) RequiresCapability('vie
         $_->{user_url} = $c->uri_for_action( '/user/show', [ $organization_user->user->name ] );
     }
 
-    my @organizations_projects =
-      $organization->search_related( organizations_projects => undef, { prefetch => 'project' } )->all;
+    my @organizations_projects;
 
-    for (@organizations_projects) {
-        my $organization_project = $_;
+    {
+        my $organizations_projects =
+          $organization->search_related( organizations_projects => undef, { prefetch => 'project' } );
 
-        $_ = $organization_project->as_hashref( project => $organization_project->project );
+        while ( my $organization_project = $organizations_projects->next ) {
+            my $project = $organization_project->project;
 
-        $_->{project_url} =
-          $c->uri_for_action( '/project/show',
-            [ $organization_project->project->id, $organization_project->project->url_name ] );
+            $c->has_capability( view_project_permissions => { project => $project } )
+              or next;
+
+            push @organizations_projects,
+              $organization_project->as_hashref(
+                project => $project->as_hashref(
+                    url => $c->uri_for_action(
+                        '/project/show', [ $organization_project->project->id, $organization_project->project->url_name ],
+                    ),
+                ),
+              );
+        }
     }
 
     $c->stash(

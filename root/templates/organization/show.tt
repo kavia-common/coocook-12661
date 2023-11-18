@@ -41,11 +41,15 @@
 
 <h3>Projects</h3>
 
+[% IF organizations_projects.empty %]
+    <p>None visible.</p>
+[% ELSE %]
 <ul>
-[% FOR organization_project IN organizations_projects %]
-    <li><a href="[% organization_project.project_url %]">[% '🔒' UNLESS organization_project.project.is_public; organization_project.project.name | html %]</a> ([% organization_project.role %])</li>
-[% END %]
+    [% FOR organization_project IN organizations_projects %]
+    <li><a href="[% organization_project.project.url %]">[% '🔒' UNLESS organization_project.project.is_public; organization_project.project.name | html %]</a> ([% organization_project.role %])</li>
+    [% END %]
 </ul>
+[% END %]
 
 [% IF delete_url %]
 <h3>Delete organization</h3>
