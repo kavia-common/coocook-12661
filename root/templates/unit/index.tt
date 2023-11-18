@@ -67,6 +67,6 @@ USE SignificantDigits %]
 </div>
 
 [% WRAPPER includes/infobox.tt %]
-    A <b>unit</b> is a measurement quantity for an amount of an <b>article</b>.
+    A <em>unit</em> is a measurement quantity for an amount of an <em>article</em>.
     Units can be converted into other units by specifying a conversion factor between these.
 [% END %]

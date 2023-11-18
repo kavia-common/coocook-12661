@@ -25,5 +25,5 @@
 </table>
 
 [% WRAPPER includes/infobox.tt %]
-   A <b>recipe</b> is a set of instructions how to prepare and cook a certain <b>dish</b>, including a list of ingredients (<b>articles</b>).
+   A <em>recipe</em> is a set of instructions how to prepare and cook a certain <em>dish</em>, including a list of ingredients (<em>articles</em>).
 [% END %]

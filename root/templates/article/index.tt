@@ -42,7 +42,7 @@
 [% new %]
 
 [% WRAPPER includes/infobox.tt %]
-    An <b>article</b> is an actual item with a defined <b>unit</b>, which can be bought in a supermarket/store.
-    It can be used as ingredient in <b>recipes</b> and <b>dishes</b>.
+    An <em>article</em> is an actual item with a defined <em>unit</em>, which can be bought in a supermarket/store.
+    It can be used as ingredient in <em>recipes</em> and <em>dishes</em>.
     An article may also contain information about shelf life and availability.
 [% END %]

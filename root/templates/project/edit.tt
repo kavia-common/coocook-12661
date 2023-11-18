@@ -9,6 +9,6 @@ js.push('/lib/coocook-web-components/dist/meals-dishes-editor/meals-dishes-edito
 <div class="meals-dishes-editor" data-meals-dishes-editor-json-id="meals-dishes-editor-data"></div>
 
 [% WRAPPER includes/infobox.tt %]
-    A <b>meal</b> is an occasion when food is eaten (e.g. breakfast, lunch, dinner). It consists of one or more <b>dishes</b>.
-    A <b>dish</b> is part of a <b>meal</b>, is derived from a <b>recipe</b> and may contain deviations from the recipe.
+    A <em>meal</em> is an occasion when food is eaten (e.g. breakfast, lunch, dinner). It consists of one or more <em>dishes</em>.
+    A <em>dish</em> is part of a <em>meal</em>, is derived from a <em>recipe</em> and may contain deviations from the recipe.
 [% END %]

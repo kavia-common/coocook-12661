@@ -19,6 +19,6 @@
 </p>
 
 [% WRAPPER includes/infobox.tt %]
-    A <b>tag</b> is a keyword which can be attached to <b>recipes</b>, <b>dishes</b> and <b>articles</b> to filter them when your search a specific item out of these categories.
-    A <b>tag group</b> can be used to organize similar <b>tags</b> together.
+    A <em>tag</em> is a keyword which can be attached to <em>recipes</em>, <em>dishes</em> and <em>articles</em> to filter them when your search a specific item out of these categories.
+    A <em>tag group</em> can be used to organize similar <em>tags</em> together.
 [% END %]

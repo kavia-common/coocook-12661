@@ -64,8 +64,8 @@ js_push_template_path() %]
 </form>
 
 [% WRAPPER includes/infobox.tt %]
-    To plan when you need to buy which <b>article</b> for which <b>meal/dish</b> and where, you can use <b>purchase lists</b>.
-    Inside a <b>purchase list</b> the articles can be grouped into <b>shop sections</b> like vegetables, meat or dairy products.
+    To plan when you need to buy which <em>article</em> for which <em>meal/dish</em> and where, you can use <em>purchase lists</em>.
+    Inside a <em>purchase list</em> the articles can be grouped into <em>shop sections</em> like vegetables, meat or dairy products.
 [% END %]
 
 <form method="post" action="[% create_url %]">
