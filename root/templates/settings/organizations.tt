@@ -21,20 +21,27 @@
 [% END %]
 
 <form method="post" action="[% create_organization_url %]">
-<div class="card">
-    <div class="card-header"><h3 class="my-2">Create a new user organization</h3></div>
+    <div class="card">
+        <div class="card-header"><h3 class="my-2">Create a new user organization</h3></div>
 
-<div class="card-body">
-    <div class="mb-3">You can pool users in organizations and grant organizations permissions on projects.
-    You will be member and owner of the new organization.</div>
+        <div class="card-body">
+            <div class="mb-3">You can pool users in organizations and grant organizations permissions on projects.
+            You will be member and owner of the new organization.</div>
 
-    <div class="row g-3 align-items-center">
-        <div class="col-auto">
-            <input type="text" name="name" placeholder="organization name" pattern="[A-Za-z0-9_]+" value="[% last_input.name %]" class="form-control">
+                <div class="row g-3 align-items-center">
+                    <div class="col-auto">
+                        <input type="text" name="name" placeholder="organization name" pattern="[A-Za-z0-9_]+" value="[% last_input.name %]" class="form-control">
+                    </div>
+                    <div class="col-auto">
+                        <input type="submit" name="create" value="Create organization" class="btn btn-primary">
+                    </div>
+            </div>
         </div>
-        <div class="col-auto">
-            <input type="submit" name="create" value="Create organization" class="btn btn-primary">
-        </div>
-</div>
-</div>
+    </div>
 </form>
+
+[% WRAPPER includes/infobox.tt %]
+    An <em>organization</em> is a group of [% name %] users.
+    You can easily grant them permissions to projects
+    without worrying about individual users even when group members change in the future.
+[% END %]

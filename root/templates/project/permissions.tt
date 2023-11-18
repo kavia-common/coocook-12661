@@ -70,7 +70,10 @@ has_admin = 0 %]
 
 [% IF add_permission_url %]
     [% IF has_admin == 0 %]
-    <div class="alert alert-info mb-5">You need another user with role <em>admin</em> to transfer ownership to them.</div>
+<div class="alert alert-light">
+    <i class="material-icons">info</i>
+    You need another user with role <em>admin</em> to transfer ownership to them.
+</div>
     [% END %]
 
 <div class="card my-3">
@@ -102,4 +105,12 @@ has_admin = 0 %]
     [% END %]
     </div>
 </div>
+[% END;
+
+WRAPPER includes/infobox.tt %]
+    <em>Permissions</em> for a project like <em>[% project.name | html %]</em>
+    allow other users at [% name %] to view or edit the project.
+    <br>
+    Only the single <em>owner</em> of a project has total control,
+    including deletion of the project.
 [% END %]

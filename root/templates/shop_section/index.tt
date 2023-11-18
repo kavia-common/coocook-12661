@@ -84,3 +84,8 @@ js_push_template_path() %]
         </div>
     </div>
 </form>
+
+[% WRAPPER includes/infobox.tt %]
+    A <em>shop section</em> is a category for articles that can be purchased.
+    You can group articles on purchase lists by selecting the shop section for them.
+[% END %]

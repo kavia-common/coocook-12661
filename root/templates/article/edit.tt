@@ -84,4 +84,13 @@ IF article; escape_title( 'Article', article.name ); ELSE; title="New Article"; 
     <li>dish <a href="[% dish.url %]">[% dish.name | html %]</a> on [% display_date(dish.meal.date, {html=>1}) %]</li>
 [% END %]
 </ul>
+[% END;
+
+WRAPPER includes/infobox.tt %]
+   <em>Preferred units</em> will be suggested first when adding an ingredient
+   with this article to a recipe/dish. Other units may be used, too.
+</p>
+
+<p>
+   <em>Known shelf life</em> helps purchasing articles not too early for them to last until they’re used.
 [% END %]
