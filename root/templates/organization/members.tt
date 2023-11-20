@@ -59,7 +59,10 @@ has_admin = 0 %]
 </div>
 
 [% IF has_admin == 0 %]
-    <div class="alert alert-warning mb-5">You need another member with role <em>admin</em> to transfer ownership to them.</div>
+<div class="alert alert-light">
+    <i class="material-icons">info</i>
+    You need another member with role <em>admin</em> to transfer ownership to them.
+</div>
 [% END %]
 
 
@@ -93,3 +96,14 @@ has_admin = 0 %]
     [% END %]
     </div>
 </div>
+
+[% WRAPPER includes/infobox.tt %]
+    <em>Organization members</em> share the same permissions on projects
+    as granted to the organization’s name
+    like they had been granted permissions individually.
+</p>
+
+<p>
+    The <em>role</em> affects only a user’s capability to manage the organization itself.
+    All members share the same permissions on projects.
+[% END %]

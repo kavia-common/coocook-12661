@@ -126,3 +126,5 @@ js_push_template_path();
     </div>
 </div>
 [% END %]
+
+[% INCLUDE includes/infobox_donate.tt %]

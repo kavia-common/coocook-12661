@@ -1,0 +1,6 @@
+[% IF donate_url;
+    WRAPPER includes/infobox.tt %]
+        Did [% name %] help you with food planning?
+        Please consider giving a share of your budget as a <a href="[% donate_url %]">donation</a> for the development of Coocook.
+    [% END;
+END %]

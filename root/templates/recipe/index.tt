@@ -23,3 +23,8 @@
     </li>
 [% END %]
 </table>
+
+[% WRAPPER includes/infobox.tt %]
+    <em>Recipes</em> are templates for new dishes in the food plan.
+    Like dishes each recipe is a list of ingredients together with cooking instructions.
+[% END %]

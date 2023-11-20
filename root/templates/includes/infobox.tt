@@ -1,0 +1,9 @@
+<div class="mt-5 alert alert-light p-2 text-center">
+    <p>
+    [%~ UNLESS icon.defined AND NOT icon ~%]
+        <i class="material-icons">[% icon || 'info' %]</i>
+    [%~ END;
+
+    content ~%]
+    </p>
+</div>

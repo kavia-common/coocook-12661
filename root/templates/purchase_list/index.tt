@@ -63,6 +63,17 @@ js_push_template_path() %]
     </div>
 </form>
 
+[% WRAPPER includes/infobox.tt %]
+    <em>Purchase lists</em> contain all articles that need to be sourced to prepare the planned meals.
+    Sort them into multiple lists for different purchase dates or stores.
+</p>
+
+<p>
+    <i class="material-icons">lightbulb</i> Pro tip:
+    Get well-structured lists by assigning articles their shop section.
+    Also items for the same article can be merged by converting them to the same unit.
+[% END %]
+
 <form method="post" action="[% create_url %]">
     <div class="modal fade" id="addList" tabindex="-1" aria-labelledby="addListLabel" aria-hidden="true">
         <div class="modal-dialog">

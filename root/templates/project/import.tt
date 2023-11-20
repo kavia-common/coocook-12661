@@ -48,3 +48,14 @@ IF no_import; %]
 [% END %]
 
 <script  id="properties-data" type="application/json">[% no_import ? '[]' : properties_json | html %]</script>
+
+[% WRAPPER includes/infobox.tt %]
+    Complete your project faster or get more detailed information
+    by importing data from existing projects.
+</p>
+
+<p>
+    If you skip this step now, you can do it later.
+    Only if you create some kind of data, for example articles or units,
+    you can’t import this kind anymore.
+[% END %]

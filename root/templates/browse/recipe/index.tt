@@ -29,3 +29,9 @@ END %]
     </li>
 [% END %]
 </ul>
+
+[% WRAPPER includes/infobox.tt %]
+    You can use these recipes as a template for your project.
+    To do so import some into your project first
+    and then create a new dish from the recipe of your choice.
+[% END %]

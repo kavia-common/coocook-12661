@@ -4,8 +4,28 @@ ELSE;
     title = "Public Projects";
 END %]
 
+<div class="alert alert-success">
+    <p class="m-0">
+[% IF user %]
+        This list also includes private projects which you have access to,
+        indicated by the 🔒 symbol.
+[% ELSE %]
+        These are only <em>public</em> recipes.
+        <a class="alert-link hov-under" href="[% login_url %]">Sign in</a>
+        to view private recipes, too.
+[% END %]
+    </p>
+</div>
+
 <ul>
 [% FOR proj IN projects; # don't overwrite $project! %]
     <li>[% '🔒' UNLESS proj.is_public %]<a href="[% proj.url %]">[% proj.name | html %]</a></li>
 [% END %]
 </ul>
+
+[% WRAPPER includes/infobox.tt %]
+    A <em>project</em> on [% name %] is a self-contained collection of data for an event,
+    for example a dinner party or a vacation week,
+    <br>
+    including a meal plan, all ingredients, cooking instructions and purchase lists.
+[% END %]

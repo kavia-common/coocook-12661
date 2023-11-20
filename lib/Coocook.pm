@@ -111,6 +111,9 @@ __PACKAGE__->config(
         },
     ],
 
+    # TODO change to dedicated donate page once it exists
+    donate_url => 'https://coocook.org/about',    # hardcoded to official instance
+
     # enable registration as self service, defaults to false
     enable_user_registration => 0,
 

@@ -1,20 +1,24 @@
 [% escape_title( 'Recipe', recipe.name ) %]
+[% css.push('/css/print.css') %]
 
 <div class="content-box">
 [% IF project_url %]
     <p>
         from project <a href="[% project_url %]">[% recipe.project.name | html %]</a>
      [% IF import_url %]
-        <form method="get" action="[% import_url %]" class="inline">
+        <form method="get" action="[% import_url %]" class="inline no-print">
             <input type="submit" value="Import" title="Import this recipe into one of your projects" class="btn btn-primary">
         </form>
+        </p>
+
+        <p class="print">for [% numerus(servings, 'serving', 'servings') %]
     [% END %]
     </p>
 [% ELSE %]
     <p>from a private project</p>
 [% END %]
 
-<form method="get" action="">
+<form method="get" action="" class="no-print">
     <div class="row g-3 align-items-center mb-3">
         <div class="col-auto">
             <label for="servings" class="col-form-label">Servings:</label>
@@ -81,3 +85,5 @@ END %]
 [% recipe.description | markdown %]
     </div>
 </div>
+
+[% INCLUDE includes/infobox_donate.tt %]

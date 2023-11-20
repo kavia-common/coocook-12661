@@ -65,3 +65,11 @@ USE SignificantDigits %]
         </form>
     </div>
 </div>
+
+[% WRAPPER includes/infobox.tt %]
+    <em>Units</em> are measurement quantities used to declare
+    how much of an article is required in a recipe/dish ingredient.
+    <br>
+    Ingredients and purchase list items can be converted from one unit to another
+    if a <em>conversion factor</em> is defined between the units.
+[% END %]
